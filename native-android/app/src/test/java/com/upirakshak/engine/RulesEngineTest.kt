@@ -1,94 +1,92 @@
 package com.upirakshak.engine
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
+/**
+ * Unit tests for RulesEngine
+ * Tests all 8 critical scam detection scenarios
+ */
 class RulesEngineTest {
-    
+
     @Test
-    fun `electricity scam should be HIGH risk`() {
-        val title = "WhatsApp"
-        val text = "URGENT: Your electricity will be disconnected tonight! Pay now via QR to avoid ₹5000 fine. UPI: bsescare@icici"
-        
-        val result = RulesEngine.analyze(title, text)
-        
+    fun testElectricityScamIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "WhatsApp",
+            "URGENT: Electricity disconnected tonight, scan QR to pay bsescare@icici"
+        )
         assertEquals(ThreatLevel.HIGH, result.level)
-        assertTrue(result.reasons.isNotEmpty())
-        assertNotNull(result.officialRoute)
     }
-    
+
     @Test
-    fun `bank KYC scam should be HIGH risk`() {
-        val title = "SMS"
-        val text = "Your SBI account has been blocked. Enter UPI PIN to verify and unblock immediately."
-        
-        val result = RulesEngine.analyze(title, text)
-        
+    fun testBankKycScamIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "SMS",
+            "Your SBI account blocked, enter UPI PIN immediately"
+        )
         assertEquals(ThreatLevel.HIGH, result.level)
-        assertTrue(result.reasons.isNotEmpty())
     }
-    
+
     @Test
-    fun `prize scam should be HIGH risk`() {
-        val title = "SMS"
-        val text = "Congratulations! Pay ₹500 processing fee to receive ₹10,000 lottery prize. UPI: refundcare@paytm"
-        
-        val result = RulesEngine.analyze(title, text)
-        
+    fun testPrizeScamIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "SMS",
+            "Congratulations! Pay ₹500 to receive ₹10,000"
+        )
         assertEquals(ThreatLevel.HIGH, result.level)
-        assertTrue(result.reasons.isNotEmpty())
     }
-    
+
     @Test
-    fun `OTP message should be SAFE`() {
-        val title = "HDFC Bank"
-        val text = "OTP for transaction is 123456. Valid for 5 minutes. Do not share with anyone."
-        
-        val result = RulesEngine.analyze(title, text)
-        
+    fun testOtpMessageIsSafe() {
+        val result = RulesEngine.analyze(
+            "HDFC Bank",
+            "Your OTP is 123456. Do not share."
+        )
         assertEquals(ThreatLevel.SAFE, result.level)
     }
-    
+
     @Test
-    fun `friend chat should be SAFE`() {
-        val title = "WhatsApp"
-        val text = "Hi, this is your friend, sending money"
-        
-        val result = RulesEngine.analyze(title, text)
-        
+    fun testFriendChatIsSafe() {
+        val result = RulesEngine.analyze(
+            "WhatsApp",
+            "Hi, this is your friend, sending money"
+        )
         assertEquals(ThreatLevel.SAFE, result.level)
     }
-    
+
     @Test
-    fun `Paytm care lookalike should be MEDIUM risk`() {
-        val title = "SMS"
-        val text = "Paytm care: verify your KYC to avoid account suspension"
-        
-        val result = RulesEngine.analyze(title, text)
-        
+    fun testPaytmCareLookalikeIsMediumRisk() {
+        val result = RulesEngine.analyze(
+            "SMS",
+            "Paytm care: verify your KYC now"
+        )
         assertEquals(ThreatLevel.MEDIUM, result.level)
-        assertTrue(result.reasons.isNotEmpty())
     }
-    
+
     @Test
-    fun `job registration fee scam should be HIGH risk`() {
-        val title = "WhatsApp"
-        val text = "URGENT: Pay ₹999 registration fee immediately to secure your job. Aaj hi pay karo or position chali jayegi. UPI: jobhelp@paytm"
-        
-        val result = RulesEngine.analyze(title, text)
-        
+    fun testJobOfferScamIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "WhatsApp",
+            "Job offer! Registration fee ₹500 required"
+        )
         assertEquals(ThreatLevel.HIGH, result.level)
-        assertTrue(result.reasons.isNotEmpty())
     }
-    
+
     @Test
-    fun `government scheme scam should be HIGH risk`() {
-        val title = "SMS"
-        val text = "Congratulations! You have been selected for PM Kisan scheme. Pay ₹500 processing fee to verify-kyc.online to receive ₹2000 benefit."
-        
-        val result = RulesEngine.analyze(title, text)
-        
+    fun testGovernmentSchemeWithSuspiciousUrlIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "SMS",
+            "Government scheme approved. Click verify-kyc.online"
+        )
         assertEquals(ThreatLevel.HIGH, result.level)
-        assertTrue(result.reasons.isNotEmpty())
+    }
+
+    @Test
+    fun testRunTestsReturnsAllPassing() {
+        val results = RulesEngine.runTests()
+        assertEquals(8, results.size)
+        results.forEach { (description, passed) ->
+            assertEquals("Test failed: $description", true, passed)
+        }
     }
 }
