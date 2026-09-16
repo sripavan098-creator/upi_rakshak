@@ -82,6 +82,87 @@ class RulesEngineTest {
     }
 
     @Test
+    fun testDigitalArrestScamIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "WhatsApp",
+            "CBI officer video call, digital arrest, money laundering verification"
+        )
+        assertEquals(ThreatLevel.HIGH, result.level)
+    }
+
+    @Test
+    fun testApkDistributionIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "SMS",
+            "Install this APK for traffic e-challan fine payment"
+        )
+        assertEquals(ThreatLevel.HIGH, result.level)
+    }
+
+    @Test
+    fun testRemoteAccessAppIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "WhatsApp",
+            "Please install AnyDesk for screen share, we will help with KYC"
+        )
+        assertEquals(ThreatLevel.HIGH, result.level)
+    }
+
+    @Test
+    fun testAutopayTrapIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "SMS",
+            "Verify your account with ₹1 to activate subscription"
+        )
+        assertEquals(ThreatLevel.HIGH, result.level)
+    }
+
+    @Test
+    fun testPinForReceivingIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "WhatsApp",
+            "Enter UPI PIN to receive your refund money"
+        )
+        assertEquals(ThreatLevel.HIGH, result.level)
+    }
+
+    @Test
+    fun testInvestmentScamIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "SMS",
+            "Guaranteed returns of 30% monthly in our trading group"
+        )
+        assertEquals(ThreatLevel.HIGH, result.level)
+    }
+
+    @Test
+    fun testLoanAppPredatoryIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "WhatsApp",
+            "Instant loan in 10 minutes, no documents, contact access required"
+        )
+        assertEquals(ThreatLevel.HIGH, result.level)
+    }
+
+    @Test
+    fun testJobScamIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "SMS",
+            "Work from home, part time job, registration fee ₹500"
+        )
+        assertEquals(ThreatLevel.HIGH, result.level)
+    }
+
+    @Test
+    fun testSimSwapFraudIsHighRisk() {
+        val result = RulesEngine.analyze(
+            "WhatsApp",
+            "Your SIM will be blocked, OTP was sent but no request was made"
+        )
+        assertEquals(ThreatLevel.HIGH, result.level)
+    }
+
+    @Test
     fun testRunTestsReturnsAllPassing() {
         val results = RulesEngine.runTests()
         assertEquals(8, results.size)
