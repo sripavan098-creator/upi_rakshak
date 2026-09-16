@@ -19,6 +19,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import com.upirakshak.notification.RakshakGuardService
 import com.upirakshak.ui.screens.*
 import com.upirakshak.ui.theme.RakshakTheme
 import com.upirakshak.ui.theme.NavyDark
@@ -41,6 +42,9 @@ class MainActivity : ComponentActivity() {
 
         // Request POST_NOTIFICATIONS permission on Android 13+ (API 33+)
         requestNotificationPermission()
+        
+        // Start guard service to keep notification listener alive on aggressive ROMs
+        RakshakGuardService.start(this)
 
         setContent {
             RakshakTheme {

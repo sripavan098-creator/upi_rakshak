@@ -60,11 +60,16 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Real-time UPI fraud warning overlay" />
         </service>
-        <!-- Overlay Service -->
+
+        <!-- Guard Service to keep notification listener alive on aggressive ROMs -->
         <service
-            android:name=".overlay.RakshakOverlayService"
+            android:name=".notification.RakshakGuardService"
             android:exported="false"
-            android:foregroundServiceType="specialUse" />
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Persistent protection for notification listener" />
+        </service>
 
     </application>
 
