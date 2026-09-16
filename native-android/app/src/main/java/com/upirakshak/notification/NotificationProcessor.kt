@@ -6,6 +6,8 @@ import com.upirakshak.engine.ThreatAnalysis
 import com.upirakshak.engine.ThreatLevel
 import com.upirakshak.overlay.RakshakOverlayService
 import com.upirakshak.util.AppContextHolder
+import com.upirakshak.util.HapticHelper
+import com.upirakshak.voice.VoiceOutput
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,15 +30,22 @@ object NotificationProcessor {
         
         Log.d(TAG, "Analysis result: ${analysis.level} - ${analysis.reasons}")
         
-        // Show overlay if threat is detected
+        // Trigger haptics, voice, and overlay if threat is detected
         if (analysis.level != ThreatLevel.SAFE) {
             try {
+                // Vibrate for threat
+                HapticHelper.vibrateForThreat(AppContextHolder.get(), analysis.level)
+                
+                // Speak warning
+                VoiceOutput.speak(analysis.suggestedAction)
+                
+                // Show overlay
                 RakshakOverlayService.show(
                     context = AppContextHolder.get(),
                     analysis = analysis
                 )
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to show overlay", e)
+                Log.e(TAG, "Failed to trigger threat response", e)
             }
         }
     }
