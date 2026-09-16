@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { Shield, AlertTriangle, TrendingDown, Calculator, ArrowRight } from 'lucide-react';
 
 interface HeroProps {
   onExplore: () => void;
@@ -7,19 +6,19 @@ interface HeroProps {
 
 export default function Hero({ onExplore }: HeroProps) {
   return (
-    <section className="min-h-screen flex flex-col justify-center relative pt-16">
-      {/* Background gradient effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl" />
+    <section className="min-h-screen flex flex-col justify-center relative pt-14 overflow-hidden">
+      {/* Ambient radar rings */}
+      <div className="absolute top-20 right-10 w-64 h-64 pointer-events-none" aria-hidden="true">
+        <div className="radar-ring absolute inset-0" />
+        <div className="radar-ring absolute inset-0" />
+        <div className="radar-ring absolute inset-0" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7 }}
           className="text-center"
         >
           {/* Badge */}
@@ -27,66 +26,78 @@ export default function Hero({ onExplore }: HeroProps) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium mb-8"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-8"
+            style={{
+              backgroundColor: 'rgba(232, 163, 61, 0.08)',
+              border: '1px solid rgba(232, 163, 61, 0.2)',
+              color: 'var(--gold)',
+            }}
           >
-            <Shield className="w-4 h-4" />
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
             Agentic AI Hackathon — Stage 1 Submission
           </motion.div>
 
-          {/* Main heading */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-              Your Financial
-            </span>
+          {/* Headline */}
+          <h1
+            className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-tight mb-6"
+            style={{ maxWidth: '16ch', margin: '0 auto 1.5rem' }}
+          >
+            <span style={{ color: 'var(--parchment)' }}>Your Financial</span>
             <br />
-            <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-              Safety Guardian
-            </span>
+            <span style={{ color: 'var(--gold)' }}>Safety Guardian</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-            UPI Rakshak sits between you and the moment of decision — scanning a QR, 
-            taking a loan — and tells you, with real numbers, what's actually true.
-            Not after the fact. <span className="text-white font-medium">Right then.</span>
+          <p
+            className="text-lg sm:text-xl leading-relaxed mb-10"
+            style={{ color: 'var(--muted)', maxWidth: '54ch', margin: '0 auto 2.5rem' }}
+          >
+            UPI Rakshak sits between you and the moment of decision — scanning a QR, taking a loan — and tells you, with real numbers, what's actually true. Not after the fact.{' '}
+            <span style={{ color: 'var(--parchment)' }}>Right then.</span>
           </p>
 
           {/* CTA */}
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={onExplore}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold rounded-xl text-lg shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-shadow"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-semibold text-sm transition-all"
+            style={{
+              backgroundColor: 'var(--gold)',
+              color: 'var(--ink)',
+            }}
           >
-            See It In Action
-            <ArrowRight className="w-5 h-5" />
+            Run Rakshak
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
           </motion.button>
         </motion.div>
 
-        {/* Feature cards */}
+        {/* Three value props */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20"
+          transition={{ delay: 0.5, duration: 0.7 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-20"
         >
-          <FeatureCard
-            icon={<AlertTriangle className="w-6 h-6 text-red-400" />}
-            title="Scam Detection"
-            description="Screens payment messages for UPI fraud patterns — names the exact phrase that triggered each flag."
-            color="red"
+          <ValueCard
+            title="Screens payment messages"
+            description="Names the exact phrase that triggered each flag — never a vague 'this looks risky.'"
+            color="var(--risk-high)"
           />
-          <FeatureCard
-            icon={<TrendingDown className="w-6 h-6 text-amber-400" />}
-            title="Cash Flow Projection"
+          <ValueCard
+            title="Projects cash flow"
             description="Surfaces shortfalls days before they happen — not after a payment bounces."
-            color="amber"
+            color="var(--risk-med)"
           />
-          <FeatureCard
-            icon={<Calculator className="w-6 h-6 text-cyan-400" />}
-            title="True Loan Cost"
+          <ValueCard
+            title="Computes true loan cost"
             description="Converts marketing rates into actual rupee totals — principal + interest + all fees."
-            color="cyan"
+            color="var(--safe)"
           />
         </motion.div>
       </div>
@@ -94,29 +105,22 @@ export default function Hero({ onExplore }: HeroProps) {
   );
 }
 
-function FeatureCard({ icon, title, description, color }: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  color: string;
-}) {
-  const borderColors: Record<string, string> = {
-    red: 'border-red-500/20 hover:border-red-500/40',
-    amber: 'border-amber-500/20 hover:border-amber-500/40',
-    cyan: 'border-cyan-500/20 hover:border-cyan-500/40',
-  };
-
-  const bgColors: Record<string, string> = {
-    red: 'bg-red-500/5',
-    amber: 'bg-amber-500/5',
-    cyan: 'bg-cyan-500/5',
-  };
-
+function ValueCard({ title, description, color }: { title: string; description: string; color: string }) {
   return (
-    <div className={`p-6 rounded-2xl border ${borderColors[color]} ${bgColors[color]} backdrop-blur-sm transition-all duration-300`}>
-      <div className="mb-4">{icon}</div>
-      <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
-      <p className="text-slate-400 text-sm leading-relaxed">{description}</p>
+    <div
+      className="p-5 rounded-[14px] transition-all duration-200 chip"
+      style={{
+        backgroundColor: 'var(--ink-1)',
+        border: '1px solid var(--border)',
+      }}
+    >
+      <div className="w-2 h-2 rounded-full mb-3" style={{ backgroundColor: color }} />
+      <h3 className="font-display font-semibold text-base mb-1.5" style={{ color: 'var(--parchment)' }}>
+        {title}
+      </h3>
+      <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+        {description}
+      </p>
     </div>
   );
 }

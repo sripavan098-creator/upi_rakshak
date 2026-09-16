@@ -1,28 +1,30 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import AgentDemo from './components/AgentDemo';
+import Console from './components/Console';
+import HowItWorks from './components/HowItWorks';
 import Architecture from './components/Architecture';
 import Impact from './components/Impact';
-import Navbar from './components/Navbar';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('hero');
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--ink)', color: 'var(--parchment)' }}>
       <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
       <main>
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSection}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
           >
-            {activeSection === 'hero' && <Hero onExplore={() => setActiveSection('demo')} />}
-            {activeSection === 'demo' && <AgentDemo />}
+            {activeSection === 'hero' && <Hero onExplore={() => setActiveSection('console')} />}
+            {activeSection === 'console' && <Console />}
+            {activeSection === 'how' && <HowItWorks />}
             {activeSection === 'architecture' && <Architecture />}
             {activeSection === 'impact' && <Impact />}
           </motion.div>
