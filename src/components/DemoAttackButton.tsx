@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ScamOverlay from './ScamOverlay';
-import { analyzeMessage } from '../lib/rulesEngine';
+import { analyzeMessage, type ThreatAnalysis } from '../lib/rulesEngine';
 import { stopSpeaking } from '../lib/voice';
 import { simulateScam } from '../lib/nativeBridge';
 
@@ -10,34 +10,90 @@ const SCAM_MESSAGE = '⚡ URGENT: Your electricity will be disconnected tonight!
 /**
  * Demo Attack Simulator — the hackathon-winning moment.
  * Simulates a scam attack with fake WhatsApp notification → Rakshak overlay → full explanation.
+ *
+ * Flow:
+ * 1. Click button → stage = 'whatsapp' (fake WhatsApp notification)
+ * 2. After 1.5s → stage = 'rakshak' (red overlay slides down)
+ * 3. If user TAPS the overlay → immediately stage = 'explanation' (cancels 3s timer)
+ * 4. If user does NOT tap → after 3s total, auto-advance to stage = 'explanation'
+ * 5. Dismiss button → stage = 'idle'
  */
 export default function DemoAttackButton() {
   const [stage, setStage] = useState<'idle' | 'whatsapp' | 'rakshak' | 'explanation'>('idle');
-  const [analysis, setAnalysis] = useState<ReturnType<typeof analyzeMessage> | null>(null);
+  const [analysis, setAnalysis] = useState<ThreatAnalysis | null>(null);
 
-  const runDemo = async () => {
+  // Timer refs so we can clear them
+  const rakshakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const explanationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (rakshakTimerRef.current) clearTimeout(rakshakTimerRef.current);
+      if (explanationTimerRef.current) clearTimeout(explanationTimerRef.current);
+    };
+  }, []);
+
+  const clearAllTimers = () => {
+    if (rakshakTimerRef.current) {
+      clearTimeout(rakshakTimerRef.current);
+      rakshakTimerRef.current = null;
+    }
+    if (explanationTimerRef.current) {
+      clearTimeout(explanationTimerRef.current);
+      explanationTimerRef.current = null;
+    }
+  };
+
+  const showExplanation = () => {
+    clearAllTimers();
+    const result = analyzeMessage('WhatsApp', SCAM_MESSAGE);
+    setAnalysis(result);
+    setStage('explanation');
+  };
+
+  const runDemo = () => {
+    clearAllTimers();
     setStage('whatsapp');
-    
+    setAnalysis(null);
+
     // Trigger native event simulation (works in Android WebView)
     simulateScam();
-    
-    // After 1.5s, show Rakshak overlay
-    setTimeout(() => {
-      setStage('rakshak');
-    }, 1500);
 
-    // After 3s total, show full explanation
-    setTimeout(() => {
-      const result = analyzeMessage('WhatsApp', SCAM_MESSAGE);
-      setAnalysis(result);
-      setStage('explanation');
-    }, 3000);
+    // After 1.5s, show Rakshak overlay
+    rakshakTimerRef.current = setTimeout(() => {
+      setStage('rakshak');
+
+      // After another 1.5s (3s total), auto-advance to explanation
+      explanationTimerRef.current = setTimeout(() => {
+        showExplanation();
+      }, 1500);
+    }, 1500);
+  };
+
+  const handleOverlayTap = () => {
+    // User tapped the rakshak overlay — immediately show explanation
+    showExplanation();
   };
 
   const dismiss = () => {
+    clearAllTimers();
     stopSpeaking();
     setStage('idle');
     setAnalysis(null);
+  };
+
+  // Check if native overlay is available (Android WebView)
+  const hasNativeOverlay = typeof window !== 'undefined' && !!window.RakshakNative;
+
+  const triggerNativeOverlay = () => {
+    if (hasNativeOverlay) {
+      window.RakshakNative!.log(`Triggering native overlay for: ${SCAM_MESSAGE}`);
+      // The Android side will handle the actual overlay display
+      // via NotificationListenerService → RakshakOverlayService
+    } else {
+      alert('Native overlay requires the Android wrapper. This is the web fallback.');
+    }
   };
 
   return (
@@ -47,22 +103,12 @@ export default function DemoAttackButton() {
         visible={stage === 'whatsapp'}
         message={SCAM_MESSAGE}
         variant="whatsapp"
-        onDismiss={() => setStage('rakshak')}
       />
       <ScamOverlay
         visible={stage === 'rakshak'}
         message={SCAM_MESSAGE}
         variant="rakshak"
-        onTap={() => {
-          const result = analyzeMessage('WhatsApp', SCAM_MESSAGE);
-          setAnalysis(result);
-          setStage('explanation');
-        }}
-        onDismiss={() => {
-          const result = analyzeMessage('WhatsApp', SCAM_MESSAGE);
-          setAnalysis(result);
-          setStage('explanation');
-        }}
+        onTap={handleOverlayTap}
       />
 
       {/* Demo button — always visible */}
@@ -83,21 +129,39 @@ export default function DemoAttackButton() {
               See how Rakshak intercepts a scam in real-time
             </p>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={runDemo}
-            disabled={stage !== 'idle'}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg font-display font-semibold text-sm disabled:opacity-40"
-            style={{
-              background: 'linear-gradient(135deg, #E1554A 0%, #B91C1C 100%)',
-              color: 'white',
-              boxShadow: '0 4px 15px rgba(225, 85, 74, 0.3)',
-            }}
-          >
-            <span>🎯</span>
-            Simulate Scam Attack
-          </motion.button>
+          <div className="flex gap-2">
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={runDemo}
+              disabled={stage !== 'idle'}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg font-display font-semibold text-sm disabled:opacity-40"
+              style={{
+                background: 'linear-gradient(135deg, #E1554A 0%, #B91C1C 100%)',
+                color: 'white',
+                boxShadow: '0 4px 15px rgba(225, 85, 74, 0.3)',
+              }}
+            >
+              <span>🎯</span>
+              Simulate Scam Attack
+            </motion.button>
+            {hasNativeOverlay && (
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={triggerNativeOverlay}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-display font-semibold text-xs"
+                style={{
+                  backgroundColor: 'transparent',
+                  border: '1px solid var(--gold)',
+                  color: 'var(--gold)',
+                }}
+              >
+                <span>📱</span>
+                Native Overlay
+              </motion.button>
+            )}
+          </div>
         </div>
       </div>
 

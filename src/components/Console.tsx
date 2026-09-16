@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { runAgent, pickVerdict, DEFAULT_SCENARIO, FAILURE_SCENARIO } from '../lib/agent';
 import type { AgentResult, TraceEntry, Verdict } from '../lib/agent';
+import { analyzeMessage, type ThreatAnalysis } from '../lib/rulesEngine';
 import TraceStepper from './TraceStepper';
 import ToolDataCard from './ToolDataCard';
 
@@ -12,6 +13,16 @@ export default function Console() {
   const [visibleSteps, setVisibleSteps] = useState<TraceEntry[]>([]);
   const [activeScenario, setActiveScenario] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Quick scan state
+  const [quickScanText, setQuickScanText] = useState('');
+  const [quickScanResult, setQuickScanResult] = useState<ThreatAnalysis | null>(null);
+
+  const handleQuickScan = () => {
+    if (!quickScanText.trim()) return;
+    const analysis = analyzeMessage('User Input', quickScanText);
+    setQuickScanResult(analysis);
+  };
 
   const runRakshak = useCallback(async () => {
     if (!inputText.trim()) return;
@@ -72,6 +83,112 @@ export default function Console() {
           <p className="text-sm" style={{ color: 'var(--muted)', maxWidth: '48ch', margin: '0 auto' }}>
             Paste a payment message or describe your financial situation. Rakshak will screen, project, and compute — then tell you what's true.
           </p>
+        </div>
+
+        {/* Quick Scan Section */}
+        <div
+          className="rounded-[14px] p-5 mb-6"
+          style={{ backgroundColor: 'var(--ink-1)', border: '1px solid var(--border)' }}
+        >
+          <h3 className="font-display font-semibold text-sm mb-3 flex items-center gap-2" style={{ color: 'var(--parchment)' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            Quick Scan — Paste any message for instant analysis
+          </h3>
+          <textarea
+            value={quickScanText}
+            onChange={(e) => setQuickScanText(e.target.value)}
+            onKeyDown={(e) => {
+              if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                handleQuickScan();
+              }
+            }}
+            placeholder="Paste any SMS, WhatsApp message, or UPI request here..."
+            className="w-full rounded-lg p-3 text-sm leading-relaxed resize-none focus:outline-none"
+            style={{
+              backgroundColor: 'var(--ink-2)',
+              border: '1px solid var(--border)',
+              color: 'var(--parchment)',
+              minHeight: '80px',
+            }}
+            rows={3}
+          />
+          <div className="flex items-center gap-2 mt-3">
+            <button
+              onClick={handleQuickScan}
+              disabled={!quickScanText.trim()}
+              className="px-4 py-2 rounded-lg text-xs font-semibold disabled:opacity-40"
+              style={{ backgroundColor: 'var(--gold)', color: 'var(--ink)' }}
+            >
+              Analyze Message
+            </button>
+            {quickScanResult && (
+              <button
+                onClick={() => { setQuickScanText(''); setQuickScanResult(null); }}
+                className="px-3 py-2 rounded-lg text-xs"
+                style={{ backgroundColor: 'var(--ink-2)', color: 'var(--muted)', border: '1px solid var(--border)' }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {/* Quick scan result */}
+          {quickScanResult && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-4 p-4 rounded-lg"
+              style={{
+                backgroundColor: quickScanResult.level === 'HIGH' ? 'rgba(225, 85, 74, 0.08)' :
+                                 quickScanResult.level === 'MEDIUM' ? 'rgba(232, 163, 61, 0.08)' :
+                                 'rgba(63, 167, 150, 0.08)',
+                border: `1px solid ${
+                  quickScanResult.level === 'HIGH' ? 'rgba(225, 85, 74, 0.2)' :
+                  quickScanResult.level === 'MEDIUM' ? 'rgba(232, 163, 61, 0.2)' :
+                  'rgba(63, 167, 150, 0.2)'
+                }`,
+              }}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span
+                  className="text-[10px] font-bold px-2 py-0.5 rounded"
+                  style={{
+                    backgroundColor: quickScanResult.level === 'HIGH' ? 'rgba(225, 85, 74, 0.2)' :
+                                     quickScanResult.level === 'MEDIUM' ? 'rgba(232, 163, 61, 0.2)' :
+                                     'rgba(63, 167, 150, 0.2)',
+                    color: quickScanResult.level === 'HIGH' ? 'var(--risk-high)' :
+                           quickScanResult.level === 'MEDIUM' ? 'var(--risk-med)' :
+                           'var(--safe)',
+                  }}
+                >
+                  {quickScanResult.level}
+                </span>
+                <span className="text-xs font-medium" style={{ color: 'var(--parchment)' }}>
+                  {quickScanResult.suggestedAction}
+                </span>
+              </div>
+              {quickScanResult.reasons.length > 0 && (
+                <ul className="space-y-1 mt-2">
+                  {quickScanResult.reasons.map((reason, i) => (
+                    <li key={i} className="text-xs flex items-start gap-2" style={{ color: 'var(--muted)' }}>
+                      <span className="flex-shrink-0">•</span>
+                      <span>{reason}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {quickScanResult.officialRoute && (
+                <div className="mt-3 p-2 rounded" style={{ backgroundColor: 'rgba(63, 167, 150, 0.1)' }}>
+                  <p className="text-xs" style={{ color: 'var(--safe)' }}>
+                    ✓ {quickScanResult.officialRoute}
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          )}
         </div>
 
         {/* Two-panel layout */}

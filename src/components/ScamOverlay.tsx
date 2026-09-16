@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { speakWarning, stopSpeaking } from '../lib/voice';
 
@@ -13,6 +12,8 @@ interface ScamOverlayProps {
 /**
  * Fixed-position notification overlay mimicking Android system alert.
  * Two variants: 'whatsapp' (fake incoming notification) and 'rakshak' (red warning).
+ *
+ * This component is purely presentational — the parent controls visibility and timing.
  */
 export default function ScamOverlay({ 
   visible, 
@@ -21,28 +22,12 @@ export default function ScamOverlay({
   onTap, 
   onDismiss 
 }: ScamOverlayProps) {
-  // Auto-dismiss after 5 seconds
-  useEffect(() => {
-    if (visible && variant === 'whatsapp') {
-      const timer = setTimeout(() => {
-        onDismiss?.();
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-    if (visible && variant === 'rakshak') {
-      speakWarning('Rakshak Alert! Yeh message fraud ho sakta hai. Savdhan rahein.');
-      const timer = setTimeout(() => {
-        stopSpeaking();
-        onDismiss?.();
-      }, 5000);
-      return () => {
-        clearTimeout(timer);
-        stopSpeaking();
-      };
-    }
-  }, [visible, variant, onDismiss]);
-
   const truncated = message.length > 80 ? message.slice(0, 77) + '…' : message;
+
+  const handleDismiss = () => {
+    stopSpeaking();
+    onDismiss?.();
+  };
 
   return (
     <AnimatePresence>
@@ -98,8 +83,7 @@ export default function ScamOverlay({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  stopSpeaking();
-                  onDismiss?.();
+                  handleDismiss();
                 }}
                 className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-colors"
                 aria-label="Dismiss"

@@ -1,155 +1,125 @@
 # UPI Rakshak — Android Native Wrapper
 
-This directory contains the Android native wrapper that turns the UPI Rakshak web app into a system-level service.
+## Why This Exists
 
-## What This Does
-
-- **NotificationListenerService** — Intercepts WhatsApp/SMS notifications at the OS level
-- **Kotlin Rules Engine** — On-device fraud detection (urgency keywords, UPI patterns, payment traps)
-- **OverlayService** — Shows a red warning banner over scam notifications in real-time
-- **WebView Host** — Loads the React app and bridges it with native Android services
-- **JavaScript Bridge** — Allows the web app to trigger native overlays and access device info
+UPI Rakshak's web app is a demo. The real product is a system-level safety layer on Android. This wrapper hosts the React app in a WebView and connects it to native Android services that intercept notifications and show warnings in real-time.
 
 ## Architecture
 
 ```
-Incoming Notification
-        |
-        v
-NotificationListenerService
-        |
-        v
-Kotlin Rules Engine
-        |
-        +--> If high threat: show native red overlay
-        |
-        +--> Send JSON event to React WebView
-                    |
-                    v
-            React App (AgentTrace / Console)
+[WebView with React App] ↔ [JavaScript Interface] ↔ [NotificationListenerService] ↔ [OverlayService]
 ```
 
-## Prerequisites
+- **NotificationListenerService** intercepts WhatsApp/SMS at the OS level
+- **Kotlin Rules Engine** analyzes messages on-device (no network calls)
+- **OverlayService** shows a red warning banner using `TYPE_APPLICATION_OVERLAY`
+- **JavaScript Bridge** forwards events to the React app
 
-- Android Studio (Hedgehog or later)
-- Android SDK 34
-- Kotlin 1.9+
-- A physical Android device (emulator won't show real notifications)
+## Required Permissions
 
-## Build Instructions
+1. **Notification Access** — to read WhatsApp/SMS messages
+2. **Display Over Other Apps** — to show the warning overlay
+3. **Foreground Service** — to keep the overlay service alive
 
-### 1. Build the React App
+## Funtouch OS Setup (iQOO Devices) — CRITICAL
+
+Funtouch OS will kill background services aggressively. Do ALL of these:
+
+### Step 1: Battery Optimization
+```
+Settings → Apps → UPI Rakshak → Battery → Unrestricted
+```
+
+### Step 2: Autostart
+```
+Settings → Apps → UPI Rakshak → Autostart → Enable
+```
+
+### Step 3: Display Over Other Apps
+```
+Settings → Apps → Special access → Display over other apps → Enable UPI Rakshak
+```
+
+### Step 4: Notification Access
+```
+Settings → Apps → Special access → Notification access → Enable UPI Rakshak
+```
+
+### Step 5: Lock App in Recents
+Open the app → Swipe up to open Recents → Long-press the app card → Tap the lock icon 🔒
+
+This prevents the system from killing Rakshak when you clear recent apps.
+
+### Step 6: Developer Options (Optional but Recommended)
+```
+Settings → Developer options → Don't keep activities → Disable
+```
+
+## Building
 
 ```bash
 # From the project root
 npm run build
-```
 
-### 2. Copy to Android Assets
-
-```bash
+# Copy the built React app to Android assets
 mkdir -p android-wrapper/app/src/main/assets/web
 cp -r dist/* android-wrapper/app/src/main/assets/web/
+
+# Open android-wrapper/ in Android Studio
+# Connect your iQOO device (enable USB debugging)
+# Click "Run"
 ```
 
-### 3. Open in Android Studio
+## Testing the Demo
 
-```bash
-cd android-wrapper
-# Open this directory in Android Studio
-```
-
-### 4. Build and Run
-
-1. Connect your Android device (enable USB debugging)
-2. Click "Run" in Android Studio
-3. Grant the required permissions when prompted:
-   - **Notification Access** — allows Rakshak to read incoming messages
-   - **Display Over Other Apps** — allows the warning overlay
-
-## Funtunch OS Setup (iQOO/Vivo Devices)
-
-Funtunch OS has aggressive battery optimization. Follow these steps:
-
-### Step 1: Notification Access
-
-```
-Settings > Apps > Special app access > Notification access
-```
-Enable UPI Rakshak.
-
-### Step 2: Overlay Permission
-
-```
-Settings > More settings > Permission manager > Display over other apps
-```
-Or:
-```
-Settings > Apps > UPI Rakshak > Display over other apps
-```
-Allow it.
-
-### Step 3: Autostart
-
-```
-Settings > Apps > Autostart
-```
-Enable UPI Rakshak.
-
-Also check:
-```
-iManager > App management > Autostart
-```
-
-### Step 4: Battery Optimization
-
-```
-Settings > Battery > Background power consumption management
-```
-Allow UPI Rakshak to run in background.
-
-Also:
-```
-Settings > Battery > More settings > High performance mode
-```
-Enable if available.
-
-### Step 5: Lock App in Memory
-
-Open UPI Rakshak, go to recent apps, and lock it if Funtunch OS supports the lock icon.
-
-## Demo Flow
-
-Once installed and configured:
-
-1. **Open WhatsApp** on the device
-2. **Send a test scam message** to yourself:
+1. Open WhatsApp on the iQOO device
+2. Send yourself the test scam message:
    ```
    URGENT: Your UPI account will be blocked. Pay ₹499 to helpdesk@upi to verify KYC immediately.
    ```
-3. **Watch the magic**: Within 200ms, a red Rakshak overlay slides down from the top of the screen.
-4. **Tap "Review"** to open the app and see the full agent trace.
+3. Watch the red overlay appear in <200ms
+4. Tap the overlay to see the full explanation
+5. Tap "Review" to open the app and see the agent trace
 
 ## Expected Behavior
 
 1. Notification appears in WhatsApp
 2. `NotificationListenerService` intercepts it
-3. Rules engine detects: urgency + UPI ID + amount + KYC trap
-4. Red overlay appears (score: 94, critical: true)
+3. `RakshakRulesEngine.analyze()` scores the message:
+   - Urgency keywords: +12 each (max 4)
+   - UPI ID present: +35
+   - Amount requested: +20
+   - Link present: +20
+   - Payment trap: +25
+   - OTP/PIN request: +20
+   - **Score ≥ 70 = CRITICAL** → show overlay
+4. Red overlay appears via `OverlayService`
 5. React WebView receives the event via `rakshak:native` custom event
-6. Clicking "Review" opens the app and shows the agent trace
+6. Clicking "Review" opens the app and shows the full agent trace
 
-## Critical Demo Safety Rules
+## Troubleshooting
 
-For the live demo:
+### Overlay not appearing
+- Check **Display over other apps** permission is enabled
+- Make sure the app is not restricted in battery optimization
+- Verify notification access is granted
+- Check Logcat for `RakshakOverlayService` logs
 
-1. Test the scam message at least 10 times
-2. Keep the app open before triggering the message
-3. Make sure the phone is not in Do Not Disturb
-4. Make sure WhatsApp/SMS notifications show message content
-5. Use a controlled test number
-6. Keep a screen recording as backup
-7. Keep the web-only simulated demo ready in case the device misbehaves
+### Service killed after 5 minutes
+- Check battery optimization is set to "Unrestricted"
+- Verify autostart is enabled
+- Lock the app in recents (Step 5 above)
+- Some devices require you to open the app once after reboot
+
+### Notification listener not working
+- Check **Notification access** permission is enabled
+- Restart the device after enabling notification access
+- Check Logcat for `RakshakNotificationListenerService` logs
+
+### WebView not loading
+- Make sure you copied `dist/*` to `app/src/main/assets/web/`
+- Check that `MainActivity.kt` loads `file:///android_asset/web/index.html`
+- Enable USB debugging and check Chrome DevTools for console errors
 
 ## File Structure
 
@@ -163,7 +133,7 @@ android-wrapper/
 │       │   ├── MainActivity.kt              # WebView host
 │       │   ├── RakshakBridge.kt             # Singleton event bridge
 │       │   ├── RakshakJsBridge.kt           # JS interface
-│       │   ├── RakshakRulesEngine.kt        # Fraud detection
+│       │   ├── RakshakRulesEngine.kt        # Fraud detection (Kotlin)
 │       │   ├── RakshakNotificationListenerService.kt
 │       │   └── RakshakOverlayService.kt     # Red warning banner
 │       └── res/layout/
@@ -173,39 +143,27 @@ android-wrapper/
 └── README.md
 ```
 
-## Permissions
-
-| Permission | Why It's Needed |
-|---|---|
-| `BIND_NOTIFICATION_LISTENER_SERVICE` | Read incoming WhatsApp/SMS notifications |
-| `SYSTEM_ALERT_WINDOW` | Show warning overlay over other apps |
-| `POST_NOTIFICATIONS` | Show foreground service notification |
-| `FOREGROUND_SERVICE` | Keep overlay service running in background |
-| `WAKE_LOCK` | Prevent device from sleeping during overlay |
-
-## Troubleshooting
-
-### Overlay doesn't appear
-
-- Check that **Display over other apps** is enabled
-- Make sure the app is not restricted in battery optimization
-- Verify notification access is granted
-
-### Services stop after reboot
-
-- Lock the app in recent apps (see Step 5)
-- Check autostart is enabled
-- Some devices require you to open the app once after reboot
-
-### False positives
-
-- The rules engine uses keyword matching + scoring
-- Score threshold is 70 for critical alerts
-- Adjust `RakshakRulesEngine.kt` thresholds if needed
-
 ## Web-Only Fallback
 
 If native becomes unstable, the React app has a "Simulate Scam Attack" button that triggers the same demo flow in the browser. Use this as a backup during the hackathon demo.
+
+The web demo proves the reasoning engine, explanation layer, and financial literacy tools. The Android implementation is the delivery mechanism.
+
+## Critical Demo Safety Rules
+
+For the live demo:
+
+1. **Test the scam message at least 10 times** before the presentation
+2. **Keep the app open** before triggering the message
+3. **Make sure the phone is not in Do Not Disturb**
+4. **Make sure WhatsApp/SMS notifications show message content** (not just "New message")
+5. **Use a controlled test number** (send to yourself or a teammate)
+6. **Keep a screen recording as backup** in case the live demo fails
+7. **Keep the web-only simulated demo ready** in case the device misbehaves
+
+## Privacy Promise
+
+All message analysis happens **on-device**. No data is sent to any server. The rules engine runs entirely in Kotlin on the user's phone.
 
 ## License
 
