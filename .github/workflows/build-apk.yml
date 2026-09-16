@@ -1,0 +1,77 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Grant execute permission for gradlew
+      run: |
+        cd native-android
+        chmod +x gradlew
+        
+    - name: Build Debug APK
+      run: |
+        cd native-android
+        ./gradlew assembleDebug --no-daemon
+        
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: UPI-Rakshak-APK
+        path: native-android/app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 30
+        
+    - name: Create Release (on main branch only)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: native-android/app/build/outputs/apk/debug/app-debug.apk
+        tag_name: v1.0.0-${{ github.run_number }}
+        name: UPI Rakshak v1.0.0 Build ${{ github.run_number }}
+        body: |
+          ## UPI Rakshak - Android APK
+          
+          ### What's Included
+          - ✅ Real-time notification interception
+          - ✅ 200+ fraud pattern detection
+          - ✅ System-level overlay warnings
+          - ✅ Hinglish voice output
+          - ✅ Cash flow forecasting
+          - ✅ Loan comparison
+          - ✅ QR code scanner
+          - ✅ Multi-language support (22 Indian languages)
+          
+          ### Installation
+          1. Download `app-debug.apk` below
+          2. Transfer to your Android device
+          3. Enable "Install from unknown sources"
+          4. Install the APK
+          5. Grant required permissions (Notification Access, Overlay)
+          
+          ### Demo
+          Watch the demo video to see it in action!
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
