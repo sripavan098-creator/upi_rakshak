@@ -5,9 +5,29 @@ This directory contains the Android native wrapper that turns the UPI Rakshak we
 ## What This Does
 
 - **NotificationListenerService** — Intercepts WhatsApp/SMS notifications at the OS level
+- **Kotlin Rules Engine** — On-device fraud detection (urgency keywords, UPI patterns, payment traps)
 - **OverlayService** — Shows a red warning banner over scam notifications in real-time
 - **WebView Host** — Loads the React app and bridges it with native Android services
-- **JavaScript Interface** — Allows the web app to trigger native overlays and access device info
+- **JavaScript Bridge** — Allows the web app to trigger native overlays and access device info
+
+## Architecture
+
+```
+Incoming Notification
+        |
+        v
+NotificationListenerService
+        |
+        v
+Kotlin Rules Engine
+        |
+        +--> If high threat: show native red overlay
+        |
+        +--> Send JSON event to React WebView
+                    |
+                    v
+            React App (AgentTrace / Console)
+```
 
 ## Prerequisites
 
@@ -18,170 +38,175 @@ This directory contains the Android native wrapper that turns the UPI Rakshak we
 
 ## Build Instructions
 
-### 1. Copy the React Build
-
-Before building the Android app, copy the built React app into the assets folder:
+### 1. Build the React App
 
 ```bash
 # From the project root
 npm run build
-mkdir -p android-wrapper/app/src/main/assets
-cp -r dist/* android-wrapper/app/src/main/assets/
 ```
 
-### 2. Open in Android Studio
+### 2. Copy to Android Assets
+
+```bash
+mkdir -p android-wrapper/app/src/main/assets/web
+cp -r dist/* android-wrapper/app/src/main/assets/web/
+```
+
+### 3. Open in Android Studio
 
 ```bash
 cd android-wrapper
 # Open this directory in Android Studio
 ```
 
-### 3. Build and Run
+### 4. Build and Run
 
 1. Connect your Android device (enable USB debugging)
 2. Click "Run" in Android Studio
-3. Grant the two required permissions when prompted:
+3. Grant the required permissions when prompted:
    - **Notification Access** — allows Rakshak to read incoming messages
    - **Display Over Other Apps** — allows the warning overlay
 
 ## Funtunch OS Setup (iQOO/Vivo Devices)
 
-Funtunch OS has aggressive battery optimization that can kill background services. Follow these steps to ensure Rakshak stays active:
+Funtunch OS has aggressive battery optimization. Follow these steps:
 
-### Step 1: Disable Battery Optimization
+### Step 1: Notification Access
 
-1. **Settings** → **Battery** → **Background power consumption management**
-2. Find **UPI Rakshak**
-3. Select **No restrictions**
+```
+Settings > Apps > Special app access > Notification access
+```
+Enable UPI Rakshak.
 
-### Step 2: Enable Autostart
+### Step 2: Overlay Permission
 
-1. **Settings** → **Apps & notifications** → **Special app access** → **Autostart**
-2. Find **UPI Rakshak**
-3. Toggle **ON**
+```
+Settings > More settings > Permission manager > Display over other apps
+```
+Or:
+```
+Settings > Apps > UPI Rakshak > Display over other apps
+```
+Allow it.
 
-### Step 3: Allow Display Over Other Apps
+### Step 3: Autostart
 
-1. **Settings** → **Apps & notifications** → **Special app access** → **Display over other apps**
-2. Find **UPI Rakshak**
-3. Toggle **ON**
+```
+Settings > Apps > Autostart
+```
+Enable UPI Rakshak.
 
-### Step 4: Enable Notification Access
+Also check:
+```
+iManager > App management > Autostart
+```
 
-1. **Settings** → **Apps & notifications** → **Special app access** → **Notification access**
-2. Find **UPI Rakshak**
-3. Toggle **ON**
-4. Confirm the warning dialog
+### Step 4: Battery Optimization
 
-### Step 5: Lock the App in Recent Apps
+```
+Settings > Battery > Background power consumption management
+```
+Allow UPI Rakshak to run in background.
 
-1. Open **UPI Rakshak**
-2. Swipe up to open **Recent Apps**
-3. Long-press the Rakshak card
-4. Tap the **lock icon** 🔒
+Also:
+```
+Settings > Battery > More settings > High performance mode
+```
+Enable if available.
 
-This prevents the system from killing Rakshak when you clear recent apps.
+### Step 5: Lock App in Memory
+
+Open UPI Rakshak, go to recent apps, and lock it if Funtunch OS supports the lock icon.
 
 ## Demo Flow
 
 Once installed and configured:
 
 1. **Open WhatsApp** on the device
-2. **Send a test scam message** to yourself (or have a friend send one):
+2. **Send a test scam message** to yourself:
    ```
-   URGENT: Your electricity will be disconnected tonight! Pay now via QR to avoid ₹5000 fine. UPI: bsescare@icici
+   URGENT: Your UPI account will be blocked. Pay ₹499 to helpdesk@upi to verify KYC immediately.
    ```
-3. **Watch the magic**: Within 200ms, a red Rakshak overlay slides down from the top of the screen, warning you that this is a scam.
-4. **Tap the overlay** to see the full analysis:
-   - Why it's fraud (urgency + suspicious UPI + payment trap)
-   - The safe action (use official BSES app)
-   - Option to report to 1930
+3. **Watch the magic**: Within 200ms, a red Rakshak overlay slides down from the top of the screen.
+4. **Tap "Review"** to open the app and see the full agent trace.
 
-## Architecture
+## Expected Behavior
+
+1. Notification appears in WhatsApp
+2. `NotificationListenerService` intercepts it
+3. Rules engine detects: urgency + UPI ID + amount + KYC trap
+4. Red overlay appears (score: 94, critical: true)
+5. React WebView receives the event via `rakshak:native` custom event
+6. Clicking "Review" opens the app and shows the agent trace
+
+## Critical Demo Safety Rules
+
+For the live demo:
+
+1. Test the scam message at least 10 times
+2. Keep the app open before triggering the message
+3. Make sure the phone is not in Do Not Disturb
+4. Make sure WhatsApp/SMS notifications show message content
+5. Use a controlled test number
+6. Keep a screen recording as backup
+7. Keep the web-only simulated demo ready in case the device misbehaves
+
+## File Structure
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Android OS                            │
-│                                                          │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │  NotificationListenerService                     │   │
-│  │  (RakshakNotificationListener.kt)                │   │
-│  │                                                  │   │
-│  │  • Intercepts all notifications                  │   │
-│  │  • Filters for WhatsApp/SMS                      │   │
-│  │  • Runs rules engine (Kotlin port)               │   │
-│  │  • Triggers overlay on HIGH threat               │   │
-│  └──────────────────────────────────────────────────┘   │
-│                          ↓                               │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │  OverlayService                                  │   │
-│  │  (OverlayService.kt)                             │   │
-│  │                                                  │   │
-│  │  • Shows system-level warning banner             │   │
-│  │  • TYPE_APPLICATION_OVERLAY                      │   │
-│  │  • Auto-dismiss after 8 seconds                  │   │
-│  └──────────────────────────────────────────────────┘   │
-│                          ↓                               │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │  MainActivity (WebView)                          │   │
-│  │                                                  │   │
-│  │  • Loads React app from assets/                  │   │
-│  │  • Exposes RakshakAndroid JS interface           │   │
-│  │  • Bridges web UI with native services           │   │
-│  └──────────────────────────────────────────────────┘   │
-│                          ↓                               │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │  React Web App (src/)                            │   │
-│  │                                                  │   │
-│  │  • Full UPI Rakshak UI                           │   │
-│  │  • Cash flow dashboard                           │   │
-│  │  • Loan comparison                               │   │
-│  │  • Voice interface                               │   │
-│  └──────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
+android-wrapper/
+├── app/
+│   ├── build.gradle
+│   └── src/main/
+│       ├── AndroidManifest.xml
+│       ├── java/com/upirakshak/
+│       │   ├── MainActivity.kt              # WebView host
+│       │   ├── RakshakBridge.kt             # Singleton event bridge
+│       │   ├── RakshakJsBridge.kt           # JS interface
+│       │   ├── RakshakRulesEngine.kt        # Fraud detection
+│       │   ├── RakshakNotificationListenerService.kt
+│       │   └── RakshakOverlayService.kt     # Red warning banner
+│       └── res/layout/
+│           ├── activity_main.xml
+│           └── overlay_rakshak.xml
+├── build.gradle
+└── README.md
 ```
 
-## Permissions Explained
+## Permissions
 
 | Permission | Why It's Needed |
 |---|---|
 | `BIND_NOTIFICATION_LISTENER_SERVICE` | Read incoming WhatsApp/SMS notifications |
 | `SYSTEM_ALERT_WINDOW` | Show warning overlay over other apps |
 | `POST_NOTIFICATIONS` | Show foreground service notification |
-| `RECEIVE_BOOT_COMPLETED` | Restart services after device reboot |
 | `FOREGROUND_SERVICE` | Keep overlay service running in background |
+| `WAKE_LOCK` | Prevent device from sleeping during overlay |
 
 ## Troubleshooting
 
 ### Overlay doesn't appear
 
-- Check that **Display over other apps** is enabled for UPI Rakshak
+- Check that **Display over other apps** is enabled
 - Make sure the app is not restricted in battery optimization
 - Verify notification access is granted
 
 ### Services stop after reboot
 
-- Lock the app in recent apps (see Step 5 above)
+- Lock the app in recent apps (see Step 5)
 - Check autostart is enabled
 - Some devices require you to open the app once after reboot
 
 ### False positives
 
-- The rules engine uses keyword matching, which can trigger on legitimate urgent messages
-- Future versions will use on-device ML for better accuracy
+- The rules engine uses keyword matching + scoring
+- Score threshold is 70 for critical alerts
+- Adjust `RakshakRulesEngine.kt` thresholds if needed
 
-## Future Enhancements
+## Web-Only Fallback
 
-- **On-device ML model** — Replace keyword matching with a lightweight fraud detection model
-- **Encrypted SMS parsing** — Read bank SMS for cash flow analysis (requires additional permissions)
-- **Multi-language support** — Expand beyond Hindi/English to Tamil, Telugu, Bengali, etc.
-- **Community reporting** — Allow users to report new scam patterns
-- **iQOO system integration** — Deep integration with Funtunch OS for native protection
+If native becomes unstable, the React app has a "Simulate Scam Attack" button that triggers the same demo flow in the browser. Use this as a backup during the hackathon demo.
 
 ## License
 
 This is a hackathon project. Use at your own risk.
-
-## Team
-
-Built for the Agentic AI Hackathon — FinTech & Commerce domain.
