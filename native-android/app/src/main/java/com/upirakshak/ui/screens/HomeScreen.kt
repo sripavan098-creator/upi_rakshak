@@ -30,7 +30,10 @@ import com.upirakshak.voice.VoiceOutput
 @Composable
 fun HomeScreen(
     onRequestNotificationAccess: () -> Unit,
-    onRequestOverlay: () -> Unit
+    onRequestOverlay: () -> Unit,
+    onScanQr: () -> Unit = {},
+    onLanguageSelect: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -47,7 +50,7 @@ fun HomeScreen(
     }
     
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(NavyDark)
             .verticalScroll(scrollState)
@@ -116,6 +119,50 @@ fun HomeScreen(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
+        }
+        
+        Spacer(modifier = Modifier.height(12.dp))
+        
+        // QR Scanner and Language buttons
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Button(
+                onClick = onScanQr,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Emerald,
+                    contentColor = NavyDark
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = "📷 Scan QR",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            
+            Button(
+                onClick = onLanguageSelect,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Slate,
+                    contentColor = TextPrimary
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = "🌐 Language",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
         
         Spacer(modifier = Modifier.height(24.dp))

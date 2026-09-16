@@ -5,6 +5,7 @@ import com.upirakshak.engine.RulesEngine
 import com.upirakshak.engine.ThreatAnalysis
 import com.upirakshak.engine.ThreatLevel
 import com.upirakshak.overlay.RakshakOverlayService
+import com.upirakshak.ui.language.LanguageManager
 import com.upirakshak.util.AppContextHolder
 import com.upirakshak.util.HapticHelper
 import com.upirakshak.voice.VoiceOutput
@@ -36,8 +37,9 @@ object NotificationProcessor {
                 // Vibrate for threat
                 HapticHelper.vibrateForThreat(AppContextHolder.get(), analysis.level)
                 
-                // Speak warning
-                VoiceOutput.speak(analysis.suggestedAction)
+                // Speak warning in user's selected language
+                val currentLanguage = LanguageManager.getCurrentLanguage(AppContextHolder.get())
+                VoiceOutput.speakInLanguage(analysis.suggestedAction, currentLanguage)
                 
                 // Show overlay
                 RakshakOverlayService.show(

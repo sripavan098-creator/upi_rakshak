@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">యూపీఐ రక్షక్</string>
+    <string name="protection_active">రక్షణ క్రియాశీలం</string>
+    <string name="setup_required">సెటప్ అవసరం</string>
+    <string name="simulate_scam_attack">స్కామ్ దాడిని అనుకరించండి</string>
+    <string name="scan_qr_code">యూపీఐ క్యూఆర్ స్కాన్ చేయండి</string>
+    <string name="cash_flow_forecast">నగదు ప్రవాహ సూచన</string>
+    <string name="loans">రుణాలు</string>
+    <string name="threat_detected">ముప్పు గుర్తించబడింది</string>
+    <string name="safe">సురక్షితం</string>
+    <string name="suspicious">అనుమానాస్పదం</string>
+    <string name="voice_warning">వాయిస్ హెచ్చరిక</string>
+    <string name="grant_permission">అనుమతి ఇవ్వండి</string>
+    <string name="language">భాష</string>
+    <string name="days_runway">మిగిలిన రోజులు</string>
+    <string name="ask_about_purchase">కొనుగోలు గురించి అడగండి</string>
+    <string name="check">తనిఖీ చేయండి</string>
+    <string name="speak_again">హెచ్చరిక చెప్పండి</string>
+    <string name="report_to_1930">1930కు నివేదించండి</string>
+    <string name="home">హోమ్</string>
+    <string name="your_financial_bodyguard">మీ ఆర్థిక అంగరక్షకుడు</string>
+    <string name="recent_threats">ఇటీవల ముప్పులు</string>
+    <string name="no_recent_threats">ఇటీవల ముప్పులు ఏమీ లేవు</string>
+</resources>

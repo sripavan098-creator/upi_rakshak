@@ -1,4 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">UPI Rakshak</string>
-    <string name="notification_listener_label">UPI Rakshak</string>
+    <string name="protection_active">Protection Active</string>
+    <string name="setup_required">Setup Required</string>
+    <string name="simulate_scam_attack">Simulate Scam Attack</string>
+    <string name="scan_qr_code">Scan UPI QR Code</string>
+    <string name="cash_flow_forecast">Cash Flow Forecast</string>
+    <string name="loans">Loans</string>
+    <string name="threat_detected">Threat Detected</string>
+    <string name="safe">Safe</string>
+    <string name="suspicious">Suspicious</string>
+    <string name="voice_warning">Voice Warning</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="language">Language</string>
+    <string name="days_runway">Days of runway remaining</string>
+    <string name="ask_about_purchase">Ask about a purchase</string>
+    <string name="check">Check</string>
+    <string name="speak_again">Speak Warning</string>
+    <string name="report_to_1930">Report to 1930</string>
+    <string name="home">Home</string>
+    <string name="your_financial_bodyguard">Your financial bodyguard</string>
+    <string name="recent_threats">Recent Threats</string>
+    <string name="no_recent_threats">No recent threats detected</string>
 </resources>
