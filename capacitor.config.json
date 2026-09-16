@@ -1,0 +1,13 @@
+{
+  "appId": "com.upirakshak.app",
+  "appName": "UPI Rakshak",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
