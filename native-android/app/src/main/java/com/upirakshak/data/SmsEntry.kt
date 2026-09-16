@@ -21,14 +21,3 @@ enum class SmsType {
     DEBIT,   // Money spent (rent, EMI, groceries, etc.)
     INFO     // Informational (OTP, alerts, etc.)
 }
-enum class SmsType {
-    CREDIT, DEBIT, INFO
-}
-
-data class SmsEntry(
-    val date: String,
-    val sender: String,
-    val message: String,
-    val amount: Double? = null,
-    val type: SmsType
-)

@@ -23,6 +23,7 @@ import com.upirakshak.notification.RakshakGuardService
 import com.upirakshak.ui.screens.*
 import com.upirakshak.ui.theme.RakshakTheme
 import com.upirakshak.ui.theme.NavyDark
+import com.upirakshak.ui.theme.TextPrimary
 import com.upirakshak.util.PermissionHelper
 
 class MainActivity : ComponentActivity() {
