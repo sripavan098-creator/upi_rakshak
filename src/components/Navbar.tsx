@@ -1,4 +1,3 @@
-import { Shield, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface NavbarProps {
@@ -8,67 +7,89 @@ interface NavbarProps {
 
 const navItems = [
   { id: 'hero', label: 'Home' },
-  { id: 'demo', label: 'Live Demo' },
+  { id: 'console', label: 'Live Console' },
+  { id: 'how', label: 'How It Works' },
   { id: 'architecture', label: 'Architecture' },
   { id: 'impact', label: 'Impact' },
+  { id: 'project', label: 'Project' },
 ];
 
 export default function Navbar({ activeSection, setActiveSection }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50">
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl"
+      style={{ backgroundColor: 'rgba(20, 19, 43, 0.85)', borderBottom: '1px solid var(--border)' }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-lg flex items-center justify-center">
-              <Shield className="w-5 h-5 text-slate-900" />
+        <div className="flex items-center justify-between h-14">
+          {/* Wordmark */}
+          <button
+            onClick={() => setActiveSection('hero')}
+            className="flex items-center gap-2.5 group"
+          >
+            <div
+              className="w-7 h-7 rounded-md flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, var(--gold), var(--gold-bright))' }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14132B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
             </div>
-            <span className="font-bold text-lg bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="font-display font-bold text-base tracking-tight" style={{ color: 'var(--gold)' }}>
               UPI Rakshak
             </span>
-          </div>
+          </button>
 
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setActiveSection(item.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  activeSection === item.id
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
+                className="px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-150"
+                style={{
+                  color: activeSection === item.id ? 'var(--gold)' : 'var(--muted)',
+                  backgroundColor: activeSection === item.id ? 'rgba(232, 163, 61, 0.08)' : 'transparent',
+                }}
               >
                 {item.label}
               </button>
             ))}
           </div>
 
+          {/* Mobile toggle */}
           <button
-            className="md:hidden text-slate-400 hover:text-white"
+            className="md:hidden p-2"
+            style={{ color: 'var(--muted)' }}
             onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
           >
-            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              {mobileOpen ? (
+                <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>
+              ) : (
+                <><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></>
+              )}
+            </svg>
           </button>
         </div>
       </div>
 
+      {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-slate-800/50 bg-slate-950/95 backdrop-blur-xl">
+        <div style={{ backgroundColor: 'var(--ink-1)', borderBottom: '1px solid var(--border)' }}>
           <div className="px-4 py-3 space-y-1">
             {navItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => {
-                  setActiveSection(item.id);
-                  setMobileOpen(false);
+                onClick={() => { setActiveSection(item.id); setMobileOpen(false); }}
+                className="block w-full text-left px-3 py-2 rounded-md text-sm font-medium"
+                style={{
+                  color: activeSection === item.id ? 'var(--gold)' : 'var(--muted)',
+                  backgroundColor: activeSection === item.id ? 'rgba(232, 163, 61, 0.08)' : 'transparent',
                 }}
-                className={`block w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  activeSection === item.id
-                    ? 'bg-emerald-500/10 text-emerald-400'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
               >
                 {item.label}
               </button>
