@@ -13,14 +13,27 @@ import VoiceQuery from './components/VoiceQuery';
 import CashFlowDashboard from './components/CashFlowDashboard';
 import { analyzeMessage, runRuleTests, type ThreatAnalysis } from './lib/rulesEngine';
 import { speakWarning } from './lib/voice';
+import { onRakshakNativeEvent, type RakshakNativeEvent } from './lib/nativeBridge';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('hero');
   const [voiceResult, setVoiceResult] = useState<ThreatAnalysis | null>(null);
+  const [nativeEvent, setNativeEvent] = useState<RakshakNativeEvent | null>(null);
 
   // Run rule tests on mount
   useEffect(() => {
     runRuleTests();
+  }, []);
+
+  // Listen for native Android events
+  useEffect(() => {
+    const unsubscribe = onRakshakNativeEvent((event) => {
+      setNativeEvent(event);
+      if (event.critical) {
+        speakWarning('Rakshak Alert! Fraud detected. Do not pay.');
+      }
+    });
+    return unsubscribe;
   }, []);
 
   const handleVoiceQuery = (transcript: string) => {
@@ -97,6 +110,57 @@ export default function App() {
                           ✓ {voiceResult.officialRoute}
                         </p>
                       )}
+                    </motion.div>
+                  )}
+
+                  {/* Native Event Detection */}
+                  {nativeEvent && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="rounded-[14px] p-5 mb-6"
+                      style={{
+                        backgroundColor: nativeEvent.critical ? 'rgba(225, 85, 74, 0.08)' : 'var(--ink-1)',
+                        border: `1px solid ${nativeEvent.critical ? 'rgba(225, 85, 74, 0.3)' : 'var(--border)'}`,
+                      }}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-display font-bold uppercase tracking-wider" style={{ color: nativeEvent.critical ? 'var(--risk-high)' : 'var(--gold)' }}>
+                            🚨 Native Threat Detected
+                          </span>
+                          <span
+                            className="text-[10px] font-bold px-2 py-0.5 rounded"
+                            style={{
+                              backgroundColor: nativeEvent.critical ? 'rgba(225, 85, 74, 0.15)' : 'rgba(232, 163, 61, 0.15)',
+                              color: nativeEvent.critical ? 'var(--risk-high)' : 'var(--risk-med)',
+                            }}
+                          >
+                            Score: {nativeEvent.score}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => setNativeEvent(null)}
+                          className="text-xs px-2 py-1 rounded"
+                          style={{ backgroundColor: 'var(--ink-2)', color: 'var(--muted)' }}
+                        >
+                          Dismiss
+                        </button>
+                      </div>
+                      <p className="text-xs mb-2" style={{ color: 'var(--muted-2)' }}>
+                        Source: {nativeEvent.source} | {nativeEvent.title}
+                      </p>
+                      <p className="text-sm mb-3 leading-relaxed" style={{ color: 'var(--parchment)' }}>
+                        {nativeEvent.message}
+                      </p>
+                      <ul className="space-y-1">
+                        {nativeEvent.reasons.map((reason, i) => (
+                          <li key={i} className="text-xs flex items-start gap-2" style={{ color: 'var(--muted)' }}>
+                            <span className="flex-shrink-0">•</span>
+                            <span>{reason}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </motion.div>
                   )}
 

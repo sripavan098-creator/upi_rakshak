@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ScamOverlay from './ScamOverlay';
 import { analyzeMessage } from '../lib/rulesEngine';
 import { stopSpeaking } from '../lib/voice';
+import { simulateScam } from '../lib/nativeBridge';
 
 const SCAM_MESSAGE = '⚡ URGENT: Your electricity will be disconnected tonight! Pay now via QR to avoid ₹5000 fine. UPI: bsescare@icici';
 
@@ -16,6 +17,9 @@ export default function DemoAttackButton() {
 
   const runDemo = async () => {
     setStage('whatsapp');
+    
+    // Trigger native event simulation (works in Android WebView)
+    simulateScam();
     
     // After 1.5s, show Rakshak overlay
     setTimeout(() => {
