@@ -5,11 +5,13 @@ plugins {
 
 android {
     namespace = "com.upirakshak"
+    compileSdk = 36
     compileSdk = 34
 
     defaultConfig {
         applicationId = "com.upirakshak"
         minSdk = 26
+        targetSdk = 36
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
