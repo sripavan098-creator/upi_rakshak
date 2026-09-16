@@ -50,6 +50,36 @@ object VoiceOutput {
         Log.d(TAG, "Speaking: $text")
     }
     
+    fun speakInLanguage(text: String, languageCode: String, utteranceId: String = "rakshak_${System.currentTimeMillis()}") {
+        if (!isReady || tts == null) {
+            Log.w(TAG, "TTS not ready, skipping speak")
+            return
+        }
+        
+        val locale = Locale.forLanguageTag(languageCode)
+        val result = tts!!.setLanguage(locale)
+        
+        if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            Log.w(TAG, "TTS: $languageCode not supported. Trying Hindi, then English.")
+            val fallback = when {
+                tts!!.setLanguage(Locale("hi", "IN")) != TextToSpeech.LANG_MISSING_DATA &&
+                    tts!!.setLanguage(Locale("hi", "IN")) != TextToSpeech.LANG_NOT_SUPPORTED -> Locale("hi", "IN")
+                else -> Locale("en", "IN")
+            }
+            tts!!.setLanguage(fallback)
+        }
+        
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
+        Log.d(TAG, "Speaking in $languageCode: $text")
+    }
+    
+    fun isNativeVoiceAvailable(context: Context, languageCode: String): Boolean {
+        val tempTts = TextToSpeech(context) {}
+        val result = tempTts.setLanguage(Locale.forLanguageTag(languageCode))
+        tempTts.shutdown()
+        return result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED
+    }
+    
     fun stop() {
         tts?.stop()
     }

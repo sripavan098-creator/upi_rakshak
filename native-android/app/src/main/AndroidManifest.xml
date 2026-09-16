@@ -12,6 +12,12 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:name=".RakshakApp"
@@ -22,7 +28,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UPIRakshak"
         tools:targetApi="36">
-        tools:targetApi="34">
 
         <!-- Main Activity -->
         <activity
@@ -55,11 +60,16 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Real-time UPI fraud warning overlay" />
         </service>
-        <!-- Overlay Service -->
+
+        <!-- Guard Service to keep notification listener alive on aggressive ROMs -->
         <service
-            android:name=".overlay.RakshakOverlayService"
+            android:name=".notification.RakshakGuardService"
             android:exported="false"
-            android:foregroundServiceType="specialUse" />
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Persistent protection for notification listener" />
+        </service>
 
     </application>
 

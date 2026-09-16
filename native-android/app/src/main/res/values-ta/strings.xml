@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">யுபிஐ ரக்ஷக்</string>
+    <string name="protection_active">பாதுகாப்பு செயலில்</string>
+    <string name="setup_required">அமைப்பு தேவை</string>
+    <string name="simulate_scam_attack">மோசடி தாக்குதலை உருவகப்படுத்து</string>
+    <string name="scan_qr_code">யுபிஐ கியூஆர் ஸ்கேன் செய்</string>
+    <string name="cash_flow_forecast">பணப்புழக்க முன்னறிவிப்பு</string>
+    <string name="loans">கடன்கள்</string>
+    <string name="threat_detected">அச்சுறுத்தல் கண்டறியப்பட்டது</string>
+    <string name="safe">பாதுகாப்பானது</string>
+    <string name="suspicious">சந்தேகத்திற்குரியது</string>
+    <string name="voice_warning">குரல் எச்சரிக்கை</string>
+    <string name="grant_permission">அனுமதி வழங்கு</string>
+    <string name="language">மொழி</string>
+    <string name="days_runway">மீதமுள்ள நாட்கள்</string>
+    <string name="ask_about_purchase">வாங்குவது பற்றி கேள்</string>
+    <string name="check">சரிபார்</string>
+    <string name="speak_again">எச்சரிக்கையைச் சொல்</string>
+    <string name="report_to_1930">1930-இல் புகார் அளி</string>
+    <string name="home">முகப்பு</string>
+    <string name="your_financial_bodyguard">உங்கள் நிதி காவலர்</string>
+    <string name="recent_threats">சமீபத்திய அச்சுறுத்தல்கள்</string>
+    <string name="no_recent_threats">சமீபத்திய அச்சுறுத்தல்கள் எதுவும் இல்லை</string>
+</resources>

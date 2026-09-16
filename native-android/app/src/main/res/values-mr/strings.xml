@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">यूपीआय रक्षक</string>
+    <string name="protection_active">संरक्षण सक्रिय</string>
+    <string name="setup_required">सेटअप आवश्यक</string>
+    <string name="simulate_scam_attack">फसवणूक हल्ला अनुकरण करा</string>
+    <string name="scan_qr_code">यूपीआय क्यूआर स्कॅन करा</string>
+    <string name="cash_flow_forecast">रोख प्रवाह अंदाज</string>
+    <string name="loans">कर्ज</string>
+    <string name="threat_detected">धोका आढळला</string>
+    <string name="safe">सुरक्षित</string>
+    <string name="suspicious">संशयास्पद</string>
+    <string name="voice_warning">आवाज इशारा</string>
+    <string name="grant_permission">परवानगी द्या</string>
+    <string name="language">भाषा</string>
+    <string name="days_runway">उर्वरित दिवस</string>
+    <string name="ask_about_purchase">खरेदीबद्दल विचारा</string>
+    <string name="check">तपासा</string>
+    <string name="speak_again">इशारा सांगा</string>
+    <string name="report_to_1930">1930 वर तक्रार करा</string>
+    <string name="home">होम</string>
+    <string name="your_financial_bodyguard">तुमचा आर्थिक अंगरक्षक</string>
+    <string name="recent_threats">अलीकडील धोके</string>
+    <string name="no_recent_threats">कोणतेही अलीकडील धोके नाहीत</string>
+</resources>

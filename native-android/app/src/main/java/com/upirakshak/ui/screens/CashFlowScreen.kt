@@ -22,7 +22,7 @@ import com.upirakshak.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CashFlowScreen() {
+fun CashFlowScreen(modifier: Modifier = Modifier) {
     val scrollState = rememberScrollState()
     val report = remember { CashFlowAnalyzer.analyze(MockSmsRepository.entries, currentBalance = 5000.0) }
     
@@ -31,7 +31,7 @@ fun CashFlowScreen() {
     var responseColor by remember { mutableStateOf(Emerald) }
     
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(NavyDark)
             .verticalScroll(scrollState)
