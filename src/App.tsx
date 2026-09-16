@@ -14,18 +14,23 @@ import CashFlowDashboard from './components/CashFlowDashboard';
 import { analyzeMessage, runRuleTests, type ThreatAnalysis } from './lib/rulesEngine';
 import { speakWarning } from './lib/voice';
 import { onRakshakNativeEvent, type RakshakNativeEvent } from './lib/nativeBridge';
+import { useRakshakListener } from './hooks/useRakshakListener';
+import { isNativeAvailable } from './lib/rakshakNative';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('hero');
   const [voiceResult, setVoiceResult] = useState<ThreatAnalysis | null>(null);
   const [nativeEvent, setNativeEvent] = useState<RakshakNativeEvent | null>(null);
 
+  // Use the native listener hook
+  const { lastAnalysis, isListening, permissionGranted, requestPermissions } = useRakshakListener();
+
   // Run rule tests on mount
   useEffect(() => {
     runRuleTests();
   }, []);
 
-  // Listen for native Android events
+  // Listen for native Android events (legacy bridge)
   useEffect(() => {
     const unsubscribe = onRakshakNativeEvent((event) => {
       setNativeEvent(event);
@@ -45,6 +50,55 @@ export default function App() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--ink)', color: 'var(--parchment)' }}>
       <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
+      
+      {/* Native permission banner */}
+      {isNativeAvailable() && (
+        <div
+          className="px-4 py-3 text-sm"
+          style={{
+            backgroundColor: !permissionGranted ? 'rgba(232, 163, 61, 0.15)' : 'rgba(63, 167, 150, 0.15)',
+            borderBottom: `1px solid ${!permissionGranted ? 'var(--gold)' : 'var(--safe)'}`,
+            color: !permissionGranted ? 'var(--gold)' : 'var(--safe)',
+          }}
+        >
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            <span>
+              {!permissionGranted
+                ? '⚠️ Rakshak needs permission to read notifications.'
+                : isListening
+                ? '🛡️ Rakshak is protecting you in real-time.'
+                : 'ℹ️ Rakshak is ready.'}
+            </span>
+            {!permissionGranted && (
+              <button
+                onClick={requestPermissions}
+                className="px-3 py-1 rounded text-xs font-semibold"
+                style={{
+                  backgroundColor: 'var(--gold)',
+                  color: 'var(--ink)',
+                }}
+              >
+                Grant Permissions
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Browser mode banner */}
+      {!isNativeAvailable() && (
+        <div
+          className="px-4 py-2 text-xs text-center"
+          style={{
+            backgroundColor: 'rgba(124, 120, 163, 0.1)',
+            borderBottom: '1px solid var(--border)',
+            color: 'var(--muted-2)',
+          }}
+        >
+          ℹ️ Running in browser. Open the Android app for full protection.
+        </div>
+      )}
+
       <main>
         <AnimatePresence mode="wait">
           <motion.div

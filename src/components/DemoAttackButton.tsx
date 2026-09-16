@@ -4,6 +4,7 @@ import ScamOverlay from './ScamOverlay';
 import { analyzeMessage, type ThreatAnalysis } from '../lib/rulesEngine';
 import { stopSpeaking } from '../lib/voice';
 import { simulateScam } from '../lib/nativeBridge';
+import Rakshak, { isNativeAvailable } from '../lib/rakshakNative';
 
 const SCAM_MESSAGE = '⚡ URGENT: Your electricity will be disconnected tonight! Pay now via QR to avoid ₹5000 fine. UPI: bsescare@icici';
 
@@ -52,15 +53,29 @@ export default function DemoAttackButton() {
     setStage('explanation');
   };
 
-  const runDemo = () => {
+  const runDemo = async () => {
     clearAllTimers();
     setStage('whatsapp');
     setAnalysis(null);
 
-    // Trigger native event simulation (works in Android WebView)
+    // If native is available, trigger the real Android overlay
+    if (isNativeAvailable()) {
+      const analysis = analyzeMessage('WhatsApp', SCAM_MESSAGE);
+      try {
+        await Rakshak.showOverlay({
+          message: SCAM_MESSAGE,
+          level: analysis.level,
+          officialRoute: analysis.officialRoute,
+        });
+      } catch (e) {
+        console.error('Failed to show native overlay:', e);
+      }
+    }
+
+    // Also trigger web simulation as fallback
     simulateScam();
 
-    // After 1.5s, show Rakshak overlay
+    // After 1.5s, show Rakshak overlay (web)
     rakshakTimerRef.current = setTimeout(() => {
       setStage('rakshak');
 
@@ -127,6 +142,11 @@ export default function DemoAttackButton() {
             </p>
             <p className="text-xs" style={{ color: 'var(--muted)' }}>
               See how Rakshak intercepts a scam in real-time
+            </p>
+            <p className="text-[10px] mt-1" style={{ color: isNativeAvailable() ? 'var(--safe)' : 'var(--muted-2)' }}>
+              {isNativeAvailable()
+                ? '✓ Uses real Android overlay (visible over WhatsApp)'
+                : 'ℹ Uses web simulation (for desktop preview)'}
             </p>
           </div>
           <div className="flex gap-2">
