@@ -2,20 +2,25 @@ package com.upirakshak.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.upirakshak.engine.ThreatAnalysis
 import com.upirakshak.engine.ThreatLevel
 import com.upirakshak.ui.theme.*
+import com.upirakshak.voice.VoiceOutput
 
 @Composable
 fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
@@ -134,19 +139,53 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(12.dp))
 
         // Speak warning button
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Slate, RoundedCornerShape(8.dp))
-                .padding(12.dp)
-        ) {
-            Text(
-                text = "🔊 Speak Warning",
-                color = TextSecondary,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.align(Alignment.Center)
-            )
+        val context = LocalContext.current
+        Column {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Slate)
+                    .clickable {
+                        VoiceOutput.speak(analysis.suggestedAction)
+                    }
+                    .padding(12.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.VolumeUp,
+                        contentDescription = "Speak warning",
+                        tint = TextSecondary,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Speak Again",
+                        color = TextSecondary,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+            
+            // Hindi TTS warning
+            if (!VoiceOutput.hasHindi()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "⚠️ Hindi voice not installed — tap to install",
+                    color = Warning,
+                    fontSize = 11.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            VoiceOutput.openTtsInstallSettings(context)
+                        }
+                )
+            }
         }
     }
 }

@@ -23,6 +23,7 @@ import com.upirakshak.overlay.RakshakOverlayService
 import com.upirakshak.ui.components.StatusCard
 import com.upirakshak.ui.components.ThreatCard
 import com.upirakshak.ui.theme.*
+import com.upirakshak.util.HapticHelper
 import com.upirakshak.util.PermissionHelper
 import com.upirakshak.voice.VoiceOutput
 
@@ -43,15 +44,6 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         notifAccessGranted = PermissionHelper.hasNotificationAccess(context)
         overlayGranted = PermissionHelper.hasOverlayPermission(context)
-    }
-    
-    // Speak warning when analysis updates
-    LaunchedEffect(lastAnalysis) {
-        lastAnalysis?.let { analysis ->
-            if (analysis.level != ThreatLevel.SAFE) {
-                VoiceOutput.speak(analysis.suggestedAction)
-            }
-        }
     }
     
     Column(
@@ -104,6 +96,10 @@ fun HomeScreen(
                     officialRoute = "Official BSES app ya bbps.npci.org.in use karein",
                     originalText = "URGENT: Electricity disconnected tonight, pay bsescare@icici"
                 )
+                
+                // Trigger full experience: vibration + voice + overlay
+                HapticHelper.vibrateForThreat(context, ThreatLevel.HIGH)
+                VoiceOutput.speak(fakeAnalysis.suggestedAction)
                 RakshakOverlayService.show(context, fakeAnalysis)
             },
             modifier = Modifier

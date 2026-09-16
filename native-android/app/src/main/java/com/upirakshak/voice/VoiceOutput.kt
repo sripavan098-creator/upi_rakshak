@@ -1,6 +1,8 @@
 package com.upirakshak.voice
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import java.util.Locale
@@ -9,35 +11,42 @@ object VoiceOutput {
     
     private const val TAG = "VoiceOutput"
     private var tts: TextToSpeech? = null
-    private var isInitialized = false
+    private var isReady = false
+    private var isHindiAvailable = false
+    private var initListener: ((Boolean) -> Unit)? = null
     
-    fun init(context: Context) {
-        tts = TextToSpeech(context) { status ->
+    fun init(context: Context, onReady: ((Boolean) -> Unit)? = null) {
+        initListener = onReady
+        tts = TextToSpeech(context.applicationContext) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                // Try Hindi first, fallback to English
-                val hindiResult = tts?.setLanguage(Locale("hi", "IN"))
-                if (hindiResult == TextToSpeech.LANG_MISSING_DATA || 
-                    hindiResult == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    // Fallback to Indian English
+                val hindi = Locale("hi", "IN")
+                val result = tts?.setLanguage(hindi)
+                isHindiAvailable = result != TextToSpeech.LANG_MISSING_DATA &&
+                                   result != TextToSpeech.LANG_NOT_SUPPORTED
+                if (!isHindiAvailable) {
+                    // Fallback to English (India)
                     tts?.setLanguage(Locale("en", "IN"))
+                    Log.w(TAG, "Hindi TTS not available, falling back to en-IN")
                 }
-                
-                tts?.setSpeechRate(0.9f)
-                isInitialized = true
-                Log.i(TAG, "✓ TTS initialized")
+                tts?.setSpeechRate(0.92f)
+                tts?.setPitch(1.0f)
+                isReady = true
+                initListener?.invoke(isHindiAvailable)
+                Log.d(TAG, "TTS ready. Hindi=$isHindiAvailable")
             } else {
-                Log.e(TAG, "TTS initialization failed")
+                Log.e(TAG, "TTS init failed: $status")
+                isReady = false
+                initListener?.invoke(false)
             }
         }
     }
     
-    fun speak(text: String) {
-        if (!isInitialized) {
-            Log.w(TAG, "TTS not initialized")
+    fun speak(text: String, utteranceId: String = "rakshak_${System.currentTimeMillis()}") {
+        if (!isReady) {
+            Log.w(TAG, "TTS not ready, skipping speak")
             return
         }
-        
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "rakshak_alert")
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
         Log.d(TAG, "Speaking: $text")
     }
     
@@ -49,13 +58,19 @@ object VoiceOutput {
         tts?.stop()
         tts?.shutdown()
         tts = null
-        isInitialized = false
+        isReady = false
     }
     
-    fun isHindiAvailable(): Boolean {
-        if (!isInitialized) return false
-        val result = tts?.isLanguageAvailable(Locale("hi", "IN"))
-        return result == TextToSpeech.LANG_AVAILABLE || 
-               result == TextToSpeech.LANG_COUNTRY_AVAILABLE
+    fun isAvailable(): Boolean = isReady
+    fun hasHindi(): Boolean = isHindiAvailable
+    
+    fun openTtsInstallSettings(context: Context) {
+        val intent = Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Log.e(TAG, "No TTS install activity", e)
+        }
     }
 }
