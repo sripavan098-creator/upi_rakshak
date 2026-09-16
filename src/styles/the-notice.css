@@ -1,0 +1,177 @@
+/* UPI Rakshak — The Notice Design System
+ * Inspired by Indian public notices, registrar documents, and official stamps
+ * The alert is the product. Everything else is quiet so it can shout.
+ */
+
+:root {
+  /* ─── Core Palette ─── */
+  --paper: #E9E7DB;           /* Manila ledger stock - primary background */
+  --paper-dark: #D4D2C4;      /* Slightly darker paper for depth */
+  --ink: #1B2A21;             /* Registrar's green-black ink - primary text */
+  --ink-light: #2D3E34;       /* Lighter ink for secondary text */
+  --stamp-red: #C2241B;       /* Rubber-stamp vermilion - LIVE THREATS ONLY */
+  --bbps-green: #138808;      /* BBPS official green - safe actions */
+  --seal-gold: #B8860B;       /* Official seal gold - for verdicts */
+  
+  /* ─── Semantic Colors ─── */
+  --safe: var(--bbps-green);
+  --warning: #D97706;         /* Amber for medium risk */
+  --danger: var(--stamp-red); /* Red ONLY for active threats */
+  --info: #1E40AF;            /* Blue for informational */
+  
+  /* ─── Typography ─── */
+  --font-signage: 'Archivo', sans-serif;      /* Headlines, signage-weight */
+  --font-legal: 'Source Serif 4', serif;      /* Body text, legal notice style */
+  --font-devanagari: 'Noto Serif Devanagari', serif; /* Hindi text - first class */
+  --font-machine: 'IBM Plex Mono', monospace; /* ONLY for rule codes, handles, timestamps */
+  
+  /* ─── Spacing ─── */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  
+  /* ─── Border Radius ─── */
+  --radius-none: 0;           /* Everything is sharp except the phone */
+  --radius-phone: 2rem;       /* Only the phone mockup is rounded */
+  
+  /* ─── Shadows ─── */
+  --shadow-paper: 0 1px 3px rgba(27, 42, 33, 0.12);
+  --shadow-stamp: 0 2px 8px rgba(194, 36, 27, 0.3);
+  --shadow-seal: 0 4px 12px rgba(184, 134, 11, 0.2);
+}
+
+/* ─── Dark Mode (Optional - for night demos) ─── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1B2A21;
+    --paper-dark: #0F1A14;
+    --ink: #E9E7DB;
+    --ink-light: #D4D2C4;
+    /* Stamp red and BBPS green stay the same - they're semantic */
+  }
+}
+
+/* ─── Base Styles ─── */
+body {
+  font-family: var(--font-legal);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-signage);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Hindi text uses Devanagari as first-class */
+.hindi, [lang="hi"] {
+  font-family: var(--font-devanagari);
+}
+
+/* Machine text (rule codes, timestamps, handles) */
+.machine {
+  font-family: var(--font-machine);
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Components ─── */
+
+/* Paper card - no radius, subtle shadow */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  box-shadow: var(--shadow-paper);
+}
+
+/* Stamp - only for active threats */
+.stamp {
+  background: var(--stamp-red);
+  color: white;
+  font-family: var(--font-signage);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  box-shadow: var(--shadow-stamp);
+  transform: rotate(-2deg); /* Off-axis like a real stamp */
+}
+
+/* Seal - for verdicts */
+.seal {
+  background: var(--seal-gold);
+  color: white;
+  font-family: var(--font-signage);
+  font-weight: 700;
+  border-radius: 50%;
+  box-shadow: var(--shadow-seal);
+}
+
+/* Safe action - BBPS green */
+.safe-action {
+  background: var(--bbps-green);
+  color: white;
+  font-family: var(--font-signage);
+}
+
+/* ─── Animations ─── */
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Stamp animation - only for live threats */
+@keyframes stamp-land {
+  0% {
+    transform: rotate(-2deg) scale(1.5);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(-2deg) scale(0.95);
+  }
+  100% {
+    transform: rotate(-2deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.stamp-animate {
+  animation: stamp-land 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── Utilities ─── */
+
+/* Highlight incriminating phrases in stamp-red */
+.highlight-threat {
+  background: linear-gradient(to bottom, transparent 60%, var(--stamp-red) 60%);
+  padding: 0 0.1em;
+  font-weight: 600;
+}
+
+/* Ruler marks for cash flow */
+.ruler {
+  background: repeating-linear-gradient(
+    to right,
+    var(--ink) 0,
+    var(--ink) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+  height: 2px;
+}
+
+/* Receipt lines for loan breakdown */
+.receipt-line {
+  border-bottom: 1px dashed var(--ink-light);
+  padding-bottom: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
