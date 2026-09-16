@@ -22,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UPIRakshak"
         tools:targetApi="36">
+        tools:targetApi="34">
 
         <!-- Main Activity -->
         <activity
@@ -54,6 +55,11 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Real-time UPI fraud warning overlay" />
         </service>
+        <!-- Overlay Service -->
+        <service
+            android:name=".overlay.RakshakOverlayService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
 
     </application>
 
