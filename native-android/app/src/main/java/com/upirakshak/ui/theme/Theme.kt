@@ -4,34 +4,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Gold,
-    onPrimary = Ink,
-    primaryContainer = Ink2,
-    onPrimaryContainer = Parchment,
-    secondary = Safe,
-    onSecondary = Ink,
-    secondaryContainer = Ink2,
-    onSecondaryContainer = Parchment,
-    tertiary = RiskHigh,
-    onTertiary = Parchment,
-    background = Ink,
-    onBackground = Parchment,
-    surface = Ink1,
-    onSurface = Parchment,
-    surfaceVariant = Ink2,
-    onSurfaceVariant = Muted,
-    outline = Border,
-    outlineVariant = BorderStrong,
-    error = RiskHigh,
-    onError = Parchment
+private val RakshakColorScheme = darkColorScheme(
+    primary = Emerald,
+    secondary = Emerald,
+    background = NavyDark,
+    surface = Slate,
+    error = Danger,
+    onBackground = TextPrimary,
+    onSurface = TextPrimary,
+    onPrimary = NavyDark,
+    onSecondary = NavyDark,
+    onError = TextPrimary
 )
 
 @Composable
-fun UPIRakshakTheme(content: @Composable () -> Unit) {
+fun RakshakTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = DarkColorScheme,
-        typography = Typography,
+        colorScheme = RakshakColorScheme,
+        typography = RakshakTypography,
         content = content
     )
+}
+
+// Legacy theme for compatibility
+@Composable
+fun UPIRakshakTheme(content: @Composable () -> Unit) {
+    RakshakTheme(content)
 }
