@@ -11,6 +11,7 @@ const navItems = [
   { id: 'how', label: 'How It Works' },
   { id: 'architecture', label: 'Architecture' },
   { id: 'impact', label: 'Impact' },
+  { id: 'project', label: 'Project' },
 ];
 
 export default function Navbar({ activeSection, setActiveSection }: NavbarProps) {

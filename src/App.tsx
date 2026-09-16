@@ -6,6 +6,8 @@ import Console from './components/Console';
 import HowItWorks from './components/HowItWorks';
 import Architecture from './components/Architecture';
 import Impact from './components/Impact';
+import ProjectOverview from './components/ProjectOverview';
+import Footer from './components/Footer';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('hero');
@@ -27,9 +29,11 @@ export default function App() {
             {activeSection === 'how' && <HowItWorks />}
             {activeSection === 'architecture' && <Architecture />}
             {activeSection === 'impact' && <Impact />}
+            {activeSection === 'project' && <ProjectOverview />}
           </motion.div>
         </AnimatePresence>
       </main>
+      <Footer setActiveSection={setActiveSection} />
     </div>
   );
 }

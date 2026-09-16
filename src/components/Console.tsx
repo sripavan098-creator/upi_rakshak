@@ -112,40 +112,55 @@ export default function Console() {
             </div>
 
             {/* Sample chips */}
-            <div className="flex flex-wrap items-center gap-2 mt-3" role="group" aria-label="Load a sample situation">
-              <button
-                onClick={() => loadScenario('default')}
-                className="chip px-3 py-1.5 rounded-md text-xs font-medium"
-                style={{
-                  backgroundColor: activeScenario === 'default' ? 'rgba(232, 163, 61, 0.12)' : 'var(--ink-2)',
-                  border: `1px solid ${activeScenario === 'default' ? 'rgba(232, 163, 61, 0.3)' : 'var(--border)'}`,
-                  color: activeScenario === 'default' ? 'var(--gold)' : 'var(--muted)',
-                }}
-              >
-                ⚡ Electricity scam + loan
-              </button>
-              <button
-                onClick={() => loadScenario('failure')}
-                className="chip px-3 py-1.5 rounded-md text-xs font-medium"
-                style={{
-                  backgroundColor: activeScenario === 'failure' ? 'rgba(232, 163, 61, 0.12)' : 'var(--ink-2)',
-                  border: `1px solid ${activeScenario === 'failure' ? 'rgba(232, 163, 61, 0.3)' : 'var(--border)'}`,
-                  color: activeScenario === 'failure' ? 'var(--gold)' : 'var(--muted)',
-                }}
-              >
-                🔄 Failure/adaptation case
-              </button>
-              <button
-                onClick={() => loadScenario('clear')}
-                className="chip px-3 py-1.5 rounded-md text-xs font-medium ml-auto"
-                style={{
-                  backgroundColor: 'var(--ink-2)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--muted-2)',
-                }}
-              >
-                Clear
-              </button>
+            <div className="mt-3">
+              <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Load a sample situation">
+                <button
+                  onClick={() => loadScenario('default')}
+                  className="chip px-3 py-1.5 rounded-md text-xs font-medium"
+                  style={{
+                    backgroundColor: activeScenario === 'default' ? 'rgba(232, 163, 61, 0.12)' : 'var(--ink-2)',
+                    border: `1px solid ${activeScenario === 'default' ? 'rgba(232, 163, 61, 0.3)' : 'var(--border)'}`,
+                    color: activeScenario === 'default' ? 'var(--gold)' : 'var(--muted)',
+                  }}
+                >
+                  ⚡ Primary scenario
+                </button>
+                <button
+                  onClick={() => loadScenario('failure')}
+                  className="chip px-3 py-1.5 rounded-md text-xs font-medium"
+                  style={{
+                    backgroundColor: activeScenario === 'failure' ? 'rgba(232, 163, 61, 0.12)' : 'var(--ink-2)',
+                    border: `1px solid ${activeScenario === 'failure' ? 'rgba(232, 163, 61, 0.3)' : 'var(--border)'}`,
+                    color: activeScenario === 'failure' ? 'var(--gold)' : 'var(--muted)',
+                  }}
+                >
+                  🔄 Failure/adaptation
+                </button>
+                <button
+                  onClick={() => loadScenario('clear')}
+                  className="chip px-3 py-1.5 rounded-md text-xs font-medium ml-auto"
+                  style={{
+                    backgroundColor: 'var(--ink-2)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--muted-2)',
+                  }}
+                >
+                  Clear
+                </button>
+              </div>
+              {/* Scenario description */}
+              {activeScenario && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-[10px] mt-2 leading-relaxed"
+                  style={{ color: 'var(--muted-2)' }}
+                >
+                  {activeScenario === 'default'
+                    ? 'User receives a fake electricity disconnection message asking them to scan a QR and enter their UPI PIN "to receive a refund." Simultaneously short on cash before rent, considering a 30% instant loan.'
+                    : 'Even avoiding the scam loan doesn\'t fully solve the problem — rent and bills outstrip the balance regardless. Exercises the "evaluate → adapt" step: surfaces the remaining gap and reasons about further options.'}
+                </motion.p>
+              )}
             </div>
 
             {/* Validation note */}
