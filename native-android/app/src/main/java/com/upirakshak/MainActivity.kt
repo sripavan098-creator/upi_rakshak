@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -22,7 +20,8 @@ import androidx.core.content.ContextCompat
 import com.upirakshak.notification.RakshakGuardService
 import com.upirakshak.ui.screens.*
 import com.upirakshak.ui.theme.RakshakTheme
-import com.upirakshak.ui.theme.NavyDark
+import com.upirakshak.ui.theme.Paper
+import com.upirakshak.ui.theme.Ink
 import com.upirakshak.util.PermissionHelper
 
 class MainActivity : ComponentActivity() {
@@ -54,7 +53,7 @@ class MainActivity : ComponentActivity() {
                 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = NavyDark
+                    color = Paper
                 ) {
                     if (showQrScanner) {
                         QrScannerScreen(onBack = { showQrScanner = false })
@@ -64,8 +63,8 @@ class MainActivity : ComponentActivity() {
                         Scaffold(
                             bottomBar = {
                                 NavigationBar(
-                                    containerColor = NavyDark,
-                                    contentColor = TextPrimary
+                                    containerColor = Paper,
+                                    contentColor = Ink
                                 ) {
                                     NavigationBarItem(
                                         icon = { Icon(Icons.Default.Home, contentDescription = null) },

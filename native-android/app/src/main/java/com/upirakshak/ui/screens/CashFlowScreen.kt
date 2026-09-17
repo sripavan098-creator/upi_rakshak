@@ -33,7 +33,7 @@ fun CashFlowScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(NavyDark)
+            .background(Paper)
             .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
@@ -283,7 +283,7 @@ fun CashFlowScreen(modifier: Modifier = Modifier) {
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Emerald,
-                    contentColor = NavyDark
+                    contentColor = Paper
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {

@@ -42,10 +42,10 @@ fun LanguageSelectionScreen(onBack: () -> Unit) {
                         Icon(Icons.Default.ArrowBack, "Back", tint = TextPrimary)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = NavyDark)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Paper)
             )
         },
-        containerColor = NavyDark
+        containerColor = Paper
     ) { padding ->
         LazyColumn(
             modifier = Modifier

@@ -33,7 +33,7 @@ fun LoanComparisonScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(NavyDark)
+            .background(Paper)
             .verticalScroll(scrollState)
             .padding(16.dp)
     ) {

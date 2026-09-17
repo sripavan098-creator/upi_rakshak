@@ -2,27 +2,39 @@ package com.upirakshak.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Primary colors - Navy theme
-val Navy = Color(0xFF0F172A)
-val NavyDark = Color(0xFF0A0F1E)
-val Slate = Color(0xFF1E293B)
-val Emerald = Color(0xFF10B981)
-val Danger = Color(0xFFDC2626)
-val Warning = Color(0xFFF59E0B)
-val TextPrimary = Color(0xFFF1F5F9)
-val TextSecondary = Color(0xFF94A3B8)
+// "The Notice" Design System - Paper/Ink Theme
+// Inspired by Indian public notices and official documents
 
-// Legacy colors (keeping for compatibility)
-val Ink = Color(0xFF14132B)
-val Ink1 = Color(0xFF1C1A3F)
-val Ink2 = Color(0xFF26234F)
-val Parchment = Color(0xFFF3EFE4)
-val Muted = Color(0xFFA7A2C9)
-val Muted2 = Color(0xFF7C78A3)
-val Gold = Color(0xFFE8A33D)
-val GoldBright = Color(0xFFF4C775)
-val Safe = Color(0xFF3FA796)
-val RiskMed = Color(0xFFE8A33D)
-val RiskHigh = Color(0xFFE1554A)
-val Border = Color(0x1FF3EFE4)
-val BorderStrong = Color(0x38F3EFE4)
+// Core Palette
+val Paper = Color(0xFFE9E7DB)           // Manila ledger stock - primary background
+val PaperDark = Color(0xFFD4D2C4)       // Slightly darker paper for depth
+val Ink = Color(0xFF1B2A21)             // Registrar's green-black ink - primary text
+val InkLight = Color(0xFF2D3E34)        // Lighter ink for secondary text
+val StampRed = Color(0xFFC2241B)        // Rubber-stamp vermilion - LIVE THREATS ONLY
+val BbpsGreen = Color(0xFF138808)       // BBPS official green - safe actions
+val SealGold = Color(0xFFB8860B)        // Official seal gold - for verdicts
+
+// Semantic Colors
+val Safe = BbpsGreen
+val Warning = Color(0xFFD97706)         // Amber for medium risk
+val Danger = StampRed                   // Red ONLY for active threats
+val Info = Color(0xFF1E40AF)            // Blue for informational
+
+// Text Colors
+val TextPrimary = Ink
+val TextSecondary = InkLight
+
+// Legacy aliases for compatibility
+val Navy = Paper
+val NavyDark = Paper
+val Slate = PaperDark
+val Emerald = BbpsGreen
+val Parchment = Paper
+val Muted = InkLight
+val Muted2 = InkLight
+val Gold = SealGold
+val GoldBright = SealGold
+val RiskMed = Warning
+val RiskHigh = StampRed
+val Border = Color(0xFF1B2A21)
+val BorderStrong = Color(0xFF1B2A21)

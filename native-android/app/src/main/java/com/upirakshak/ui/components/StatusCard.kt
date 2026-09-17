@@ -85,7 +85,7 @@ fun StatusCard(
                         onClick = onGrantNotification,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Warning,
-                            contentColor = NavyDark
+                            contentColor = Paper
                         )
                     ) {
                         Text("Grant", fontWeight = FontWeight.Bold)
@@ -119,7 +119,7 @@ fun StatusCard(
                         onClick = onGrantOverlay,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Warning,
-                            contentColor = NavyDark
+                            contentColor = Paper
                         )
                     ) {
                         Text("Grant", fontWeight = FontWeight.Bold)

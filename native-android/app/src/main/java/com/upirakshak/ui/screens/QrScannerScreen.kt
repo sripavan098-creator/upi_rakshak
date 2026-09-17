@@ -89,11 +89,11 @@ fun QrScannerScreen(onBack: () -> Unit) {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = NavyDark
+                    containerColor = Paper
                 )
             )
         },
-        containerColor = NavyDark
+        containerColor = Paper
     ) { padding ->
         Column(
             modifier = Modifier
@@ -119,7 +119,7 @@ fun QrScannerScreen(onBack: () -> Unit) {
                             onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) },
                             colors = ButtonDefaults.buttonColors(containerColor = Emerald)
                         ) {
-                            Text("Grant Permission", color = NavyDark)
+                            Text("Grant Permission", color = Paper)
                         }
                     }
                 }
@@ -216,7 +216,7 @@ fun QrScannerScreen(onBack: () -> Unit) {
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(containerColor = Emerald)
                         ) {
-                            Text("Scan Another QR", color = NavyDark)
+                            Text("Scan Another QR", color = Paper)
                         }
                     }
                 }

@@ -52,7 +52,7 @@ fun HomeScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(NavyDark)
+            .background(Paper)
             .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
@@ -135,7 +135,7 @@ fun HomeScreen(
                     .height(48.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Emerald,
-                    contentColor = NavyDark
+                    contentColor = Paper
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {
