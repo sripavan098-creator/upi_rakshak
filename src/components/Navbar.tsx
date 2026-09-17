@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LanguageSelector } from './LanguageSelector';
+import { LanguageSelector } from '../layouts/LanguageSelector';
 import { useLanguage } from '../i18n/LanguageContext';
 
 interface NavbarProps {
