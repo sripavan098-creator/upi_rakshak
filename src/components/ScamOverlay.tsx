@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { speakWarning, stopSpeaking } from '../lib/voice';
+import { speak, stopSpeaking } from '../lib/voice';
 
 interface ScamOverlayProps {
   visible: boolean;

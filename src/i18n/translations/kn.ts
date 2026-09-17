@@ -1,0 +1,26 @@
+import { TranslationKeys } from '../types';
+
+export const kn: Partial<TranslationKeys> = {
+  appName: 'ಯುಪಿಐ ರಕ್ಷಕ್',
+  tagline: 'ನಿಮ್ಮ ಆರ್ಥಿಕ ರಕ್ಷಕ',
+  protectionActive: 'ರಕ್ಷಣೆ ಸಕ್ರಿಯ',
+  setupRequired: 'ಸೆಟಪ್ ಅಗತ್ಯವಿದೆ',
+  simulateScamAttack: 'ಸ್ಕ್ಯಾಮ್ ದಾಳಿಯನ್ನು ಅನುಕರಿಸಿ',
+  scanQrCode: 'ಯುಪಿಐ ಕ್ಯೂಆರ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ',
+  cashFlowForecast: 'ನಗದು ಹರಿವಿನ ಮುನ್ಸೂಚನೆ',
+  loans: 'ಸಾಲಗಳು',
+  threatDetected: 'ಬೆದರಿಕೆ ಪತ್ತೆಯಾಗಿದೆ',
+  safe: 'ಸುರಕ್ಷಿತ',
+  suspicious: 'ಸಂದಿಗ್ಧ',
+  voiceWarning: 'ಧ್ವನಿ ಎಚ್ಚರಿಕೆ',
+  grantPermission: 'ಅನುಮತಿ ನೀಡಿ',
+  language: 'ಭಾಷೆ',
+  daysRunway: 'ಉಳಿದ ದಿನಗಳು',
+  askAboutPurchase: 'ಖರೀದಿ ಬಗ್ಗೆ ಕೇಳಿ',
+  check: 'ಪರಿಶೀಲಿಸಿ',
+  speakAgain: 'ಎಚ್ಚರಿಕೆ ಹೇಳಿ',
+  reportTo1930: '1930 ಗೆ ವರದಿ ಮಾಡಿ',
+  heroTitle: 'ಭಾರತದ ಡಿಜಿಟಲ್ ಆರ್ಥಿಕತೆಗಾಗಿ ನೈಜ-ಸಮಯದ ಆರ್ಥಿಕ ಸುರಕ್ಷತಾ ಪದರ',
+  heroSubtitle: 'ಪ್ರತಿ ಪಾವತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ, ವಂಚನೆಯನ್ನು ತಡೆಯಿರಿ.',
+  demoButton: 'ಸ್ಕ್ಯಾಮ್ ದಾಳಿಯನ್ನು ಅನುಕರಿಸಿ',
+};

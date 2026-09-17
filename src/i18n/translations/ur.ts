@@ -1,0 +1,26 @@
+import { TranslationKeys } from '../types';
+
+export const ur: Partial<TranslationKeys> = {
+  appName: 'یو پی آئی رکشک',
+  tagline: 'آپ کا مالی محافظ',
+  protectionActive: 'تحفظ فعال',
+  setupRequired: 'سیٹ اپ درکار',
+  simulateScamAttack: 'فراڈ حملے کی نقل کریں',
+  scanQrCode: 'یو پی آئی کیو آر اسکین کریں',
+  cashFlowForecast: 'نقد بہاؤ کی پیشن گوئی',
+  loans: 'قرضے',
+  threatDetected: 'خطرہ پایا گیا',
+  safe: 'محفوظ',
+  suspicious: 'مشتبہ',
+  voiceWarning: 'صوتی وارننگ',
+  grantPermission: 'اجازت دیں',
+  language: 'زبان',
+  daysRunway: 'باقی دن',
+  askAboutPurchase: 'خریداری کے بارے میں پوچھیں',
+  check: 'چیک کریں',
+  speakAgain: 'وارننگ بولیں',
+  reportTo1930: '1930 پر رپورٹ کریں',
+  heroTitle: 'بھارت کی ڈیجیٹل معیشت کے لیے ریئل ٹائم مالی تحفظ کی پرت',
+  heroSubtitle: 'ہر ادائیگی کی جانچ کریں، دھوکہ دہی روکیں۔',
+  demoButton: 'فراڈ حملے کی نقل کریں',
+};

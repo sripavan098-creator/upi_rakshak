@@ -1,59 +1,83 @@
 /**
- * UPI Rakshak — Voice Interface
- * 
- * Uses Web Speech API for text-to-speech warnings in Hindi/English.
- * Browser-native, no external dependencies.
+ * Language-aware voice output using Web Speech API
+ * Supports 22 Indian languages with graceful fallback
  */
 
-let currentUtterance: SpeechSynthesisUtterance | null = null;
+const VOICE_LOCALE_MAP: Record<string, string> = {
+  en: 'en-IN',
+  hi: 'hi-IN',
+  bn: 'bn-IN',
+  ta: 'ta-IN',
+  te: 'te-IN',
+  kn: 'kn-IN',
+  ml: 'ml-IN',
+  mr: 'mr-IN',
+  gu: 'gu-IN',
+  pa: 'pa-IN',
+  or: 'or-IN',
+  as: 'as-IN',
+  ur: 'ur-IN',
+  ne: 'ne-NP',
+  sa: 'sa-IN',
+};
 
-/**
- * Speak a warning message aloud.
- * Prefers Hindi voice if available, falls back to English.
- */
-export function speakWarning(text: string, lang: 'hi-IN' | 'en-IN' = 'hi-IN'): void {
+export function speak(text: string, languageCode: string = 'en'): void {
   if (!('speechSynthesis' in window)) {
-    console.warn('Speech synthesis not supported in this browser');
+    console.warn('Speech synthesis not supported');
     return;
   }
 
   // Cancel any ongoing speech
-  stopSpeaking();
+  window.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = lang;
-  utterance.rate = 0.9; // Slightly slower for clarity
+  
+  // Set language
+  const targetLocale = VOICE_LOCALE_MAP[languageCode] || 'en-IN';
+  utterance.lang = targetLocale;
+  utterance.rate = 0.92;
   utterance.pitch = 1.0;
   utterance.volume = 1.0;
 
-  // Try to find a Hindi voice
+  // Find the best matching voice
   const voices = window.speechSynthesis.getVoices();
-  const hindiVoice = voices.find(v => v.lang.startsWith('hi'));
-  const englishVoice = voices.find(v => v.lang.startsWith('en-IN') || v.lang.startsWith('en'));
   
-  if (lang === 'hi-IN' && hindiVoice) {
-    utterance.voice = hindiVoice;
-  } else if (englishVoice) {
-    utterance.voice = englishVoice;
+  // Priority: exact match > language prefix match > Hindi fallback > English fallback
+  const preferred = 
+    voices.find(v => v.lang === targetLocale) ||
+    voices.find(v => v.lang.startsWith(targetLocale.split('-')[0])) ||
+    voices.find(v => v.lang.startsWith('hi')) ||
+    voices.find(v => v.lang.startsWith('en'));
+
+  if (preferred) {
+    utterance.voice = preferred;
   }
 
-  currentUtterance = utterance;
   window.speechSynthesis.speak(utterance);
 }
 
-/**
- * Stop any ongoing speech.
- */
 export function stopSpeaking(): void {
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
-    currentUtterance = null;
   }
 }
 
-/**
- * Check if speech synthesis is available.
- */
-export function isSpeechSupported(): boolean {
-  return 'speechSynthesis' in window;
+export function isVoiceAvailable(languageCode: string): boolean {
+  if (!('speechSynthesis' in window)) return false;
+  
+  const voices = window.speechSynthesis.getVoices();
+  const target = VOICE_LOCALE_MAP[languageCode] || 'en-IN';
+  
+  return voices.some(v => 
+    v.lang === target || 
+    v.lang.startsWith(target.split('-')[0])
+  );
+}
+
+// Preload voices (some browsers need this)
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+  };
 }

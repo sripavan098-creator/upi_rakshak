@@ -1,0 +1,26 @@
+import { TranslationKeys } from '../types';
+
+export const as: Partial<TranslationKeys> = {
+  appName: 'ইউপিআই ৰক্ষক',
+  tagline: 'আপোনাৰ বিত্তীয় ৰক্ষক',
+  protectionActive: 'সুৰক্ষা সক্ৰিয়',
+  setupRequired: 'ছেটআপ প্ৰয়োজন',
+  simulateScamAttack: 'স্কেম আক্ৰমণ অনুকৰণ কৰক',
+  scanQrCode: 'ইউপিআই কিউআৰ স্কেন কৰক',
+  cashFlowForecast: 'নগদ প্ৰবাহ পূৰ্বানুমান',
+  loans: 'ঋণ',
+  threatDetected: 'ভাবুকি ধৰা পৰিছে',
+  safe: 'সুৰক্ষিত',
+  suspicious: 'সন্দেহজনক',
+  voiceWarning: 'ভইচ সতৰ্কবাণী',
+  grantPermission: 'অনুমতি দিয়ক',
+  language: 'ভাষা',
+  daysRunway: 'বাকী দিন',
+  askAboutPurchase: 'ক্ৰয়ৰ বিষয়ে সোধক',
+  check: 'পৰীক্ষা কৰক',
+  speakAgain: 'সতৰ্কবাণী কওক',
+  reportTo1930: '1930 ত অভিযোগ কৰক',
+  heroTitle: 'ভাৰতৰ ডিজিটেল অৰ্থনীতিৰ বাবে ৰিয়েল-টাইম বিত্তীয় সুৰক্ষা স্তৰ',
+  heroSubtitle: 'প্ৰতিটো পেমেন্ট পৰীক্ষা কৰক, প্ৰতাৰণা ৰোধ কৰক।',
+  demoButton: 'স্কেম আক্ৰমণ অনুকৰণ কৰক',
+};

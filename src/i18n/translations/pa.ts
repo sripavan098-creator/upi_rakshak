@@ -1,0 +1,26 @@
+import { TranslationKeys } from '../types';
+
+export const pa: Partial<TranslationKeys> = {
+  appName: 'ਯੂਪੀਆਈ ਰਕਸ਼ਕ',
+  tagline: 'ਤੁਹਾਡਾ ਵਿੱਤੀ ਅੰਗਰੱਖਿਅਕ',
+  protectionActive: 'ਸੁਰੱਖਿਆ ਸਰਗਰਮ',
+  setupRequired: 'ਸੈਟਅਪ ਲੋੜੀਂਦਾ',
+  simulateScamAttack: 'ਠੱਗੀ ਹਮਲਾ ਸਿਮੂਲੇਟ ਕਰੋ',
+  scanQrCode: 'ਯੂਪੀਆਈ ਕਿਊਆਰ ਸਕੈਨ ਕਰੋ',
+  cashFlowForecast: 'ਨਕਦ ਪ੍ਰਵਾਹ ਭਵਿੱਖਬਾਣੀ',
+  loans: 'ਕਰਜ਼ੇ',
+  threatDetected: 'ਖਤਰਾ ਲੱਭਿਆ',
+  safe: 'ਸੁਰੱਖਿਅਤ',
+  suspicious: 'ਸ਼ੱਕੀ',
+  voiceWarning: 'ਆਵਾਜ਼ ਚੇਤਾਵਨੀ',
+  grantPermission: 'ਇਜਾਜ਼ਤ ਦਿਓ',
+  language: 'ਭਾਸ਼ਾ',
+  daysRunway: 'ਬਚੇ ਦਿਨ',
+  askAboutPurchase: 'ਖਰੀਦ ਬਾਰੇ ਪੁੱਛੋ',
+  check: 'ਜਾਂਚ ਕਰੋ',
+  speakAgain: 'ਚੇਤਾਵਨੀ ਬੋਲੋ',
+  reportTo1930: '1930 ਤੇ ਰਿਪੋਰਟ ਕਰੋ',
+  heroTitle: 'ਭਾਰਤ ਦੀ ਡਿਜੀਟਲ ਅਰਥਵਿਵਸਥਾ ਲਈ ਰੀਅਲ-ਟਾਈਮ ਵਿੱਤੀ ਸੁਰੱਖਿਆ ਪਰਤ',
+  heroSubtitle: 'ਹਰ ਭੁਗਤਾਨ ਦੀ ਜਾਂਚ ਕਰੋ, ਧੋਖਾਧੜੀ ਰੋਕੋ।',
+  demoButton: 'ਠੱਗੀ ਹਮਲਾ ਸਿਮੂਲੇਟ ਕਰੋ',
+};

@@ -1,0 +1,26 @@
+import { TranslationKeys } from '../types';
+
+export const gu: Partial<TranslationKeys> = {
+  appName: 'યુપીઆઈ રક્ષક',
+  tagline: 'તમારો નાણાકીય અંગરક્ષક',
+  protectionActive: 'સુરક્ષા સક્રિય',
+  setupRequired: 'સેટઅપ જરૂરી',
+  simulateScamAttack: 'સ્કેમ હુમલો સિમ્યુલેટ કરો',
+  scanQrCode: 'યુપીઆઈ ક્યુઆર સ્કેન કરો',
+  cashFlowForecast: 'રોકડ પ્રવાહ આગાહી',
+  loans: 'લોન',
+  threatDetected: 'ધમકી મળી',
+  safe: 'સુરક્ષિત',
+  suspicious: 'શંકાસ્પદ',
+  voiceWarning: 'વોઇસ ચેતવણી',
+  grantPermission: 'પરવાનગી આપો',
+  language: 'ભાષા',
+  daysRunway: 'બાકી દિવસો',
+  askAboutPurchase: 'ખરીદી વિશે પૂછો',
+  check: 'તપાસો',
+  speakAgain: 'ચેતવણી બોલો',
+  reportTo1930: '1930 પર રિપોર્ટ કરો',
+  heroTitle: 'ભારતની ડિજિટલ અર્થવ્યવસ્થા માટે રીઅલ-ટાઇમ નાણાકીય સુરક્ષા સ્તર',
+  heroSubtitle: 'દરેક પેમેન્ટ ચકાસો, છેતરપિંડી રોકો.',
+  demoButton: 'સ્કેમ હુમલો સિમ્યુલેટ કરો',
+};

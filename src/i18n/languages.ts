@@ -1,0 +1,27 @@
+import { LanguageMeta } from './types';
+
+export const LANGUAGE_LIST: LanguageMeta[] = [
+  { code: 'en', label: 'English', nativeLabel: 'English', dir: 'ltr' },
+  { code: 'hi', label: 'Hindi', nativeLabel: 'हिन्दी', dir: 'ltr' },
+  { code: 'bn', label: 'Bengali', nativeLabel: 'বাংলা', dir: 'ltr' },
+  { code: 'ta', label: 'Tamil', nativeLabel: 'தமிழ்', dir: 'ltr' },
+  { code: 'te', label: 'Telugu', nativeLabel: 'తెలుగు', dir: 'ltr' },
+  { code: 'kn', label: 'Kannada', nativeLabel: 'ಕನ್ನಡ', dir: 'ltr' },
+  { code: 'ml', label: 'Malayalam', nativeLabel: 'മലയാളം', dir: 'ltr' },
+  { code: 'mr', label: 'Marathi', nativeLabel: 'मराठी', dir: 'ltr' },
+  { code: 'gu', label: 'Gujarati', nativeLabel: 'ગુજરાતી', dir: 'ltr' },
+  { code: 'pa', label: 'Punjabi', nativeLabel: 'ਪੰਜਾਬੀ', dir: 'ltr' },
+  { code: 'or', label: 'Odia', nativeLabel: 'ଓଡ଼ିଆ', dir: 'ltr' },
+  { code: 'as', label: 'Assamese', nativeLabel: 'অসমীয়া', dir: 'ltr' },
+  { code: 'ur', label: 'Urdu', nativeLabel: 'اردو', dir: 'rtl' },
+  { code: 'ne', label: 'Nepali', nativeLabel: 'नेपाली', dir: 'ltr' },
+  { code: 'sa', label: 'Sanskrit', nativeLabel: 'संस्कृतम्', dir: 'ltr' },
+  { code: 'kok', label: 'Konkani', nativeLabel: 'कोंकणी', dir: 'ltr' },
+  { code: 'mai', label: 'Maithili', nativeLabel: 'मैथिली', dir: 'ltr' },
+  { code: 'doi', label: 'Dogri', nativeLabel: 'डोगरी', dir: 'ltr' },
+  { code: 'brx', label: 'Bodo', nativeLabel: 'बड़ो', dir: 'ltr' },
+  { code: 'mni', label: 'Manipuri', nativeLabel: 'মৈতৈলোন্', dir: 'ltr' },
+  { code: 'sat', label: 'Santali', nativeLabel: 'ᱥᱟᱱᱛᱟᱲᱤ', dir: 'ltr' },
+  { code: 'ks', label: 'Kashmiri', nativeLabel: 'कॉशुर', dir: 'rtl' },
+  { code: 'sd', label: 'Sindhi', nativeLabel: 'سنڌي', dir: 'rtl' },
+];

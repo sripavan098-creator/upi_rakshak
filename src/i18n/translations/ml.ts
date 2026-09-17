@@ -1,0 +1,26 @@
+import { TranslationKeys } from '../types';
+
+export const ml: Partial<TranslationKeys> = {
+  appName: 'യുപിഐ രക്ഷക്',
+  tagline: 'നിങ്ങളുടെ സാമ്പത്തിക അംഗരക്ഷകൻ',
+  protectionActive: 'സംരക്ഷണം സജീവം',
+  setupRequired: 'സെറ്റപ്പ് ആവശ്യം',
+  simulateScamAttack: 'തട്ടിപ്പ് ആക്രമണം അനുകരിക്കുക',
+  scanQrCode: 'യുപിഐ ക്യുആർ സ്കാൻ ചെയ്യുക',
+  cashFlowForecast: 'ക്യാഷ് ഫ്ലോ പ്രവചനം',
+  loans: 'വായ്പകൾ',
+  threatDetected: 'ഭീഷണി കണ്ടെത്തി',
+  safe: 'സുരക്ഷിതം',
+  suspicious: 'സംശയാസ്പദം',
+  voiceWarning: 'ശബ്ദ മുന്നറിയിപ്പ്',
+  grantPermission: 'അനുമതി നൽകുക',
+  language: 'ഭാഷ',
+  daysRunway: 'ബാക്കി ദിവസങ്ങൾ',
+  askAboutPurchase: 'വാങ്ങൽ സംബന്ധിച്ച് ചോദിക്കുക',
+  check: 'പരിശോധിക്കുക',
+  speakAgain: 'മുന്നറിയിപ്പ് പറയുക',
+  reportTo1930: '1930-ൽ റിപ്പോർട്ട് ചെയ്യുക',
+  heroTitle: 'ഇന്ത്യയുടെ ഡിജിറ്റൽ സമ്പദ്‌വ്യവസ്ഥയ്ക്കായി തത്സമയ സാമ്പത്തിക സുരക്ഷാ പാളി',
+  heroSubtitle: 'ഓരോ പേയ്‌മെന്റും പരിശോധിക്കുക, തട്ടിപ്പ് തടയുക.',
+  demoButton: 'തട്ടിപ്പ് ആക്രമണം അനുകരിക്കുക',
+};

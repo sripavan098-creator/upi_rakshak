@@ -1,0 +1,26 @@
+import { TranslationKeys } from '../types';
+
+export const or: Partial<TranslationKeys> = {
+  appName: 'ୟୁପିଆଇ ରକ୍ଷକ',
+  tagline: 'ଆପଣଙ୍କ ଆର୍ଥିକ ଅଙ୍ଗରକ୍ଷକ',
+  protectionActive: 'ସୁରକ୍ଷା ସକ୍ରିୟ',
+  setupRequired: 'ସେଟଅପ ଆବଶ୍ୟକ',
+  simulateScamAttack: 'ଠକେଇ ଆକ୍ରମଣ ଅନୁକରଣ କରନ୍ତୁ',
+  scanQrCode: 'ୟୁପିଆଇ କ୍ୟୁଆର ସ୍କାନ କରନ୍ତୁ',
+  cashFlowForecast: 'ନଗଦ ପ୍ରବାହ ପୂର୍ବାନୁମାନ',
+  loans: 'ଋଣ',
+  threatDetected: 'ବିପଦ ଚିହ୍ନଟ',
+  safe: 'ସୁରକ୍ଷିତ',
+  suspicious: 'ସନ୍ଦେହଜନକ',
+  voiceWarning: 'ସ୍ୱର ଚେତାବନୀ',
+  grantPermission: 'ଅନୁମତି ଦିଅନ୍ତୁ',
+  language: 'ଭାଷା',
+  daysRunway: 'ଅବଶିଷ୍ଟ ଦିନ',
+  askAboutPurchase: 'କ୍ରୟ ବିଷୟରେ ପଚାରନ୍ତୁ',
+  check: 'ଯାଞ୍ଚ କରନ୍ତୁ',
+  speakAgain: 'ଚେତାବନୀ କୁହନ୍ତୁ',
+  reportTo1930: '1930 ରେ ରିପୋର୍ଟ କରନ୍ତୁ',
+  heroTitle: 'ଭାରତର ଡିଜିଟାଲ ଅର୍ଥନୀତି ପାଇଁ ରିଅଲ-ଟାଇମ ଆର୍ଥିକ ସୁରକ୍ଷା ସ୍ତର',
+  heroSubtitle: 'ପ୍ରତ୍ୟେକ ଦେୟ ଯାଞ୍ଚ କରନ୍ତୁ, ଠକେଇ ରୋକନ୍ତୁ।',
+  demoButton: 'ଠକେଇ ଆକ୍ରମଣ ଅନୁକରଣ କରନ୍ତୁ',
+};

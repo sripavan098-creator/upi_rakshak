@@ -1,0 +1,26 @@
+import { TranslationKeys } from '../types';
+
+export const hi: Partial<TranslationKeys> = {
+  appName: 'यूपीआई रक्षक',
+  tagline: 'आपका वित्तीय अंगरक्षक',
+  protectionActive: 'सुरक्षा सक्रिय',
+  setupRequired: 'सेटअप आवश्यक',
+  simulateScamAttack: 'ठगी हमले का अनुकरण करें',
+  scanQrCode: 'यूपीआई क्यूआर स्कैन करें',
+  cashFlowForecast: 'नकदी प्रवाह पूर्वानुमान',
+  loans: 'ऋण',
+  threatDetected: 'खतरा पता चला',
+  safe: 'सुरक्षित',
+  suspicious: 'संदिग्ध',
+  voiceWarning: 'आवाज़ चेतावनी',
+  grantPermission: 'अनुमति दें',
+  language: 'भाषा',
+  daysRunway: 'बचे हुए दिन',
+  askAboutPurchase: 'खरीदारी के बारे में पूछें',
+  check: 'जाँचें',
+  speakAgain: 'चेतावनी बोलें',
+  reportTo1930: '1930 पर रिपोर्ट करें',
+  heroTitle: 'भारत की डिजिटल अर्थव्यवस्था के लिए वास्तविक समय वित्तीय सुरक्षा परत',
+  heroSubtitle: 'हर भुगतान की जाँच करें, धोखाधड़ी को रोकें, अपनी नकदी की स्थिति जानें।',
+  demoButton: 'ठगी हमले का अनुकरण करें',
+};

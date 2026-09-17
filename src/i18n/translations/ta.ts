@@ -1,0 +1,26 @@
+import { TranslationKeys } from '../types';
+
+export const ta: Partial<TranslationKeys> = {
+  appName: 'யுபிஐ ரக்ஷக்',
+  tagline: 'உங்கள் நிதி பாதுகாவலர்',
+  protectionActive: 'பாதுகாப்பு செயலில்',
+  setupRequired: 'அமைப்பு தேவை',
+  simulateScamAttack: 'மோசடி தாக்குதலை உருவகப்படுத்து',
+  scanQrCode: 'யுபிஐ கியூஆர் ஸ்கேன் செய்',
+  cashFlowForecast: 'பணப்புழக்க முன்னறிவிப்பு',
+  loans: 'கடன்கள்',
+  threatDetected: 'அச்சுறுத்தல் கண்டறியப்பட்டது',
+  safe: 'பாதுகாப்பானது',
+  suspicious: 'சந்தேகத்திற்குரியது',
+  voiceWarning: 'குரல் எச்சரிக்கை',
+  grantPermission: 'அனுமதி வழங்கு',
+  language: 'மொழி',
+  daysRunway: 'மீதமுள்ள நாட்கள்',
+  askAboutPurchase: 'வாங்குவது பற்றி கேள்',
+  check: 'சரிபார்',
+  speakAgain: 'எச்சரிக்கையைச் சொல்',
+  reportTo1930: '1930-இல் புகார் அளி',
+  heroTitle: 'இந்தியாவின் டிஜிட்டல் பொருளாதாரத்திற்கான நிகழ்நேர நிதி பாதுகாப்பு அடுக்கு',
+  heroSubtitle: 'ஒவ்வொரு கட்டணத்தையும் சரிபார்க்கவும், மோசடியைத் தடுக்கவும்.',
+  demoButton: 'மோசடி தாக்குதலை உருவகப்படுத்து',
+};

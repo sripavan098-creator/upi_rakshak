@@ -1,0 +1,26 @@
+import { TranslationKeys } from '../types';
+
+export const bn: Partial<TranslationKeys> = {
+  appName: 'ইউপিআই রক্ষক',
+  tagline: 'আপনার আর্থিক দেহরক্ষী',
+  protectionActive: 'সুরক্ষা সক্রিয়',
+  setupRequired: 'সেটআপ প্রয়োজন',
+  simulateScamAttack: 'স্ক্যাম আক্রমণ সিমুলেট করুন',
+  scanQrCode: 'ইউপিআই কিউআর স্ক্যান করুন',
+  cashFlowForecast: 'নগদ প্রবাহ পূর্বাভাস',
+  loans: 'ঋণ',
+  threatDetected: 'হুমকি সনাক্ত',
+  safe: 'নিরাপদ',
+  suspicious: 'সন্দেহজনক',
+  voiceWarning: 'ভয়েস সতর্কতা',
+  grantPermission: 'অনুমতি দিন',
+  language: 'ভাষা',
+  daysRunway: 'বাকি দিন',
+  askAboutPurchase: 'কেনাকাটা সম্পর্কে জিজ্ঞাসা করুন',
+  check: 'চেক করুন',
+  speakAgain: 'সতর্কতা বলুন',
+  reportTo1930: '1930-এ রিপোর্ট করুন',
+  heroTitle: 'ভারতের ডিজিটাল অর্থনীতির জন্য রিয়েল-টাইম আর্থিক নিরাপত্তা স্তর',
+  heroSubtitle: 'প্রতিটি পেমেন্ট যাচাই করুন, প্রতারণা প্রতিরোধ করুন, আপনার নগদ জানুন।',
+  demoButton: 'স্ক্যাম আক্রমণ সিমুলেট করুন',
+};
