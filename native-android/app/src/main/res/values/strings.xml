@@ -22,4 +22,5 @@
     <string name="your_financial_bodyguard">Your financial bodyguard</string>
     <string name="recent_threats">Recent Threats</string>
     <string name="no_recent_threats">No recent threats detected</string>
+    <string name="notification_listener_label">UPI Rakshak Notification Listener</string>
 </resources>

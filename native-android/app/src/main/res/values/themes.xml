@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- The Notice Design System - Paper/Ink Theme -->
     <style name="Theme.UPIRakshak" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#14132B</item>
-        <item name="android:navigationBarColor">#14132B</item>
-        <item name="android:windowBackground">#14132B</item>
+        <item name="android:statusBarColor">#1B2A21</item>
+        <item name="android:navigationBarColor">#E9E7DB</item>
+        <item name="android:windowBackground">#E9E7DB</item>
+        <item name="android:colorPrimary">#1B2A21</item>
+        <item name="android:colorAccent">#C2241B</item>
     </style>
     
     <style name="Theme.UPIRakshak.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#14132B</item>
-        <item name="windowSplashScreenAnimatedIcon">@android:drawable/sym_def_app_icon</item>
+        <item name="windowSplashScreenBackground">#E9E7DB</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/Theme.UPIRakshak</item>
     </style>
 </resources>
