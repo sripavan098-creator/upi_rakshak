@@ -1,21 +1,24 @@
 import { useState } from 'react';
+import { LanguageSelector } from './LanguageSelector';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface NavbarProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
 }
 
-const navItems = [
-  { id: 'hero', label: 'Home' },
-  { id: 'console', label: 'Live Console' },
-  { id: 'how', label: 'How It Works' },
-  { id: 'architecture', label: 'Architecture' },
-  { id: 'impact', label: 'Impact' },
-  { id: 'project', label: 'Project' },
-];
-
 export default function Navbar({ activeSection, setActiveSection }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useLanguage();
+
+  const navItems = [
+    { id: 'hero', label: t('home') },
+    { id: 'console', label: t('console') },
+    { id: 'how', label: t('howItWorks') },
+    { id: 'architecture', label: t('architecture') },
+    { id: 'impact', label: t('impact') },
+    { id: 'project', label: t('project') },
+  ];
 
   return (
     <nav
@@ -57,6 +60,9 @@ export default function Navbar({ activeSection, setActiveSection }: NavbarProps)
                 {item.label}
               </button>
             ))}
+            <div className="ml-4">
+              <LanguageSelector />
+            </div>
           </div>
 
           {/* Mobile toggle */}
@@ -94,6 +100,9 @@ export default function Navbar({ activeSection, setActiveSection }: NavbarProps)
                 {item.label}
               </button>
             ))}
+            <div className="pt-2 mt-2 border-t" style={{ borderColor: 'var(--border)' }}>
+              <LanguageSelector />
+            </div>
           </div>
         </div>
       )}

@@ -5,6 +5,7 @@ import { analyzeMessage, type ThreatAnalysis } from '../lib/rulesEngine';
 import { stopSpeaking } from '../lib/voice';
 import { simulateScam } from '../lib/nativeBridge';
 import Rakshak, { isNativeAvailable } from '../lib/rakshakNative';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const SCAM_MESSAGE = '⚡ URGENT: Your electricity will be disconnected tonight! Pay now via QR to avoid ₹5000 fine. UPI: bsescare@icici';
 
@@ -20,6 +21,7 @@ const SCAM_MESSAGE = '⚡ URGENT: Your electricity will be disconnected tonight!
  * 5. Dismiss button → stage = 'idle'
  */
 export default function DemoAttackButton() {
+  const { t } = useLanguage();
   const [stage, setStage] = useState<'idle' | 'whatsapp' | 'rakshak' | 'explanation'>('idle');
   const [analysis, setAnalysis] = useState<ThreatAnalysis | null>(null);
 
@@ -163,7 +165,7 @@ export default function DemoAttackButton() {
               }}
             >
               <span>🎯</span>
-              Simulate Scam Attack
+              {t('simulateScamAttack')}
             </motion.button>
             {hasNativeOverlay && (
               <motion.button

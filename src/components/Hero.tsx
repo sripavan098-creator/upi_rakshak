@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface HeroProps {
   onExplore: () => void;
 }
 
 export default function Hero({ onExplore }: HeroProps) {
+  const { t } = useLanguage();
+  
   return (
     <section className="min-h-screen flex flex-col justify-center relative pt-14 overflow-hidden">
       {/* Ambient radar rings */}
@@ -44,9 +47,9 @@ export default function Hero({ onExplore }: HeroProps) {
             className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-tight mb-6"
             style={{ maxWidth: '16ch', margin: '0 auto 1.5rem' }}
           >
-            <span style={{ color: 'var(--parchment)' }}>Your Financial</span>
+            <span style={{ color: 'var(--parchment)' }}>{t('appName')}</span>
             <br />
-            <span style={{ color: 'var(--gold)' }}>Safety Guardian</span>
+            <span style={{ color: 'var(--gold)' }}>{t('tagline')}</span>
           </h1>
 
           {/* Subtitle */}
@@ -69,7 +72,7 @@ export default function Hero({ onExplore }: HeroProps) {
               color: 'var(--ink)',
             }}
           >
-            Run Rakshak
+            {t('demoButton')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
