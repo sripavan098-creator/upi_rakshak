@@ -167,7 +167,7 @@ export default function Console() {
                   {quickScanResult.level}
                 </span>
                 <span className="text-xs font-medium" style={{ color: 'var(--parchment)' }}>
-                  {quickScanResult.suggestedAction}
+                  {quickScanResult.suggestedAction.en}
                 </span>
               </div>
               {quickScanResult.reasons.length > 0 && (
@@ -175,7 +175,7 @@ export default function Console() {
                   {quickScanResult.reasons.map((reason, i) => (
                     <li key={i} className="text-xs flex items-start gap-2" style={{ color: 'var(--muted)' }}>
                       <span className="flex-shrink-0">•</span>
-                      <span>{reason}</span>
+                      <span>{reason.en}</span>
                     </li>
                   ))}
                 </ul>
@@ -183,7 +183,7 @@ export default function Console() {
               {quickScanResult.officialRoute && (
                 <div className="mt-3 p-2 rounded" style={{ backgroundColor: 'rgba(63, 167, 150, 0.1)' }}>
                   <p className="text-xs" style={{ color: 'var(--safe)' }}>
-                    ✓ {quickScanResult.officialRoute}
+                    ✓ {quickScanResult.officialRoute.en}
                   </p>
                 </div>
               )}

@@ -54,9 +54,9 @@ export function useRakshakListener(): UseRakshakListenerResult {
           // Show overlay if HIGH or MEDIUM
           if (analysis.level === 'HIGH' || analysis.level === 'MEDIUM') {
             Rakshak.showOverlay({
-              message: analysis.reasons[0] || text,
+              message: analysis.reasons[0]?.en || text,
               level: analysis.level,
-              officialRoute: analysis.officialRoute,
+              officialRoute: analysis.officialRoute?.en,
             });
           }
         });

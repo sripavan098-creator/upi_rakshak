@@ -40,18 +40,10 @@ class RakshakNotificationListenerService : NotificationListenerService() {
 
         val result = RakshakRulesEngine.analyze(fullMessage)
 
-        val json = JSONObject()
-            .put("source", sbn.packageName)
-            .put("title", title)
-            .put("message", text)
-            .put("score", result.score)
-            .put("critical", result.isCritical)
-            .put("reasons", JSONArray(result.reasons))
-            .put("receivedAt", System.currentTimeMillis())
-            .toString()
+        // Emit notification to Capacitor plugin
+        RakshakPlugin.emitNotification(title, text)
 
-        RakshakBridge.publish(json)
-
+        // Show overlay if critical threat detected
         if (result.isCritical && canShowOverlay(sbn.key)) {
             RakshakOverlayService.startWithThreat(this, fullMessage, result)
         }

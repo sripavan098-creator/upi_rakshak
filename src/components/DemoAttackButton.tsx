@@ -67,7 +67,7 @@ export default function DemoAttackButton() {
         await Rakshak.showOverlay({
           message: SCAM_MESSAGE,
           level: analysis.level,
-          officialRoute: analysis.officialRoute,
+          officialRoute: analysis.officialRoute?.en,
         });
       } catch (e) {
         console.error('Failed to show native overlay:', e);
@@ -248,7 +248,7 @@ export default function DemoAttackButton() {
                     {analysis.reasons.map((reason, i) => (
                       <li key={i} className="flex items-start gap-2 text-xs leading-relaxed" style={{ color: 'var(--muted)' }}>
                         <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--risk-high)' }}>✕</span>
-                        <span>{reason}</span>
+                        <span>{reason.en}</span>
                       </li>
                     ))}
                   </ul>
@@ -267,7 +267,7 @@ export default function DemoAttackButton() {
                       ✓ Safe Action
                     </p>
                     <p className="text-xs" style={{ color: 'var(--parchment)' }}>
-                      {analysis.officialRoute}
+                      {analysis.officialRoute.en}
                     </p>
                   </div>
                 )}

@@ -14,7 +14,10 @@ export type Phase = 'observe' | 'decide' | 'act' | 'act_failure' | 'decide_final
 export interface ScamFlag {
   phrase: string;
   severity: Severity;
-  explanation: string;
+  explanation: {
+    en: string;
+    hi: string;
+  };
 }
 
 export interface AnalyzeMessageResult {
@@ -91,21 +94,21 @@ export interface ScenarioContext {
 // ─── Scam pattern lists (deterministic) ──────────────────────────────────────
 
 const RECEIVE_MONEY_SCAM_MARKERS = [
-  { pattern: /enter.*(?:upi\s*)?pin.*(?:receiv|accept|claim|refund|collect)/i, severity: 'critical' as Severity, explanation: 'You NEVER need to enter your UPI PIN to RECEIVE money. A PIN is only required when SENDING. Any message asking for a PIN to "receive" or "accept" a payment is a scam.' },
-  { pattern: /scan.*qr.*(?:receiv|accept|claim|refund|collect)/i, severity: 'critical' as Severity, explanation: 'Scanning a QR code sends money FROM your account. You cannot receive money by scanning a QR code. This is the most common UPI scam pattern.' },
-  { pattern: /(?:receiv|collect|accept).*money.*(?:enter|type|input).*pin/i, severity: 'critical' as Severity, explanation: 'Receiving money never requires entering a PIN. This instruction is technically impossible — it is designed to trick you into authorizing a payment.' },
+  { pattern: /enter.*(?:upi\s*)?pin.*(?:receiv|accept|claim|refund|collect)/i, severity: 'critical' as Severity, explanation: { en: 'You NEVER need to enter your UPI PIN to RECEIVE money. A PIN is only required when SENDING. Any message asking for a PIN to "receive" or "accept" a payment is a scam.', hi: 'Paisa RECEIVE karne ke liye UPI PIN kabhi nahi dena hota. PIN sirf SEND karne ke liye hota hai.' } },
+  { pattern: /scan.*qr.*(?:receiv|accept|claim|refund|collect)/i, severity: 'critical' as Severity, explanation: { en: 'Scanning a QR code sends money FROM your account. You cannot receive money by scanning a QR code. This is the most common UPI scam pattern.', hi: 'QR code scan karne se aapke account se paisa JATA hai. QR scan karke paisa RECEIVE nahi hota.' } },
+  { pattern: /(?:receiv|collect|accept).*money.*(?:enter|type|input).*pin/i, severity: 'critical' as Severity, explanation: { en: 'Receiving money never requires entering a PIN. This instruction is technically impossible — it is designed to trick you into authorizing a payment.', hi: 'Paisa receive karne ke liye PIN kabhi nahi dena hota. Yeh instruction technically impossible hai.' } },
 ];
 
 const URGENCY_PHRASES = [
-  { pattern: /(?:disconnect|shut\s*off|suspend|block).*(?:24\s*hour|immediately|urgent|within|today)/i, severity: 'high' as Severity, explanation: 'Urgency + threat of disconnection is a classic social engineering pressure tactic. Legitimate utility bills give 15–30 days notice before disconnection.' },
-  { pattern: /act\s*(?:immediately|now|quickly|fast|within)/i, severity: 'high' as Severity, explanation: 'Pressure to act immediately prevents you from thinking clearly or verifying the message through official channels.' },
-  { pattern: /(?:within|in)\s*\d+\s*(?:hour|hrs?|minutes?)\s*(?:or|otherwise)/i, severity: 'high' as Severity, explanation: 'Artificial time limits are a hallmark of scam messages. Legitimate organizations do not demand action within hours.' },
+  { pattern: /(?:disconnect|shut\s*off|suspend|block).*(?:24\s*hour|immediately|urgent|within|today)/i, severity: 'high' as Severity, explanation: { en: 'Urgency + threat of disconnection is a classic social engineering pressure tactic. Legitimate utility bills give 15–30 days notice before disconnection.', hi: 'Turant katne ki dhamki ek classic scam hai. Asli bill mein 15-30 din ka time milta hai.' } },
+  { pattern: /act\s*(?:immediately|now|quickly|fast|within)/i, severity: 'high' as Severity, explanation: { en: 'Pressure to act immediately prevents you from thinking clearly or verifying the message through official channels.', hi: 'Turant action ka pressure aapko sochne aur verify karne se rokta hai.' } },
+  { pattern: /(?:within|in)\s*\d+\s*(?:hour|hrs?|minutes?)\s*(?:or|otherwise)/i, severity: 'high' as Severity, explanation: { en: 'Artificial time limits are a hallmark of scam messages. Legitimate organizations do not demand action within hours.', hi: 'Time limit dalna scam ki pehchaan hai. Asli companies itni jaldi action nahi maangti.' } },
 ];
 
 const SUSPICIOUS_CHANNELS = [
-  { pattern: /refund\s*adjustment/i, severity: 'high' as Severity, explanation: '"Refund adjustment" is not a real UPI transaction type. Scammers invent plausible-sounding terms to confuse victims.' },
-  { pattern: /forwarded\s*from/i, severity: 'medium' as Severity, explanation: '"Forwarded from [Official Name]" does not mean the message is from that organization. Anyone can type any sender name in a forwarded message.' },
-  { pattern: /(?:customer\s*(?:care|support)|helpline).*(?:number|call)/i, severity: 'medium' as Severity, explanation: 'Fake customer care numbers are a common scam vector. Always use the official app or website to contact support.' },
+  { pattern: /refund\s*adjustment/i, severity: 'high' as Severity, explanation: { en: '"Refund adjustment" is not a real UPI transaction type. Scammers invent plausible-sounding terms to confuse victims.', hi: '"Refund adjustment" koi asli UPI transaction nahi hai. Scammers confusing terms banate hain.' } },
+  { pattern: /forwarded\s*from/i, severity: 'medium' as Severity, explanation: { en: '"Forwarded from [Official Name]" does not mean the message is from that organization. Anyone can type any sender name in a forwarded message.', hi: '"Forwarded from [Official Name]" ka matlab yeh nahi ki message uss organization se hai. Koi bhi sender name likh sakta hai.' } },
+  { pattern: /(?:customer\s*(?:care|support)|helpline).*(?:number|call)/i, severity: 'medium' as Severity, explanation: { en: 'Fake customer care numbers are a common scam vector. Always use the official app or website to contact support.', hi: 'Fake customer care numbers ek common scam hai. Hamesha official app ya website se contact karein.' } },
 ];
 
 // ─── Tool 1: analyze_payment_message ─────────────────────────────────────────
@@ -434,40 +437,49 @@ export function runAgent(context: ScenarioContext): AgentResult {
   }
 
   // ── DECIDE FINAL ──
-  // Build the final answer
+  // Build the final answer with bilingual output
   let answer = '';
 
   if (hasScam) {
-    answer += '🚨 **This message is a scam.** ';
+    answer += '🚨 **Yeh message fraud hai (This message is a scam).** ';
     const criticalFlags = (trace.find(t => t.tool === 'analyze_payment_message')?.result as AnalyzeMessageResult)?.flags.filter(f => f.severity === 'critical');
     if (criticalFlags?.length) {
-      answer += `The phrase "${criticalFlags[0].phrase}" is the red flag — ${criticalFlags[0].explanation} `;
+      answer += `The phrase "${criticalFlags[0].phrase}" is the red flag — ${criticalFlags[0].explanation.en} `;
+      answer += `\n\n**हिन्दी:** ${criticalFlags[0].explanation.hi}`;
     }
     answer += '\n\n**Do not** scan any QR code or enter your PIN. ';
+    answer += '\n**किसी को भी QR code scan mat karo ya PIN mat daalo.** ';
     answer += 'Pay your bill through the official biller app or your bank\'s bill-pay section instead.';
+    answer += '\n\n**Safe action:** Official biller app ya bank ke bill-pay section se payment karein.';
   }
 
   if (stillShort && loanResult) {
     answer += `\n\n💰 **About the loan:** The headline rate hides the real cost. You'd pay ₹${loanResult.extra_cost_over_principal.toLocaleString()} extra (effective rate: ${loanResult.effective_annual_rate}%). `;
+    answer += `\n**Loan ke baare mein:** Headline rate asli cost chhupati hai. Aap ₹${loanResult.extra_cost_over_principal.toLocaleString()} extra denge (effective rate: ${loanResult.effective_annual_rate}%). `;
     if (hasScam) {
       answer += `Since the message is a scam, avoid this loan entirely — it's part of the trap. `;
+      answer += `Kyunki message scam hai, yeh loan bilkul mat lo — yeh trap ka hissa hai. `;
     }
     if (cashFlowResult) {
       answer += `Your cash flow projects to ₹${cashFlowResult.final_balance.toLocaleString()} after expenses. `;
       if (cashFlowResult.goes_negative) {
         answer += `That's ₹${Math.abs(cashFlowResult.final_balance).toLocaleString()} short. Consider: request a bill extension, defer a non-essential expense, or borrow from a trusted contact at 0% instead.`;
+        answer += `\n**Aapka cash flow:** Expenses ke baad ₹${cashFlowResult.final_balance.toLocaleString()} rahega. Yeh ₹${Math.abs(cashFlowResult.final_balance).toLocaleString()} kam hai. Bill extension maangein, non-essential expense defer karein, ya trusted contact se 0% interest pe udhaar lein.`;
       }
     }
   } else if (stillShort && !loanResult) {
     answer += `\n\n💰 Your cash flow projects to ₹${cashFlowResult!.final_balance.toLocaleString()}. That's a shortfall of ₹${Math.abs(cashFlowResult!.final_balance).toLocaleString()}. Consider deferring non-essential expenses or requesting payment extensions.`;
+    answer += `\n**Aapka cash flow:** ₹${cashFlowResult!.final_balance.toLocaleString()} rahega. Yeh ₹${Math.abs(cashFlowResult!.final_balance).toLocaleString()} kam hai. Non-essential expenses defer karein ya payment extension maangein.`;
   }
 
   if (escalationResult?.escalated) {
     answer += '\n\n📱 **Alert sent to your trusted contact** so they can help verify before you act.';
+    answer += '\n**Alert aapke trusted contact ko bhej diya gaya hai** taaki woh aapki help kar sakein.';
   }
 
   if (!answer) {
     answer = '✅ No scam patterns detected and your cash flow looks manageable. No action needed.';
+    answer += '\n**Koi scam pattern nahi mila aur aapka cash flow theek hai. Koi action ki zarurat nahi.**';
   }
 
   finalAnswer = answer;

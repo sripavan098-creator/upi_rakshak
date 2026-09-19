@@ -51,8 +51,11 @@ function ScamFlagsCard({ result }: { result: AnalyzeMessageResult }) {
                 <p className="text-[11px] font-mono mb-1" style={{ color: 'var(--parchment)' }}>
                   "{flag.phrase}"
                 </p>
-                <p className="text-[11px] leading-relaxed" style={{ color: 'var(--muted)' }}>
-                  {flag.explanation}
+                <p className="text-[11px] leading-relaxed mb-1" style={{ color: 'var(--muted)' }}>
+                  {flag.explanation.en}
+                </p>
+                <p className="text-[11px] leading-relaxed" style={{ color: 'var(--muted-2)' }}>
+                  <span className="font-medium">हिन्दी:</span> {flag.explanation.hi}
                 </p>
               </div>
             );
