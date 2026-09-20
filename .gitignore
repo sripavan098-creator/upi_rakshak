@@ -1,5 +1,54 @@
+# Dependencies
 node_modules/
-.next/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production
 dist/
 build/
+
+# Environment variables
+.env
+.env.local
+.env.production
+local.properties
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Android
+native-android/.gradle/
+native-android/app/build/
+native-android/app/.cxx/
+native-android/local.properties
+
+# Capacitor
+android/.gradle/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
+
+# Misc
+.cache/
+.temp/
+tmp/
+.next/

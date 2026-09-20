@@ -36,8 +36,10 @@ export default function CashFlowRuler() {
   
   // Calculate runway
   const availableFunds = CURRENT_BALANCE + SALARY;
-  const runway = Math.floor((availableFunds / totalWithHypothetical) * DAYS_IN_MONTH);
-  const runwayPercentage = (runway / DAYS_IN_MONTH) * 100;
+  const actualRunway = Math.floor((availableFunds / totalWithHypothetical) * DAYS_IN_MONTH);
+  const runway = Math.min(actualRunway, DAYS_IN_MONTH); // Cap at 30 days for display
+  const runwayPercentage = Math.min((runway / DAYS_IN_MONTH) * 100, 100); // Cap at 100%
+  const isBeyondMonth = actualRunway > DAYS_IN_MONTH;
   
   // Determine if in danger zone
   const isDanger = runway < 10;
@@ -122,7 +124,7 @@ export default function CashFlowRuler() {
                 className="absolute top-1/2 -translate-y-1/2 right-2 font-signage font-bold text-lg"
                 style={{ color: isDanger ? 'var(--stamp-red)' : isWarning ? 'var(--warning)' : 'var(--bbps-green)' }}
               >
-                {runway} days
+                {actualRunway} days{isBeyondMonth && ' (beyond month)'}
               </div>
             </motion.div>
           </div>
@@ -155,7 +157,7 @@ export default function CashFlowRuler() {
               className="font-signage font-bold text-3xl"
               style={{ color: isDanger ? 'var(--stamp-red)' : isWarning ? 'var(--warning)' : 'var(--bbps-green)' }}
             >
-              {runway} days
+              {actualRunway} days{isBeyondMonth && '+'}
             </p>
           </div>
         </div>

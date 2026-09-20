@@ -130,7 +130,7 @@ export default function TheNoticeLanding() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="https://github.com/yourusername/upi-rakshak"
+              href="https://github.com/sripavan098-creator/upi_rakshak"
               className="bg-[var(--paper)] text-[var(--ink)] px-6 py-3 font-signage font-bold uppercase tracking-wide hover:bg-[var(--paper-dark)] transition-colors"
             >
               View Source

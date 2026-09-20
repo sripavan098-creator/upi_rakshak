@@ -244,10 +244,16 @@ export default function InterceptionTimeline() {
                 3 rules violated. This is a confirmed scam.
               </p>
               <div className="flex gap-3">
-                <button className="bg-[var(--bbps-green)] text-white px-6 py-3 font-signage font-bold uppercase tracking-wide hover:bg-[var(--ink)] transition-colors">
+                <a 
+                  href="tel:1930" 
+                  className="bg-[var(--bbps-green)] text-white px-6 py-3 font-signage font-bold uppercase tracking-wide hover:bg-[var(--ink)] transition-colors inline-block"
+                >
                   Report to 1930
-                </button>
-                <button className="bg-[var(--ink)] text-[var(--paper)] px-6 py-3 font-signage font-bold uppercase tracking-wide hover:bg-[var(--ink-light)] transition-colors">
+                </a>
+                <button 
+                  onClick={() => alert('Detailed threat analysis would open here with full context, timeline, and recommended actions.')}
+                  className="bg-[var(--ink)] text-[var(--paper)] px-6 py-3 font-signage font-bold uppercase tracking-wide hover:bg-[var(--ink-light)] transition-colors"
+                >
                   View Details
                 </button>
               </div>
