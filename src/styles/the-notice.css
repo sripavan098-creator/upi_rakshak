@@ -249,6 +249,32 @@ body {
 .notice-annex p { max-width: 48rem; margin: 0; font-family: var(--font-legal); font-size: 1.1rem; line-height: 1.6; }
 .notice-annex__facts { display: flex; flex-wrap: wrap; gap: 0.7rem 1.5rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(27, 42, 33, 0.28); font-family: var(--font-machine); font-size: 0.66rem; letter-spacing: 0.06em; }
 @keyframes notice-wave { from { transform: scaleY(0.65); opacity: 0.65; } to { transform: scaleY(1.1); opacity: 1; } }
+.notice-attack { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 1rem; background: rgba(27, 42, 33, 0.78); }
+.notice-attack__window { width: min(100%, 34rem); padding: 1rem; border: 2px solid var(--paper); background: var(--paper); color: var(--ink); box-shadow: 12px 12px 0 var(--seal-gold); }
+.notice-attack__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(27, 42, 33, 0.25); }
+.notice-attack__code { color: var(--ink-light); font-family: var(--font-machine); font-size: 0.62rem; letter-spacing: 0.08em; }
+.notice-attack__header h2 { margin: 0.25rem 0 0; font-size: 1.55rem; }
+.notice-attack__close { width: 2rem; height: 2rem; border: 1px solid var(--ink); color: var(--ink); background: transparent; font-size: 1.3rem; line-height: 1; cursor: pointer; }
+.notice-attack__phone { min-height: 19rem; margin-top: 1rem; overflow: hidden; border: 1px solid var(--ink); border-radius: var(--radius-phone); background: #d6d2c7; }
+.notice-attack__phonebar { display: flex; justify-content: space-between; padding: 0.65rem 0.85rem; background: var(--ink); color: var(--paper); font-family: var(--font-machine); font-size: 0.68rem; }
+.notice-attack__notification, .notice-attack__fraud, .notice-attack__verdict { margin: 1.25rem; padding: 1rem; }
+.notice-attack__notification { background: var(--paper); border: 1px solid rgba(27, 42, 33, 0.22); }
+.notice-attack__sender { display: block; margin-bottom: 0.65rem; color: var(--ink-light); font-family: var(--font-machine); font-size: 0.68rem; text-transform: uppercase; }
+.notice-attack__notification p { margin: 0; font-family: var(--font-legal); line-height: 1.5; }
+.notice-attack__fraud { display: flex; gap: 0.8rem; align-items: flex-start; background: var(--stamp-red); color: white; }
+.notice-attack__fraud-mark { display: grid; width: 2.2rem; height: 2.2rem; flex: 0 0 auto; place-items: center; border: 2px solid white; border-radius: 50%; font-family: var(--font-signage); font-size: 1.4rem; }
+.notice-attack__fraud strong, .notice-attack__fraud p { display: block; margin: 0; font-family: var(--font-signage); letter-spacing: 0.06em; }
+.notice-attack__fraud small { display: block; margin-top: 0.5rem; font-family: var(--font-legal); line-height: 1.45; }
+.notice-attack__verdict { background: var(--paper); border: 1px solid var(--ink); }
+.notice-attack__stamp { display: inline-block; padding: 0.35rem 0.55rem; background: var(--stamp-red); color: white; font-family: var(--font-signage); font-size: 0.74rem; letter-spacing: 0.1em; transform: rotate(-3deg); }
+.notice-attack__verdict h3 { margin: 0.8rem 0 0.5rem; font-size: 1.35rem; }
+.notice-attack__verdict ul { margin: 0; padding-left: 1.1rem; font-family: var(--font-legal); font-size: 0.88rem; line-height: 1.55; }
+.notice-attack__safe { margin: 0.9rem 0 0; padding-top: 0.7rem; border-top: 1px solid rgba(27, 42, 33, 0.25); color: var(--bbps-green); font-family: var(--font-machine); font-size: 0.7rem; line-height: 1.45; }
+.notice-attack__progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin-top: 1rem; font-family: var(--font-machine); font-size: 0.6rem; letter-spacing: 0.03em; }
+.notice-attack__progress span { padding-top: 0.55rem; border-top: 2px solid rgba(27, 42, 33, 0.2); color: var(--ink-light); }
+.notice-attack__progress span.is-active { border-color: var(--stamp-red); color: var(--stamp-red); }
+.notice-attack__progress span.is-done { border-color: var(--bbps-green); color: var(--bbps-green); }
+.notice-attack__caption { margin: 0.85rem 0 0; color: var(--ink-light); font-family: var(--font-legal); font-size: 0.76rem; }
 @media (max-width: 680px) {
   .notice-nav__links a:nth-child(-n+3) { display: none; }
   .notice-nav { min-height: 3.5rem; }

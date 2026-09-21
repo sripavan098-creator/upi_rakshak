@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import InterceptionTimeline from './InterceptionTimeline';
 import CashFlowRuler from './CashFlowRuler';
 import LoanReceipt from './LoanReceipt';
 import CredibilityLedger from './CredibilityLedger';
 import QrCodeScanner from './QrCodeScanner';
 import NoticeVoicePanel from './NoticeVoicePanel';
+import NoticeAttackSimulation from './NoticeAttackSimulation';
 
 /**
  * The Notice — Landing Page
@@ -14,6 +16,8 @@ import NoticeVoicePanel from './NoticeVoicePanel';
  */
 
 export default function TheNoticeLanding() {
+  const [attackOpen, setAttackOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[var(--paper)]">
       <header className="notice-nav" aria-label="Primary navigation">
@@ -159,7 +163,7 @@ export default function TheNoticeLanding() {
               <span className="hero-preview__seal">!</span>
               <div><strong>HIGH RISK</strong><small>3 payment traps intercepted before approval</small></div>
             </div>
-            <button type="button" className="hero-preview__action" onClick={() => document.getElementById('interception')?.scrollIntoView({ behavior: 'smooth' })}>
+            <button type="button" className="hero-preview__action" onClick={() => setAttackOpen(true)}>
               Simulate scam attack ↓
             </button>
             <p className="hero-preview__footer">The product moment: explain the trap before the money leaves.</p>
@@ -240,6 +244,7 @@ export default function TheNoticeLanding() {
           </p>
         </div>
       </footer>
+      <NoticeAttackSimulation open={attackOpen} onClose={() => setAttackOpen(false)} />
     </div>
   );
 }

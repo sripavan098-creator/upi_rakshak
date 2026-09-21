@@ -75,10 +75,11 @@ Converts marketing rates into actual rupee totals:
    - Stamp-red notice: "RAKSHAK ALERT: FRAUD HO SAKTA HAI!"
    - Shows the exact phrases that triggered the flag
 
-3. **Verdict panel appears inside the notice timeline**
-   - Three ledger-style reasons explaining the interception
-   - Safe-action guidance: "Use official BSES app or bbps.npci.org.in"
-   - Report and scanner follow-up actions
+3. **The in-page mobile simulation advances to a verdict**
+   - The recreated phone screen changes from WhatsApp to a Rakshak fraud alert
+   - Three ledger-style reasons explain the interception
+   - Safe-action guidance: "Use the official BSES app or call 1930"
+   - The dialog explicitly states that no real notification is sent
 
 **This is the unforgettable demo moment** — the overlay appearing over a live scam notification within 200ms.
 
