@@ -104,9 +104,9 @@ Award rubrics and hackathon judges both score content credibility. A Stage 1 sub
 ┌─────────────────────────────────┬─────────────────────────────────┐
 │ What we have proved             │ What we have not proved yet     │
 ├─────────────────────────────────┼─────────────────────────────────┤
-│ 200+ fraud patterns detected    │ Real user testing (0 users)     │
+│ 257 native keyword signals      │ Coverage validation (not measured)│
 │ <200ms overlay on iQOO 15       │ False positive rate (unknown)   │
-│ 22 Indian languages supported   │ Long-term retention (0 days)    │
+│ English + Hinglish web cues     │ Full 22-language coverage        │
 │ 17 unit tests passing           │ Production deployment (Stage 1) │
 └─────────────────────────────────┴─────────────────────────────────┘
 ```

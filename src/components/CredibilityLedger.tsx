@@ -15,16 +15,16 @@ interface LedgerItem {
 
 const LEDGER_ITEMS: LedgerItem[] = [
   {
-    proved: '200+ fraud patterns detected',
-    notProved: 'Real user testing (0 users so far)',
+    proved: '257 native keyword signals catalogued',
+    notProved: 'Independent coverage validation (not measured)',
   },
   {
     proved: '<200ms overlay on iQOO 15',
     notProved: 'False positive rate (unknown)',
   },
   {
-    proved: '22 Indian languages supported',
-    notProved: 'Long-term retention (0 days)',
+    proved: 'English + Hinglish cues in the live web engine',
+    notProved: 'Full 22-language product coverage (not implemented)',
   },
   {
     proved: '17 unit tests passing',

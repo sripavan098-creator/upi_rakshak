@@ -1,8 +1,8 @@
 package com.upirakshak.engine
 
 /**
- * Comprehensive scam detection patterns for Indian UPI fraud detection
- * Includes 200+ patterns across 22+ fraud categories
+ * Keyword catalog for Indian UPI fraud detection.
+ * Contains 257 literal keyword signals across the base detectors and 21 named fraud categories.
  */
 object ScamPatterns {
 

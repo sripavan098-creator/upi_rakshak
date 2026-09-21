@@ -33,7 +33,7 @@ Every day, millions of Indians receive scam messages on WhatsApp and SMS. By the
 ## ✨ What UPI Rakshak Does
 
 ### 🚨 Real-Time Scam Detection
-Intercepts WhatsApp/SMS notifications at the OS level and analyzes them in <200ms using a deterministic rules engine:
+Intercepts WhatsApp/SMS notifications at the OS level and analyzes them in <200ms using deterministic rules engines. The Android catalog contains **257 keyword signals across 21 named fraud categories**; these are rule signals, not 257 independently validated scam cases:
 - **Urgency keywords** (Hinglish + English): "bandh", "kat jayega", "disconnected", "immediately"
 - **Suspicious UPI patterns**: `@care`, `@refund`, `@verify`, `@support`
 - **Payment traps**: "scan QR to receive", "enter PIN to accept"
@@ -53,10 +53,11 @@ Converts marketing rates into actual rupee totals:
 - Includes processing fees, flat fees, and hidden charges
 - Compares instant loans vs bank loans vs credit card EMI
 
-### 🎤 Voice-First, Multilingual
+### 🎤 Voice-First, English + Hinglish Prototype
 - Speak queries in Hindi/Hinglish: "Mere paise mahine ke end tak chalenge?"
 - Get spoken warnings: "Yeh message fraud hai. QR code scan mat karo."
-- Works offline with on-device speech recognition
+- Uses browser-native speech synthesis and Android text-to-speech where available
+- The Android selector lists 22 Indian locales, but translated Android resources currently exist for English, Hindi, Bengali, Marathi, Tamil, and Telugu only; the web UI is not fully localized yet
 
 ---
 
@@ -226,7 +227,7 @@ UPI Rakshak is designed to integrate deeply with **iQOO devices running Funtouch
 - ✅ System-level overlay (Android native)
 - ✅ Cash flow prediction from SMS history
 - ✅ True loan cost calculator
-- ✅ Voice-first multilingual interface
+- ✅ Voice notice with English/Hinglish speech output
 - ✅ Android rules-engine test suite (17 passing tests)
 
 ### What's Still Open

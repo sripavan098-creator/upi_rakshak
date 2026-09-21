@@ -1,7 +1,7 @@
 package com.upirakshak.engine
 
 /**
- * Comprehensive fraud detection engine with 200+ patterns across 22+ categories
+ * Deterministic fraud detection engine over 257 native keyword signals and 21 named categories.
  * Analyzes notification text and returns threat level with reasons and suggested actions
  */
 object RulesEngine {

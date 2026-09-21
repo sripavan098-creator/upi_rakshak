@@ -113,9 +113,9 @@ export default function TheNoticeLanding() {
             transition={{ delay: 0.5 }}
             className="notice-register max-w-4xl mx-auto md:mx-0"
           >
-            <div><span>01 / PATTERN REGISTER</span><strong>200+</strong><em>fraud patterns</em></div>
+            <div><span>01 / NATIVE REGISTER</span><strong>257</strong><em>keyword signals</em></div>
             <div><span>02 / RESPONSE TIME</span><strong>&lt;200ms</strong><em>overlay detection</em></div>
-            <div><span>03 / LANGUAGE COVERAGE</span><strong>22</strong><em>Indian languages</em></div>
+            <div><span>03 / LIVE WEB CUES</span><strong>2</strong><em>English + Hinglish</em></div>
             <div><span>04 / VALIDATION</span><strong>17</strong><em>unit tests passing</em></div>
           </motion.div>
 
