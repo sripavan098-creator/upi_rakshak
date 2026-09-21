@@ -7,6 +7,7 @@ import CredibilityLedger from './CredibilityLedger';
 import QrCodeScanner from './QrCodeScanner';
 import NoticeVoicePanel from './NoticeVoicePanel';
 import NoticeAttackSimulation from './NoticeAttackSimulation';
+import MessageAnalysisWorkbench from './MessageAnalysisWorkbench';
 
 /**
  * The Notice — Landing Page
@@ -189,6 +190,7 @@ export default function TheNoticeLanding() {
             </p>
           </div>
 
+          <MessageAnalysisWorkbench />
           <NoticeVoicePanel />
           <QrCodeScanner id="live-qr-scanner-section" />
         </div>
