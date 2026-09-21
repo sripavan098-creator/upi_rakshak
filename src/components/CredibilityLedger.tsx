@@ -221,9 +221,14 @@ export default function CredibilityLedger() {
           <p className="text-[var(--ink-light)] mb-6">
             Want to pilot UPI Rakshak with your users?
           </p>
-          <button className="bg-[var(--ink)] text-[var(--paper)] px-8 py-4 font-signage font-bold text-lg uppercase tracking-wide hover:bg-[var(--ink-light)] transition-colors">
-            Partner With Us
-          </button>
+          <a
+            href="https://github.com/sripavan098-creator/upi_rakshak/issues/new"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex bg-[var(--ink)] text-[var(--paper)] px-8 py-4 font-signage font-bold text-lg uppercase tracking-wide hover:bg-[var(--ink-light)] transition-colors"
+          >
+            Start a pilot conversation
+          </a>
         </motion.div>
       </div>
     </section>

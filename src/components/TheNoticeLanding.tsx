@@ -28,8 +28,18 @@ export default function TheNoticeLanding() {
         </nav>
       </header>
       {/* Hero Section */}
-      <section id="top" className="min-h-screen flex items-center justify-center px-4 py-16">
-        <div className="max-w-4xl mx-auto text-center">
+      <section id="top" className="min-h-screen flex items-center justify-center px-4 py-24 sm:py-28 scroll-mt-16">
+        <div className="max-w-5xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            className="notice-kicker"
+          >
+            <span>Agentic AI Hackathon 2025</span>
+            <span aria-hidden="true">•</span>
+            <span>FinTech &amp; Commerce</span>
+          </motion.div>
           {/* Official seal */}
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
@@ -61,17 +71,31 @@ export default function TheNoticeLanding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-xl md:text-2xl text-[var(--ink-light)] mb-8 max-w-2xl mx-auto"
+            className="text-xl md:text-2xl text-[var(--ink-light)] mb-5 max-w-2xl mx-auto"
           >
             The real-time financial safety layer for India's digital economy
           </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            className="max-w-2xl mx-auto text-base sm:text-lg text-[var(--ink-light)] leading-relaxed"
+          >
+            A safety layer that stops fraud <strong>before you pay</strong> — by explaining the exact trap in the message, not just showing another warning after the money is gone.
+          </motion.p>
+
+          <div className="flex flex-wrap justify-center gap-3 mt-7 mb-8">
+            <a className="notice-cta notice-cta--primary" href="#scanner">Run the live defense</a>
+            <a className="notice-cta notice-cta--secondary" href="#cash-flow">See the money layer</a>
+          </div>
 
           {/* Hindi tagline */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-lg text-[var(--ink)] mb-12 hindi"
+            className="text-lg text-[var(--ink)] mb-8 hindi"
           >
             आपके पैसों का रक्षक
           </motion.p>
@@ -81,7 +105,7 @@ export default function TheNoticeLanding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto"
+            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto"
           >
             <div className="bg-white border-2 border-[var(--ink)] p-4">
               <p className="font-signage font-bold text-3xl text-[var(--ink)]">200+</p>
@@ -124,7 +148,7 @@ export default function TheNoticeLanding() {
       <InterceptionTimeline />
 
       {/* Real-Time QR Scanner & Status Indicator */}
-      <section id="scanner" className="py-20 px-4 bg-[var(--ink)] border-t-2 border-b-2 border-[var(--border)]">
+      <section id="scanner" className="py-20 px-4 bg-[var(--ink)] border-t-2 border-b-2 border-[var(--border)] scroll-mt-16">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
             <span className="inline-block px-3 py-1 bg-[var(--gold)] text-[var(--ink)] font-mono text-xs font-bold uppercase tracking-widest mb-3">
@@ -143,10 +167,10 @@ export default function TheNoticeLanding() {
       </section>
 
       {/* Cash Flow Ruler */}
-      <div id="cash-flow"><CashFlowRuler /></div>
+      <div id="cash-flow" className="scroll-mt-16"><CashFlowRuler /></div>
 
       {/* Loan Receipt */}
-      <div id="loans"><LoanReceipt /></div>
+      <div id="loans" className="scroll-mt-16"><LoanReceipt /></div>
 
       {/* Credibility Ledger */}
       <CredibilityLedger />

@@ -63,6 +63,16 @@ export default function InterceptionTimeline() {
     >
       {/* Sticky phone container */}
       <div className="sticky top-0 h-screen flex items-center justify-center px-4">
+        <div className="timeline-guide" aria-label="Interception timeline progress">
+          <div className="timeline-guide__copy">
+            <span className="timeline-guide__eyebrow">The decision moment</span>
+            <span className="timeline-guide__step">Step <motion.span>{currentRule}</motion.span> / 3</span>
+          </div>
+          <div className="timeline-guide__track" aria-hidden="true">
+            <motion.div className="timeline-guide__progress" style={{ scaleX: scrollYProgress }} />
+          </div>
+          <span className="timeline-guide__hint">Scroll to see how Rakshak intercepts it</span>
+        </div>
         <div className="relative w-full max-w-md">
           {/* Phone mockup */}
           <div
@@ -228,7 +238,7 @@ export default function InterceptionTimeline() {
 
       {/* Verdict panel - rises at the end */}
       <motion.div
-        className="fixed bottom-0 left-0 right-0 bg-[var(--paper)] border-t-2 border-[var(--ink)] p-6 shadow-lg"
+        className="absolute bottom-0 left-0 right-0 bg-[var(--paper)] border-t-2 border-[var(--ink)] p-4 sm:p-6 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-lg"
         style={{
           y: verdictY,
           opacity: verdictOpacity,
@@ -243,13 +253,13 @@ export default function InterceptionTimeline() {
               <p className="text-[var(--ink)] mb-4">
                 3 rules violated. This is a confirmed scam.
               </p>
-              <div className="flex gap-3">
-                <button className="bg-[var(--bbps-green)] text-white px-6 py-3 font-signage font-bold uppercase tracking-wide hover:bg-[var(--ink)] transition-colors">
+              <div className="flex flex-wrap gap-3">
+                <a href="https://www.cybercrime.gov.in/" target="_blank" rel="noreferrer" className="bg-[var(--bbps-green)] text-white px-5 py-3 font-signage font-bold text-sm uppercase tracking-wide hover:bg-[var(--ink)] transition-colors">
                   Report to 1930
-                </button>
-                <button className="bg-[var(--ink)] text-[var(--paper)] px-6 py-3 font-signage font-bold uppercase tracking-wide hover:bg-[var(--ink-light)] transition-colors">
-                  View Details
-                </button>
+                </a>
+                <a href="#scanner" className="bg-[var(--ink)] text-[var(--paper)] px-5 py-3 font-signage font-bold text-sm uppercase tracking-wide hover:bg-[var(--ink-light)] transition-colors">
+                  Open scanner
+                </a>
               </div>
             </div>
           </div>
