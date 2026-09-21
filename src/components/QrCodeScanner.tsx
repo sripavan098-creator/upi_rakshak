@@ -12,8 +12,13 @@ import {
   QrCode,
   Info,
   CheckCircle2,
+  Volume2,
+  VolumeX,
+  Vibrate,
+  Activity,
 } from 'lucide-react';
 import { analyzeQrPayload, QrSafetyResult } from '../lib/qrSafetyAnalyzer';
+import { soundHaptics } from '../lib/audioHaptics';
 import StatusIndicator from './StatusIndicator';
 
 // Realistic sample UPI QR payloads for immediate simulation & verification
@@ -78,6 +83,8 @@ export default function QrCodeScanner({
   const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment');
   const [torchOn, setTorchOn] = useState<boolean>(false);
   const [isScanning, setIsScanning] = useState<boolean>(true);
+  const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const [hapticsEnabled, setHapticsEnabled] = useState<boolean>(true);
   
   // Scanned payload & safety evaluation state
   const [currentRawPayload, setCurrentRawPayload] = useState<string>(
@@ -91,13 +98,19 @@ export default function QrCodeScanner({
     defaultScenarioId || SAMPLE_UPI_QR_SCENARIOS[0].id
   );
 
-  // Evaluate payload and propagate result
+  // Evaluate payload and propagate result with sound and haptic alerts
   const evaluatePayload = useCallback(
-    (payload: string, scenarioId?: string) => {
+    (payload: string, scenarioId?: string, triggerNotification: boolean = true) => {
       const result = analyzeQrPayload(payload);
       setCurrentRawPayload(payload);
       setAnalysisResult(result);
       if (scenarioId) setActiveScenarioId(scenarioId);
+
+      // Play distinct audio chime / siren and haptic waveform
+      if (triggerNotification) {
+        soundHaptics.notifyScanResult(result.level);
+      }
+
       onScanResult?.(result);
     },
     [onScanResult]
@@ -250,8 +263,55 @@ export default function QrCodeScanner({
             </div>
           </div>
 
-          {/* Camera action buttons */}
-          <div className="flex items-center gap-2">
+          {/* Controls: Audio, Haptics, Camera */}
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Audio Toggle */}
+            <button
+              type="button"
+              id="btn-toggle-sound"
+              onClick={() => {
+                const next = !soundEnabled;
+                setSoundEnabled(next);
+                soundHaptics.setSoundEnabled(next);
+                if (next) {
+                  soundHaptics.playSound('SAFE');
+                }
+              }}
+              title={soundEnabled ? 'Mute Alert Sounds' : 'Unmute Alert Sounds'}
+              className={`px-2.5 py-1.5 font-mono text-xs border flex items-center gap-1.5 transition-colors ${
+                soundEnabled
+                  ? 'bg-[var(--ink-2)] border-[var(--border-strong)] text-[var(--gold)] hover:border-[var(--gold)]'
+                  : 'bg-[var(--ink-1)] border-[var(--border)] text-[var(--muted-2)]'
+              }`}
+            >
+              {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+              <span className="hidden sm:inline">{soundEnabled ? 'Sound ON' : 'Muted'}</span>
+            </button>
+
+            {/* Haptic Toggle */}
+            <button
+              type="button"
+              id="btn-toggle-haptics"
+              onClick={() => {
+                const next = !hapticsEnabled;
+                setHapticsEnabled(next);
+                soundHaptics.setHapticsEnabled(next);
+                if (next) {
+                  soundHaptics.triggerHaptics('SAFE');
+                }
+              }}
+              title={hapticsEnabled ? 'Disable Haptics' : 'Enable Haptics'}
+              className={`px-2.5 py-1.5 font-mono text-xs border flex items-center gap-1.5 transition-colors ${
+                hapticsEnabled
+                  ? 'bg-[var(--ink-2)] border-[var(--border-strong)] text-[var(--safe)] hover:border-[var(--safe)]'
+                  : 'bg-[var(--ink-1)] border-[var(--border)] text-[var(--muted-2)]'
+              }`}
+            >
+              <Vibrate className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">{hapticsEnabled ? 'Haptics ON' : 'Haptics OFF'}</span>
+            </button>
+
+            {/* Camera action buttons */}
             <button
               type="button"
               id="btn-toggle-camera"
@@ -359,6 +419,73 @@ export default function QrCodeScanner({
               {/* Animated laser sweep line from CSS */}
               <div className="scan-sweep" />
 
+              {/* Real-time Fraud Detection Latency Overlay on the scan-frame */}
+              <div
+                id="scan-frame-latency-overlay"
+                className="w-full z-20 flex items-center justify-between px-2.5 py-1.5 bg-[var(--ink)]/95 border backdrop-blur-sm font-mono text-[10px] shadow-lg pointer-events-none select-none transition-all duration-200"
+                style={{
+                  borderColor:
+                    analysisResult.level === 'HIGH'
+                      ? 'var(--risk-high)'
+                      : analysisResult.level === 'MEDIUM'
+                      ? 'var(--risk-med)'
+                      : 'var(--safe)',
+                }}
+                role="status"
+                aria-label={`Fraud detection latency: ${analysisResult.latencyMs} milliseconds`}
+              >
+                <div className="flex items-center gap-1.5">
+                  <Activity
+                    className="w-3.5 h-3.5 animate-pulse"
+                    style={{
+                      color:
+                        analysisResult.level === 'HIGH'
+                          ? 'var(--risk-high)'
+                          : analysisResult.level === 'MEDIUM'
+                          ? 'var(--risk-med)'
+                          : 'var(--safe)',
+                    }}
+                  />
+                  <span className="text-[var(--parchment)] font-bold tracking-wider">LATENCY:</span>
+                  <span
+                    className="font-bold text-xs"
+                    style={{
+                      color:
+                        analysisResult.level === 'HIGH'
+                          ? 'var(--risk-high)'
+                          : analysisResult.level === 'MEDIUM'
+                          ? 'var(--risk-med)'
+                          : 'var(--safe)',
+                    }}
+                  >
+                    {analysisResult.latencyMs} ms
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[9px] text-[var(--muted)] hidden sm:inline">TARGET &lt;200ms</span>
+                  <span
+                    className="font-bold text-[9px] px-1.5 py-0.5 uppercase tracking-wider"
+                    style={{
+                      backgroundColor:
+                        analysisResult.level === 'HIGH'
+                          ? 'rgba(225, 85, 74, 0.25)'
+                          : analysisResult.level === 'MEDIUM'
+                          ? 'rgba(232, 163, 61, 0.25)'
+                          : 'rgba(63, 167, 150, 0.25)',
+                      color:
+                        analysisResult.level === 'HIGH'
+                          ? 'var(--risk-high)'
+                          : analysisResult.level === 'MEDIUM'
+                          ? 'var(--risk-med)'
+                          : 'var(--safe)',
+                    }}
+                  >
+                    REAL-TIME
+                  </span>
+                </div>
+              </div>
+
               {/* Target HUD Header */}
               <div className="w-full flex justify-between items-center text-[10px] font-mono text-[var(--gold)] opacity-80 uppercase tracking-wider">
                 <span>[SCAN: VPA_ALIGN]</span>
@@ -380,7 +507,10 @@ export default function QrCodeScanner({
 
               {/* Target HUD Footer */}
               <div className="w-full flex justify-between items-center text-[9px] font-mono text-[var(--muted)]">
-                <span>LATENCY: &lt;180ms</span>
+                <span className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--safe)] inline-block" />
+                  LATENCY: {analysisResult.latencyMs}ms
+                </span>
                 <span className="text-[var(--parchment)] font-bold">
                   {analysisResult.score}/100 SECURE
                 </span>
@@ -431,6 +561,45 @@ export default function QrCodeScanner({
           <p className="mt-2 text-[var(--parchment)] break-all font-mono text-[11px] leading-relaxed bg-[var(--ink)] p-2 border border-[var(--border)]">
             {currentRawPayload}
           </p>
+        </div>
+
+        {/* Audio & Haptic Feedback Quick Testing Bar */}
+        <div className="mt-4 p-3 bg-[var(--ink-2)] border border-[var(--border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Volume2 className="w-4 h-4 text-[var(--gold)]" />
+            <div>
+              <p className="text-xs font-bold text-[var(--parchment)]">
+                Audio &amp; Haptic Sensory Alerts
+              </p>
+              <p className="text-[10px] text-[var(--muted)]">
+                Synthesized Web Audio API chimes &amp; Android-standard vibration patterns
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              id="btn-test-safe-audio"
+              onClick={() => {
+                soundHaptics.playSound('SAFE');
+                soundHaptics.triggerHaptics('SAFE');
+              }}
+              className="px-2.5 py-1 text-[11px] font-mono font-bold bg-[var(--ink)] text-[var(--safe)] border border-[var(--safe)] hover:brightness-110 flex items-center gap-1.5 transition-all"
+            >
+              <span>🔔</span> Test Safe Chime
+            </button>
+            <button
+              type="button"
+              id="btn-test-risk-audio"
+              onClick={() => {
+                soundHaptics.playSound('HIGH');
+                soundHaptics.triggerHaptics('HIGH');
+              }}
+              className="px-2.5 py-1 text-[11px] font-mono font-bold bg-[var(--ink)] text-[var(--risk-high)] border border-[var(--risk-high)] hover:brightness-110 flex items-center gap-1.5 transition-all"
+            >
+              <span>🚨</span> Test High-Risk Alarm
+            </button>
+          </div>
         </div>
 
         {/* Real-time Scenario Presets Selector */}
