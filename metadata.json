@@ -1,0 +1,6 @@
+{
+  "name": "UPI Rakshak — The Notice",
+  "description": "The real-time financial safety layer for India's digital economy. Detects 200+ fraud patterns in <200ms.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
