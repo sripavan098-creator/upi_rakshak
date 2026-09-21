@@ -3,6 +3,7 @@ import InterceptionTimeline from './InterceptionTimeline';
 import CashFlowRuler from './CashFlowRuler';
 import LoanReceipt from './LoanReceipt';
 import CredibilityLedger from './CredibilityLedger';
+import QrCodeScanner from './QrCodeScanner';
 
 /**
  * The Notice — Landing Page
@@ -109,6 +110,25 @@ export default function TheNoticeLanding() {
 
       {/* The Interception Timeline — Signature Moment */}
       <InterceptionTimeline />
+
+      {/* Real-Time QR Scanner & Status Indicator */}
+      <section className="py-20 px-4 bg-[var(--ink)] border-t-2 border-b-2 border-[var(--border)]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <span className="inline-block px-3 py-1 bg-[var(--gold)] text-[var(--ink)] font-mono text-xs font-bold uppercase tracking-widest mb-3">
+              LIVE OPTICAL DEFENSE
+            </span>
+            <h2 className="font-signage font-bold text-4xl sm:text-5xl text-[var(--parchment)] mb-4">
+              Real-Time QR Scanner & Safety Scoring
+            </h2>
+            <p className="text-base sm:text-lg text-[var(--muted)] max-w-2xl mx-auto">
+              Scan any merchant or payment QR code with your device camera. Rakshak parses the payload, identifies reversed payment traps, detects unauthorized VPA handles, and renders the live safety score in &lt;180ms.
+            </p>
+          </div>
+
+          <QrCodeScanner id="live-qr-scanner-section" />
+        </div>
+      </section>
 
       {/* Cash Flow Ruler */}
       <CashFlowRuler />
