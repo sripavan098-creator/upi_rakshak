@@ -15,8 +15,20 @@ import QrCodeScanner from './QrCodeScanner';
 export default function TheNoticeLanding() {
   return (
     <div className="min-h-screen bg-[var(--paper)]">
+      <header className="notice-nav" aria-label="Primary navigation">
+        <a className="notice-brand" href="#top" aria-label="UPI Rakshak home">
+          <span className="notice-brand__seal" aria-hidden="true">र</span>
+          <span>UPI Rakshak</span>
+        </a>
+        <nav className="notice-nav__links">
+          <a href="#scanner">Live scanner</a>
+          <a href="#cash-flow">Cash flow</a>
+          <a href="#loans">Loan receipt</a>
+          <a href="https://github.com/sripavan098-creator/upi_rakshak" target="_blank" rel="noreferrer">Source</a>
+        </nav>
+      </header>
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center px-4 py-16">
+      <section id="top" className="min-h-screen flex items-center justify-center px-4 py-16">
         <div className="max-w-4xl mx-auto text-center">
           {/* Official seal */}
           <motion.div
@@ -112,7 +124,7 @@ export default function TheNoticeLanding() {
       <InterceptionTimeline />
 
       {/* Real-Time QR Scanner & Status Indicator */}
-      <section className="py-20 px-4 bg-[var(--ink)] border-t-2 border-b-2 border-[var(--border)]">
+      <section id="scanner" className="py-20 px-4 bg-[var(--ink)] border-t-2 border-b-2 border-[var(--border)]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
             <span className="inline-block px-3 py-1 bg-[var(--gold)] text-[var(--ink)] font-mono text-xs font-bold uppercase tracking-widest mb-3">
@@ -131,10 +143,10 @@ export default function TheNoticeLanding() {
       </section>
 
       {/* Cash Flow Ruler */}
-      <CashFlowRuler />
+      <div id="cash-flow"><CashFlowRuler /></div>
 
       {/* Loan Receipt */}
-      <LoanReceipt />
+      <div id="loans"><LoanReceipt /></div>
 
       {/* Credibility Ledger */}
       <CredibilityLedger />
@@ -150,16 +162,20 @@ export default function TheNoticeLanding() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="https://github.com/yourusername/upi-rakshak"
+              href="https://github.com/sripavan098-creator/upi_rakshak"
+              target="_blank"
+              rel="noreferrer"
               className="bg-[var(--paper)] text-[var(--ink)] px-6 py-3 font-signage font-bold uppercase tracking-wide hover:bg-[var(--paper-dark)] transition-colors"
             >
               View Source
             </a>
             <a
-              href="https://t.me/upirakshak"
+              href="https://www.cybercrime.gov.in/"
+              target="_blank"
+              rel="noreferrer"
               className="bg-[var(--bbps-green)] text-white px-6 py-3 font-signage font-bold uppercase tracking-wide hover:bg-[var(--ink)] transition-colors"
             >
-              Join Pilot Program
+              Report a Scam
             </a>
           </div>
           <p className="mt-8 text-sm text-[var(--paper)]/60">
