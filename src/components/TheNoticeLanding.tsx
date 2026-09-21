@@ -4,6 +4,7 @@ import CashFlowRuler from './CashFlowRuler';
 import LoanReceipt from './LoanReceipt';
 import CredibilityLedger from './CredibilityLedger';
 import QrCodeScanner from './QrCodeScanner';
+import NoticeVoicePanel from './NoticeVoicePanel';
 
 /**
  * The Notice — Landing Page
@@ -101,29 +102,17 @@ export default function TheNoticeLanding() {
             आपके पैसों का रक्षक
           </motion.p>
 
-          {/* Stats */}
+          {/* Evidence register */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto md:mx-0"
+            className="notice-register max-w-4xl mx-auto md:mx-0"
           >
-            <div className="bg-white border-2 border-[var(--ink)] p-4">
-              <p className="font-signage font-bold text-3xl text-[var(--ink)]">200+</p>
-              <p className="text-sm text-[var(--ink-light)]">Fraud Patterns</p>
-            </div>
-            <div className="bg-white border-2 border-[var(--ink)] p-4">
-              <p className="font-signage font-bold text-3xl text-[var(--ink)]">&lt;200ms</p>
-              <p className="text-sm text-[var(--ink-light)]">Detection Time</p>
-            </div>
-            <div className="bg-white border-2 border-[var(--ink)] p-4">
-              <p className="font-signage font-bold text-3xl text-[var(--ink)]">22</p>
-              <p className="text-sm text-[var(--ink-light)]">Indian Languages</p>
-            </div>
-            <div className="bg-white border-2 border-[var(--ink)] p-4">
-              <p className="font-signage font-bold text-3xl text-[var(--ink)]">17</p>
-              <p className="text-sm text-[var(--ink-light)]">Unit Tests</p>
-            </div>
+            <div><span>01 / PATTERN REGISTER</span><strong>200+</strong><em>fraud patterns</em></div>
+            <div><span>02 / RESPONSE TIME</span><strong>&lt;200ms</strong><em>overlay detection</em></div>
+            <div><span>03 / LANGUAGE COVERAGE</span><strong>22</strong><em>Indian languages</em></div>
+            <div><span>04 / VALIDATION</span><strong>17</strong><em>unit tests passing</em></div>
           </motion.div>
 
           {/* Scroll indicator */}
@@ -170,29 +159,33 @@ export default function TheNoticeLanding() {
               <span className="hero-preview__seal">!</span>
               <div><strong>HIGH RISK</strong><small>3 payment traps intercepted before approval</small></div>
             </div>
+            <button type="button" className="hero-preview__action" onClick={() => document.getElementById('interception')?.scrollIntoView({ behavior: 'smooth' })}>
+              Simulate scam attack ↓
+            </button>
             <p className="hero-preview__footer">The product moment: explain the trap before the money leaves.</p>
           </motion.aside>
         </div>
       </section>
 
       {/* The Interception Timeline — Signature Moment */}
-      <InterceptionTimeline />
+      <div id="interception" className="scroll-mt-16"><InterceptionTimeline /></div>
 
       {/* Real-Time QR Scanner & Status Indicator */}
-      <section id="scanner" className="py-20 px-4 bg-[var(--ink)] border-t-2 border-b-2 border-[var(--border)] scroll-mt-16">
+      <section id="scanner" className="py-20 px-4 bg-[var(--ink)] border-t-2 border-b-2 border-[rgba(233, 231, 219, 0.18)] scroll-mt-16">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
-            <span className="inline-block px-3 py-1 bg-[var(--gold)] text-[var(--ink)] font-mono text-xs font-bold uppercase tracking-widest mb-3">
+            <span className="inline-block px-3 py-1 bg-[var(--seal-gold)] text-[var(--ink)] font-mono text-xs font-bold uppercase tracking-widest mb-3">
               LIVE OPTICAL DEFENSE
             </span>
-            <h2 className="font-signage font-bold text-4xl sm:text-5xl text-[var(--parchment)] mb-4">
+            <h2 className="font-signage font-bold text-4xl sm:text-5xl text-[var(--paper)] mb-4">
               Real-Time QR Scanner & Safety Scoring
             </h2>
-            <p className="text-base sm:text-lg text-[var(--muted)] max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-[var(--paper-dark)] max-w-2xl mx-auto">
               Scan any merchant or payment QR code with your device camera. Rakshak parses the payload, identifies reversed payment traps, detects unauthorized VPA handles, and renders the live safety score in &lt;180ms.
             </p>
           </div>
 
+          <NoticeVoicePanel />
           <QrCodeScanner id="live-qr-scanner-section" />
         </div>
       </section>
@@ -202,6 +195,15 @@ export default function TheNoticeLanding() {
 
       {/* Loan Receipt */}
       <div id="loans" className="scroll-mt-16"><LoanReceipt /></div>
+
+      <section className="notice-annex" aria-labelledby="iqoo-title">
+        <div className="max-w-5xl mx-auto">
+          <span className="notice-annex__label">ANDROID ANNEX / iQOO + FUNTOUCH OS</span>
+          <h2 id="iqoo-title">The guard has to survive the phone.</h2>
+          <p>For the iQOO battle, the native layer keeps Rakshak alive between notifications: autostart whitelist, battery-optimization exemption, notification priority, and overlay permission are the product—not setup trivia.</p>
+          <div className="notice-annex__facts"><span>01 / AUTOSTART</span><span>02 / BATTERY EXEMPTION</span><span>03 / PRIORITY OVERLAY</span></div>
+        </div>
+      </section>
 
       {/* Credibility Ledger */}
       <CredibilityLedger />

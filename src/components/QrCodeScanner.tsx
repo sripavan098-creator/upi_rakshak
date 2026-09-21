@@ -243,21 +243,21 @@ export default function QrCodeScanner({
   return (
     <div id={id} className={`w-full max-w-4xl mx-auto ${className}`}>
       {/* Scanner Control Deck */}
-      <div className="bg-[var(--ink-1)] border-2 border-[var(--border-strong)] p-4 sm:p-6 mb-6">
+      <div className="bg-[var(--ink-light)] border-2 border-[rgba(233, 231, 219, 0.34)] p-4 sm:p-6 mb-6">
         {/* Header with Camera Status */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[var(--border)]">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[rgba(233, 231, 219, 0.18)]">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded bg-[var(--ink-2)] border border-[var(--border)] flex items-center justify-center text-[var(--gold)]">
+            <div className="w-9 h-9 rounded bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.18)] flex items-center justify-center text-[var(--seal-gold)]">
               <QrCode className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-display font-bold text-lg text-[var(--parchment)] flex items-center gap-2">
+              <h2 className="font-display font-bold text-lg text-[var(--paper)] flex items-center gap-2">
                 Real-Time UPI QR Guard
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--ink-2)] text-[var(--gold)] border border-[var(--border)] uppercase tracking-wider">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--ink-light)] text-[var(--seal-gold)] border border-[rgba(233, 231, 219, 0.18)] uppercase tracking-wider">
                   Live Vision
                 </span>
               </h2>
-              <p className="text-xs text-[var(--muted)]">
+              <p className="text-xs text-[var(--paper-dark)]">
                 Optical scan-frame viewfinder with instant deterministic risk scoring
               </p>
             </div>
@@ -280,8 +280,8 @@ export default function QrCodeScanner({
               title={soundEnabled ? 'Mute Alert Sounds' : 'Unmute Alert Sounds'}
               className={`px-2.5 py-1.5 font-mono text-xs border flex items-center gap-1.5 transition-colors ${
                 soundEnabled
-                  ? 'bg-[var(--ink-2)] border-[var(--border-strong)] text-[var(--gold)] hover:border-[var(--gold)]'
-                  : 'bg-[var(--ink-1)] border-[var(--border)] text-[var(--muted-2)]'
+                  ? 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.34)] text-[var(--seal-gold)] hover:border-[var(--seal-gold)]'
+                  : 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.18)] text-[var(--paper-dark)]'
               }`}
             >
               {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
@@ -303,8 +303,8 @@ export default function QrCodeScanner({
               title={hapticsEnabled ? 'Disable Haptics' : 'Enable Haptics'}
               className={`px-2.5 py-1.5 font-mono text-xs border flex items-center gap-1.5 transition-colors ${
                 hapticsEnabled
-                  ? 'bg-[var(--ink-2)] border-[var(--border-strong)] text-[var(--safe)] hover:border-[var(--safe)]'
-                  : 'bg-[var(--ink-1)] border-[var(--border)] text-[var(--muted-2)]'
+                  ? 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.34)] text-[var(--safe)] hover:border-[var(--safe)]'
+                  : 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.18)] text-[var(--paper-dark)]'
               }`}
             >
               <Vibrate className="w-3.5 h-3.5" />
@@ -319,7 +319,7 @@ export default function QrCodeScanner({
               className={`px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all border ${
                 isCameraActive
                   ? 'bg-[var(--safe)] text-[var(--ink)] border-[var(--safe)] hover:brightness-110'
-                  : 'bg-[var(--ink-2)] text-[var(--parchment)] border-[var(--border-strong)] hover:border-[var(--gold)]'
+                  : 'bg-[var(--ink-light)] text-[var(--paper)] border-[rgba(233, 231, 219, 0.34)] hover:border-[var(--seal-gold)]'
               }`}
             >
               {isCameraActive ? (
@@ -328,7 +328,7 @@ export default function QrCodeScanner({
                 </>
               ) : (
                 <>
-                  <Camera className="w-3.5 h-3.5 text-[var(--gold)]" /> Start Camera
+                  <Camera className="w-3.5 h-3.5 text-[var(--seal-gold)]" /> Start Camera
                 </>
               )}
             </button>
@@ -340,7 +340,7 @@ export default function QrCodeScanner({
                   id="btn-flip-camera"
                   onClick={flipCamera}
                   title="Switch camera"
-                  className="p-1.5 bg-[var(--ink-2)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--parchment)]"
+                  className="p-1.5 bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.18)] text-[var(--paper-dark)] hover:text-[var(--paper)]"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </button>
@@ -351,8 +351,8 @@ export default function QrCodeScanner({
                   title="Flashlight / Torch"
                   className={`p-1.5 border transition-colors ${
                     torchOn
-                      ? 'bg-[var(--gold)] text-[var(--ink)] border-[var(--gold)]'
-                      : 'bg-[var(--ink-2)] border-[var(--border)] text-[var(--muted)] hover:text-[var(--parchment)]'
+                      ? 'bg-[var(--seal-gold)] text-[var(--ink)] border-[var(--seal-gold)]'
+                      : 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.18)] text-[var(--paper-dark)] hover:text-[var(--paper)]'
                   }`}
                 >
                   {torchOn ? <Zap className="w-4 h-4" /> : <ZapOff className="w-4 h-4" />}
@@ -363,7 +363,7 @@ export default function QrCodeScanner({
         </div>
 
         {/* Viewfinder Viewport */}
-        <div className="relative mt-4 bg-[var(--ink)] border border-[var(--border)] overflow-hidden min-h-[340px] flex items-center justify-center">
+        <div className="relative mt-4 bg-[var(--ink)] border border-[rgba(233, 231, 219, 0.18)] overflow-hidden min-h-[340px] flex items-center justify-center">
           {/* Radar background rings */}
           <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none opacity-40">
             <div className="radar-ring w-[180px] h-[180px]" />
@@ -382,21 +382,21 @@ export default function QrCodeScanner({
             />
           ) : (
             /* Idle / Simulated Viewfinder Backdrop */
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-0 bg-gradient-to-b from-[var(--ink-1)] to-[var(--ink)]">
-              <div className="w-16 h-16 rounded-full bg-[var(--ink-2)] border border-[var(--border-strong)] flex items-center justify-center mb-3 text-[var(--gold)] shadow-inner">
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-0 bg-gradient-to-b from-[var(--ink-light)] to-[var(--ink)]">
+              <div className="w-16 h-16 rounded-full bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.34)] flex items-center justify-center mb-3 text-[var(--seal-gold)] shadow-inner">
                 <Camera className="w-8 h-8 opacity-80" />
               </div>
-              <p className="font-display font-semibold text-sm text-[var(--parchment)] mb-1">
+              <p className="font-display font-semibold text-sm text-[var(--paper)] mb-1">
                 Camera Viewfinder Inactive
               </p>
-              <p className="text-xs text-[var(--muted)] max-w-sm mb-4">
+              <p className="text-xs text-[var(--paper-dark)] max-w-sm mb-4">
                 Click &quot;Start Camera&quot; to inspect physical QR codes with your device lens, or select any real-world UPI scenario below.
               </p>
               <button
                 type="button"
                 id="btn-start-camera-overlay"
                 onClick={startCamera}
-                className="px-4 py-2 bg-[var(--gold)] text-[var(--ink)] font-mono text-xs font-bold uppercase tracking-wider hover:brightness-110 flex items-center gap-2"
+                className="px-4 py-2 bg-[var(--seal-gold)] text-[var(--ink)] font-mono text-xs font-bold uppercase tracking-wider hover:brightness-110 flex items-center gap-2"
               >
                 <Camera className="w-4 h-4" /> Enable Device Camera
               </button>
@@ -410,7 +410,7 @@ export default function QrCodeScanner({
               className={`scan-frame ${isScanning ? 'scanning' : ''} w-64 h-64 sm:w-72 sm:h-72 flex flex-col items-center justify-between p-4 shadow-2xl transition-all duration-300`}
               style={{
                 backgroundColor: isCameraActive ? 'rgba(20, 19, 43, 0.25)' : 'rgba(20, 19, 43, 0.65)',
-                borderColor: 'var(--border)',
+                borderColor: 'rgba(233, 231, 219, 0.18)',
               }}
             >
               {/* Inner corners element as defined in CSS */}
@@ -426,9 +426,9 @@ export default function QrCodeScanner({
                 style={{
                   borderColor:
                     analysisResult.level === 'HIGH'
-                      ? 'var(--risk-high)'
+                      ? 'var(--stamp-red)'
                       : analysisResult.level === 'MEDIUM'
-                      ? 'var(--risk-med)'
+                      ? 'var(--warning)'
                       : 'var(--safe)',
                 }}
                 role="status"
@@ -440,21 +440,21 @@ export default function QrCodeScanner({
                     style={{
                       color:
                         analysisResult.level === 'HIGH'
-                          ? 'var(--risk-high)'
+                          ? 'var(--stamp-red)'
                           : analysisResult.level === 'MEDIUM'
-                          ? 'var(--risk-med)'
+                          ? 'var(--warning)'
                           : 'var(--safe)',
                     }}
                   />
-                  <span className="text-[var(--parchment)] font-bold tracking-wider">LATENCY:</span>
+                  <span className="text-[var(--paper)] font-bold tracking-wider">LATENCY:</span>
                   <span
                     className="font-bold text-xs"
                     style={{
                       color:
                         analysisResult.level === 'HIGH'
-                          ? 'var(--risk-high)'
+                          ? 'var(--stamp-red)'
                           : analysisResult.level === 'MEDIUM'
-                          ? 'var(--risk-med)'
+                          ? 'var(--warning)'
                           : 'var(--safe)',
                     }}
                   >
@@ -463,7 +463,7 @@ export default function QrCodeScanner({
                 </div>
 
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[9px] text-[var(--muted)] hidden sm:inline">TARGET &lt;200ms</span>
+                  <span className="text-[9px] text-[var(--paper-dark)] hidden sm:inline">TARGET &lt;200ms</span>
                   <span
                     className="font-bold text-[9px] px-1.5 py-0.5 uppercase tracking-wider"
                     style={{
@@ -475,9 +475,9 @@ export default function QrCodeScanner({
                           : 'rgba(63, 167, 150, 0.25)',
                       color:
                         analysisResult.level === 'HIGH'
-                          ? 'var(--risk-high)'
+                          ? 'var(--stamp-red)'
                           : analysisResult.level === 'MEDIUM'
-                          ? 'var(--risk-med)'
+                          ? 'var(--warning)'
                           : 'var(--safe)',
                     }}
                   >
@@ -487,31 +487,31 @@ export default function QrCodeScanner({
               </div>
 
               {/* Target HUD Header */}
-              <div className="w-full flex justify-between items-center text-[10px] font-mono text-[var(--gold)] opacity-80 uppercase tracking-wider">
+              <div className="w-full flex justify-between items-center text-[10px] font-mono text-[var(--seal-gold)] opacity-80 uppercase tracking-wider">
                 <span>[SCAN: VPA_ALIGN]</span>
                 <span className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)] animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--seal-gold)] animate-pulse" />
                   LIVE
                 </span>
               </div>
 
               {/* Center Crosshair or Payload Watermark */}
               <div className="text-center my-auto pointer-events-none">
-                <div className="w-12 h-12 border border-[var(--gold)] border-dashed mx-auto mb-2 opacity-50 flex items-center justify-center">
-                  <div className="w-2 h-2 bg-[var(--gold)] rounded-full" />
+                <div className="w-12 h-12 border border-[var(--seal-gold)] border-dashed mx-auto mb-2 opacity-50 flex items-center justify-center">
+                  <div className="w-2 h-2 bg-[var(--seal-gold)] rounded-full" />
                 </div>
-                <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--gold-bright)] bg-[var(--ink)]/80 px-2 py-0.5 border border-[var(--border)] inline-block">
+                <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--seal-gold)] bg-[var(--ink)]/80 px-2 py-0.5 border border-[rgba(233, 231, 219, 0.18)] inline-block">
                   {analysisResult.level === 'HIGH' ? '⚠️ RISK INTERCEPT' : 'UPI QR DETECTOR'}
                 </p>
               </div>
 
               {/* Target HUD Footer */}
-              <div className="w-full flex justify-between items-center text-[9px] font-mono text-[var(--muted)]">
+              <div className="w-full flex justify-between items-center text-[9px] font-mono text-[var(--paper-dark)]">
                 <span className="flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--safe)] inline-block" />
                   LATENCY: {analysisResult.latencyMs}ms
                 </span>
-                <span className="text-[var(--parchment)] font-bold">
+                <span className="text-[var(--paper)] font-bold">
                   {analysisResult.score}/100 SECURE
                 </span>
               </div>
@@ -523,7 +523,7 @@ export default function QrCodeScanner({
                 type="button"
                 id="btn-toggle-scan-anim"
                 onClick={() => setIsScanning((prev) => !prev)}
-                className="text-[10px] font-mono px-2.5 py-1 bg-[var(--ink-2)]/90 border border-[var(--border)] text-[var(--muted)] hover:text-[var(--parchment)]"
+                className="text-[10px] font-mono px-2.5 py-1 bg-[var(--ink-light)]/90 border border-[rgba(233, 231, 219, 0.18)] text-[var(--paper-dark)] hover:text-[var(--paper)]"
               >
                 {isScanning ? '⏸ Pause Viewfinder Sweep' : '▶ Resume Sweep'}
               </button>
@@ -532,15 +532,15 @@ export default function QrCodeScanner({
 
           {/* Camera Permission / Error Banner if blocked */}
           {cameraError && (
-            <div className="absolute top-3 left-3 right-3 z-20 bg-[var(--ink-2)] border-l-4 border-[var(--risk-med)] p-3 text-xs text-[var(--parchment)] shadow-lg flex items-start justify-between gap-2">
+            <div className="absolute top-3 left-3 right-3 z-20 bg-[var(--ink-light)] border-l-4 border-[var(--warning)] p-3 text-xs text-[var(--paper)] shadow-lg flex items-start justify-between gap-2">
               <div className="flex items-start gap-2">
-                <Info className="w-4 h-4 text-[var(--risk-med)] flex-shrink-0 mt-0.5" />
+                <Info className="w-4 h-4 text-[var(--warning)] flex-shrink-0 mt-0.5" />
                 <span>{cameraError}</span>
               </div>
               <button
                 type="button"
                 onClick={() => setCameraError(null)}
-                className="text-[var(--muted)] hover:text-[var(--parchment)] font-mono text-[10px]"
+                className="text-[var(--paper-dark)] hover:text-[var(--paper)] font-mono text-[10px]"
               >
                 ✕
               </button>
@@ -549,29 +549,29 @@ export default function QrCodeScanner({
         </div>
 
         {/* Current QR Payload Summary Card */}
-        <div className="mt-4 p-3 bg-[var(--ink-2)] border border-[var(--border)] font-mono text-xs">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
-            <span className="text-[var(--muted)] text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+        <div className="mt-4 p-3 bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.18)] font-mono text-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[rgba(233, 231, 219, 0.18)]">
+            <span className="text-[var(--paper-dark)] text-[11px] uppercase tracking-wider flex items-center gap-1.5">
               <span>🔍</span> Active Payload Stream:
             </span>
-            <span className="text-[10px] text-[var(--gold)]">
+            <span className="text-[10px] text-[var(--seal-gold)]">
               Analyzed in: 0.14s • {analysisResult.timestamp}
             </span>
           </div>
-          <p className="mt-2 text-[var(--parchment)] break-all font-mono text-[11px] leading-relaxed bg-[var(--ink)] p-2 border border-[var(--border)]">
+          <p className="mt-2 text-[var(--paper)] break-all font-mono text-[11px] leading-relaxed bg-[var(--ink)] p-2 border border-[rgba(233, 231, 219, 0.18)]">
             {currentRawPayload}
           </p>
         </div>
 
         {/* Audio & Haptic Feedback Quick Testing Bar */}
-        <div className="mt-4 p-3 bg-[var(--ink-2)] border border-[var(--border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="mt-4 p-3 bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.18)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Volume2 className="w-4 h-4 text-[var(--gold)]" />
+            <Volume2 className="w-4 h-4 text-[var(--seal-gold)]" />
             <div>
-              <p className="text-xs font-bold text-[var(--parchment)]">
+              <p className="text-xs font-bold text-[var(--paper)]">
                 Audio &amp; Haptic Sensory Alerts
               </p>
-              <p className="text-[10px] text-[var(--muted)]">
+              <p className="text-[10px] text-[var(--paper-dark)]">
                 Synthesized Web Audio API chimes &amp; Android-standard vibration patterns
               </p>
             </div>
@@ -595,7 +595,7 @@ export default function QrCodeScanner({
                 soundHaptics.playSound('HIGH');
                 soundHaptics.triggerHaptics('HIGH');
               }}
-              className="px-2.5 py-1 text-[11px] font-mono font-bold bg-[var(--ink)] text-[var(--risk-high)] border border-[var(--risk-high)] hover:brightness-110 flex items-center gap-1.5 transition-all"
+              className="px-2.5 py-1 text-[11px] font-mono font-bold bg-[var(--ink)] text-[var(--stamp-red)] border border-[var(--stamp-red)] hover:brightness-110 flex items-center gap-1.5 transition-all"
             >
               <span>🚨</span> Test High-Risk Alarm
             </button>
@@ -604,7 +604,7 @@ export default function QrCodeScanner({
 
         {/* Real-time Scenario Presets Selector */}
         <div className="mt-5">
-          <p className="text-xs font-mono uppercase tracking-wider text-[var(--muted)] mb-2 flex items-center gap-1.5">
+          <p className="text-xs font-mono uppercase tracking-wider text-[var(--paper-dark)] mb-2 flex items-center gap-1.5">
             <span>⚡</span> Test Scenarios (Simulate QR Scan in Real-Time):
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -621,27 +621,27 @@ export default function QrCodeScanner({
                   onClick={() => evaluatePayload(item.payload, item.id)}
                   className={`text-left p-2.5 border transition-all ${
                     isActive
-                      ? 'border-[var(--gold)] bg-[var(--ink-2)]'
-                      : 'border-[var(--border)] bg-[var(--ink)] hover:border-[var(--border-strong)]'
+                      ? 'border-[var(--seal-gold)] bg-[var(--ink-light)]'
+                      : 'border-[rgba(233, 231, 219, 0.18)] bg-[var(--ink)] hover:border-[rgba(233, 231, 219, 0.34)]'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-[var(--parchment)] truncate">
+                    <span className="text-xs font-bold text-[var(--paper)] truncate">
                       {item.title}
                     </span>
                     <span
                       className={`text-[9px] font-mono px-1.5 py-0.2 uppercase ${
                         isHigh
-                          ? 'text-[var(--risk-high)]'
+                          ? 'text-[var(--stamp-red)]'
                           : isMed
-                          ? 'text-[var(--risk-med)]'
+                          ? 'text-[var(--warning)]'
                           : 'text-[var(--safe)]'
                       }`}
                     >
                       {item.type.replace('_', ' ')}
                     </span>
                   </div>
-                  <p className="text-[11px] text-[var(--muted)] line-clamp-2 leading-snug">
+                  <p className="text-[11px] text-[var(--paper-dark)] line-clamp-2 leading-snug">
                     {item.description}
                   </p>
                 </button>
@@ -651,7 +651,7 @@ export default function QrCodeScanner({
         </div>
 
         {/* Custom UPI String Input */}
-        <div className="mt-4 pt-4 border-t border-[var(--border)]">
+        <div className="mt-4 pt-4 border-t border-[rgba(233, 231, 219, 0.18)]">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -667,12 +667,12 @@ export default function QrCodeScanner({
               value={customInput}
               onChange={(e) => setCustomInput(e.target.value)}
               placeholder="Paste custom UPI URI or VPA (e.g. upi://pay?pa=merchant@upi&pn=Store&am=200)"
-              className="flex-1 bg-[var(--ink)] border border-[var(--border)] px-3 py-2 text-xs font-mono text-[var(--parchment)] placeholder-[var(--muted-2)] focus:border-[var(--gold)] focus:outline-none"
+              className="flex-1 bg-[var(--ink)] border border-[rgba(233, 231, 219, 0.18)] px-3 py-2 text-xs font-mono text-[var(--paper)] placeholder-[var(--paper-dark)] focus:border-[var(--seal-gold)] focus:outline-none"
             />
             <button
               type="submit"
               id="btn-analyze-custom"
-              className="px-4 py-2 bg-[var(--ink-2)] border border-[var(--border-strong)] hover:border-[var(--gold)] text-xs font-mono font-bold uppercase tracking-wider text-[var(--parchment)] transition-colors"
+              className="px-4 py-2 bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.34)] hover:border-[var(--seal-gold)] text-xs font-mono font-bold uppercase tracking-wider text-[var(--paper)] transition-colors"
             >
               Analyze Custom QR
             </button>

@@ -23,8 +23,8 @@ export interface StatusIndicatorProps {
  * 
  * Reflects the safety score of a scanned transaction using the color-coding defined in the CSS:
  * - safe: var(--safe) [#3FA796]
- * - risk-med: var(--risk-med) [#E8A33D]
- * - risk-high: var(--risk-high) [#E1554A]
+ * - risk-med: var(--warning) [#E8A33D]
+ * - risk-high: var(--stamp-red) [#E1554A]
  */
 export default function StatusIndicator({
   id = 'rakshak-status-indicator',
@@ -55,25 +55,25 @@ export default function StatusIndicator({
       pulseClass: '',
     },
     MEDIUM: {
-      colorVar: 'var(--risk-med)',
+      colorVar: 'var(--warning)',
       bgColor: 'rgba(232, 163, 61, 0.12)',
-      borderColor: 'var(--risk-med)',
-      badgeBg: 'var(--risk-med)',
-      textColor: 'var(--risk-med)',
+      borderColor: 'var(--warning)',
+      badgeBg: 'var(--warning)',
+      textColor: 'var(--warning)',
       label: 'SUSPICIOUS / CAUTION',
-      icon: <AlertTriangle className="w-6 h-6 text-[var(--risk-med)]" />,
-      smallIcon: <AlertTriangle className="w-4 h-4 text-[var(--risk-med)]" />,
+      icon: <AlertTriangle className="w-6 h-6 text-[var(--warning)]" />,
+      smallIcon: <AlertTriangle className="w-4 h-4 text-[var(--warning)]" />,
       pulseClass: '',
     },
     HIGH: {
-      colorVar: 'var(--risk-high)',
+      colorVar: 'var(--stamp-red)',
       bgColor: 'rgba(225, 85, 74, 0.14)',
-      borderColor: 'var(--risk-high)',
-      badgeBg: 'var(--risk-high)',
-      textColor: 'var(--risk-high)',
+      borderColor: 'var(--stamp-red)',
+      badgeBg: 'var(--stamp-red)',
+      textColor: 'var(--stamp-red)',
       label: 'CRITICAL FRAUD RISK',
-      icon: <ShieldAlert className="w-6 h-6 text-[var(--risk-high)]" />,
-      smallIcon: <ShieldAlert className="w-4 h-4 text-[var(--risk-high)]" />,
+      icon: <ShieldAlert className="w-6 h-6 text-[var(--stamp-red)]" />,
+      smallIcon: <ShieldAlert className="w-4 h-4 text-[var(--stamp-red)]" />,
       pulseClass: 'risk-pulse',
     },
   }[level];
@@ -102,7 +102,7 @@ export default function StatusIndicator({
           <p className="text-xs font-bold uppercase tracking-wider font-mono" style={{ color: statusConfig.textColor }}>
             {statusConfig.label}
           </p>
-          <p className="text-xs truncate text-[var(--parchment)] opacity-90">
+          <p className="text-xs truncate text-[var(--paper)] opacity-90">
             {title || (level === 'SAFE' ? 'No threats detected' : 'Check payment details')}
           </p>
         </div>
@@ -110,7 +110,7 @@ export default function StatusIndicator({
           <span className="font-mono font-bold text-sm" style={{ color: statusConfig.textColor }}>
             {score}
           </span>
-          <span className="text-[10px] text-[var(--muted)]">/100</span>
+          <span className="text-[10px] text-[var(--paper-dark)]">/100</span>
         </div>
       </div>
     );
@@ -128,7 +128,7 @@ export default function StatusIndicator({
       aria-label="Transaction Safety Status"
     >
       {/* Top Header: Score Gauge + Status Tag */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[rgba(233, 231, 219, 0.18)]">
         <div className="flex items-center gap-3.5">
           {/* Radial score gauge */}
           <div className="relative w-16 h-16 flex-shrink-0 flex items-center justify-center">
@@ -140,7 +140,7 @@ export default function StatusIndicator({
                 stroke="currentColor"
                 strokeWidth="6"
                 fill="transparent"
-                className="text-[var(--border)] opacity-30"
+                className="text-[rgba(233, 231, 219, 0.18)] opacity-30"
               />
               <circle
                 cx="36"
@@ -159,7 +159,7 @@ export default function StatusIndicator({
               <span className="font-mono font-bold text-base leading-none" style={{ color: statusConfig.textColor }}>
                 {score}
               </span>
-              <span className="text-[9px] text-[var(--muted)] font-mono leading-none mt-0.5">
+              <span className="text-[9px] text-[var(--paper-dark)] font-mono leading-none mt-0.5">
                 SCORE
               </span>
             </div>
@@ -175,11 +175,11 @@ export default function StatusIndicator({
                 {statusConfig.label}
               </span>
             </div>
-            <h3 className="font-bold text-base sm:text-lg text-[var(--parchment)]">
+            <h3 className="font-bold text-base sm:text-lg text-[var(--paper)]">
               {title || (level === 'SAFE' ? 'Transaction Is Verified & Safe' : 'Safety Threat Detected')}
             </h3>
             {subtitle && (
-              <p className="text-xs text-[var(--muted)] mt-0.5">
+              <p className="text-xs text-[var(--paper-dark)] mt-0.5">
                 {subtitle}
               </p>
             )}
@@ -188,19 +188,19 @@ export default function StatusIndicator({
 
         {/* Transaction Summary Pill */}
         {(payeeAddress || amount) && (
-          <div className="bg-[var(--ink-2)] px-3.5 py-2 border border-[var(--border)] sm:text-right font-mono text-xs">
+          <div className="bg-[var(--ink-light)] px-3.5 py-2 border border-[rgba(233, 231, 219, 0.18)] sm:text-right font-mono text-xs">
             {amount && (
-              <p className="font-bold text-[var(--parchment)]">
-                Amount: <span className="text-[var(--gold)]">₹{amount}</span>
+              <p className="font-bold text-[var(--paper)]">
+                Amount: <span className="text-[var(--seal-gold)]">₹{amount}</span>
               </p>
             )}
             {payeeAddress && (
-              <p className="text-[var(--muted)] truncate max-w-[200px]" title={payeeAddress}>
+              <p className="text-[var(--paper-dark)] truncate max-w-[200px]" title={payeeAddress}>
                 VPA: {payeeAddress}
               </p>
             )}
             {payeeName && (
-              <p className="text-[var(--muted-2)] truncate max-w-[200px]" title={payeeName}>
+              <p className="text-[var(--paper-dark)] truncate max-w-[200px]" title={payeeName}>
                 To: {payeeName}
               </p>
             )}
@@ -211,14 +211,14 @@ export default function StatusIndicator({
       {/* Detected Safety Reasons */}
       {reasons.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-mono uppercase tracking-wider text-[var(--muted)] mb-2 flex items-center gap-1.5">
+          <p className="text-xs font-mono uppercase tracking-wider text-[var(--paper-dark)] mb-2 flex items-center gap-1.5">
             <span>🛡️</span> Analysis Findings ({reasons.length})
           </p>
           <ul className="space-y-2">
             {reasons.map((reason, idx) => (
               <li
                 key={idx}
-                className="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--parchment)] bg-[var(--ink-1)] p-2.5 border border-[var(--border)]"
+                className="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--paper)] bg-[var(--ink-light)] p-2.5 border border-[rgba(233, 231, 219, 0.18)]"
               >
                 <span className="mt-0.5 flex-shrink-0" style={{ color: statusConfig.textColor }}>
                   {level === 'SAFE' ? '✓' : '⚠'}
@@ -232,24 +232,24 @@ export default function StatusIndicator({
 
       {/* Suggested Action & Official Route */}
       {(suggestedAction || officialRoute) && (
-        <div className="mt-4 pt-3 border-t border-[var(--border)] flex flex-col sm:flex-row gap-3 text-xs">
+        <div className="mt-4 pt-3 border-t border-[rgba(233, 231, 219, 0.18)] flex flex-col sm:flex-row gap-3 text-xs">
           {suggestedAction && (
-            <div className="flex-1 bg-[var(--ink-2)] p-3 border border-[var(--border-strong)]">
+            <div className="flex-1 bg-[var(--ink-light)] p-3 border border-[rgba(233, 231, 219, 0.34)]">
               <span className="font-bold uppercase tracking-wide block mb-1" style={{ color: statusConfig.textColor }}>
                 Recommended Action:
               </span>
-              <p className="text-[var(--parchment)] opacity-90 leading-relaxed">
+              <p className="text-[var(--paper)] opacity-90 leading-relaxed">
                 {suggestedAction}
               </p>
             </div>
           )}
 
           {officialRoute && (
-            <div className="flex-1 bg-[var(--ink)] p-3 border border-[var(--border)]">
-              <span className="text-[var(--gold)] font-bold uppercase tracking-wide flex items-center gap-1 mb-1">
+            <div className="flex-1 bg-[var(--ink)] p-3 border border-[rgba(233, 231, 219, 0.18)]">
+              <span className="text-[var(--seal-gold)] font-bold uppercase tracking-wide flex items-center gap-1 mb-1">
                 Official Safe Channel <ArrowRight className="w-3.5 h-3.5" />
               </span>
-              <p className="text-[var(--muted)] leading-relaxed">
+              <p className="text-[var(--paper-dark)] leading-relaxed">
                 {officialRoute}
               </p>
             </div>

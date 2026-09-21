@@ -64,34 +64,32 @@ Converts marketing rates into actual rupee totals:
 
 ### The Hackathon-Winning Moment
 
-**Click "🎯 Simulate Scam Attack"** on the home page to see:
+**Click "Simulate scam attack"** in the hero preview or use the scrollable interception timeline to see:
 
 1. **Fake WhatsApp notification slides in** (1.5s)
    - Looks realistic: green header, "Unknown sender", urgent message
    - Message: "URGENT: Your electricity will be disconnected tonight! Pay now via QR..."
 
-2. **Red Rakshak overlay replaces it** (1.5s)
+2. **Red Rakshak overlay replaces it**
    - Slides down from the top like an Android system notification
-   - Pulsing red gradient: "⚠️ RAKSHAK ALERT: FRAUD HO SAKTA HAI!"
+   - Stamp-red notice: "RAKSHAK ALERT: FRAUD HO SAKTA HAI!"
    - Shows the exact phrases that triggered the flag
 
-3. **Full-screen explanation modal opens** (auto)
-   - Big red warning icon
-   - "YEH MESSAGE FRAUD HAI" headline
-   - 3 bullet points explaining why (urgency + suspicious UPI + payment trap)
-   - Green "Safe Action" section: "Use official BSES app or bbps.npci.org.in"
-   - Red "Report to 1930" button
+3. **Verdict panel appears inside the notice timeline**
+   - Three ledger-style reasons explaining the interception
+   - Safe-action guidance: "Use official BSES app or bbps.npci.org.in"
+   - Report and scanner follow-up actions
 
 **This is the unforgettable demo moment** — the overlay appearing over a live scam notification within 200ms.
 
 ### Try the Voice Interface
 
-Click the microphone button and say:
+Use the **Voice Notice** in the live scanner and click the microphone button or choose a sample question:
 - "Is this payment safe?"
 - "Can I afford this EMI?"
 - "Mere paise mahine ke end tak chalenge?"
 
-Rakshak analyzes your query and speaks the response aloud in Hindi/English.
+Rakshak updates the answer in the notice and uses the browser's native speech synthesis to speak the response in Hindi or English. Speech recognition is available when supported by Chrome/Edge.
 
 ### Explore Cash Flow
 
@@ -271,13 +269,14 @@ The verified Android artifact is generated at
 upi_rakshak/
 ├── src/
 │   ├── components/
-│   │   ├── Console.tsx              # Main scan console
-│   │   ├── DemoAttackButton.tsx     # Hackathon demo moment
-│   │   ├── ScamOverlay.tsx          # Android-style overlay
-│   │   ├── VoiceQuery.tsx           # Voice input
-│   │   ├── CashFlowDashboard.tsx    # Runway calculator
-│   │   ├── Architecture.tsx         # System diagram
-│   │   └── ...
+│   │   ├── TheNoticeLanding.tsx      # Product page composition
+│   │   ├── InterceptionTimeline.tsx  # Signature scroll interception
+│   │   ├── NoticeVoicePanel.tsx      # Speech input/output notice
+│   │   ├── QrCodeScanner.tsx         # Live QR safety scoring
+│   │   ├── CashFlowRuler.tsx         # Runway visualization
+│   │   ├── LoanReceipt.tsx           # Itemised loan comparison
+│   │   ├── CredibilityLedger.tsx     # Evidence and limitations
+│   │   └── StatusIndicator.tsx       # Scanner status display
 │   ├── lib/
 │   │   ├── agent.ts                 # Core agent loop
 │   │   ├── rulesEngine.ts           # Fraud detection rules
