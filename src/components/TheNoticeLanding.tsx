@@ -28,13 +28,14 @@ export default function TheNoticeLanding() {
         </nav>
       </header>
       {/* Hero Section */}
-      <section id="top" className="min-h-screen flex items-center justify-center px-4 py-24 sm:py-28 scroll-mt-16">
-        <div className="max-w-5xl mx-auto text-center">
+      <section id="top" className="hero-section flex items-center px-4 py-14 sm:py-16 scroll-mt-16">
+        <div className="hero-grid max-w-6xl mx-auto w-full">
+          <div className="hero-copy text-center md:text-left">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35 }}
-            className="notice-kicker"
+            className="notice-kicker mx-auto md:mx-0"
           >
             <span>Agentic AI Hackathon 2025</span>
             <span aria-hidden="true">•</span>
@@ -45,10 +46,10 @@ export default function TheNoticeLanding() {
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.6, type: 'spring' }}
-            className="inline-block mb-8"
+            className="inline-block mb-6"
           >
             <div
-              className="w-24 h-24 rounded-full bg-[var(--seal-gold)] flex items-center justify-center mx-auto"
+              className="w-20 h-20 rounded-full bg-[var(--seal-gold)] flex items-center justify-center mx-auto md:mx-0"
               style={{ boxShadow: 'var(--shadow-seal)' }}
             >
               <span className="text-white font-signage font-bold text-3xl">र</span>
@@ -60,7 +61,7 @@ export default function TheNoticeLanding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="font-signage font-bold text-6xl md:text-7xl text-[var(--ink)] mb-4"
+            className="font-signage font-bold text-5xl sm:text-6xl md:text-7xl text-[var(--ink)] mb-4"
             style={{ letterSpacing: '-0.02em' }}
           >
             UPI Rakshak
@@ -71,7 +72,7 @@ export default function TheNoticeLanding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-xl md:text-2xl text-[var(--ink-light)] mb-5 max-w-2xl mx-auto"
+            className="text-xl md:text-2xl text-[var(--ink-light)] mb-5 max-w-2xl mx-auto md:mx-0"
           >
             The real-time financial safety layer for India's digital economy
           </motion.p>
@@ -80,12 +81,12 @@ export default function TheNoticeLanding() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
-            className="max-w-2xl mx-auto text-base sm:text-lg text-[var(--ink-light)] leading-relaxed"
+            className="max-w-2xl mx-auto md:mx-0 text-base sm:text-lg text-[var(--ink-light)] leading-relaxed"
           >
             A safety layer that stops fraud <strong>before you pay</strong> — by explaining the exact trap in the message, not just showing another warning after the money is gone.
           </motion.p>
 
-          <div className="flex flex-wrap justify-center gap-3 mt-7 mb-8">
+          <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-7 mb-7">
             <a className="notice-cta notice-cta--primary" href="#scanner">Run the live defense</a>
             <a className="notice-cta notice-cta--secondary" href="#cash-flow">See the money layer</a>
           </div>
@@ -95,7 +96,7 @@ export default function TheNoticeLanding() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-lg text-[var(--ink)] mb-8 hindi"
+            className="text-lg text-[var(--ink)] mb-7 hindi"
           >
             आपके पैसों का रक्षक
           </motion.p>
@@ -105,7 +106,7 @@ export default function TheNoticeLanding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto"
+            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto md:mx-0"
           >
             <div className="bg-white border-2 border-[var(--ink)] p-4">
               <p className="font-signage font-bold text-3xl text-[var(--ink)]">200+</p>
@@ -130,7 +131,7 @@ export default function TheNoticeLanding() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="mt-16"
+            className="mt-8"
           >
             <p className="text-sm text-[var(--ink-light)] mb-2">Scroll to see the mechanism</p>
             <motion.div
@@ -141,6 +142,36 @@ export default function TheNoticeLanding() {
               ↓
             </motion.div>
           </motion.div>
+          </div>
+
+          <motion.aside
+            initial={{ opacity: 0, x: 28 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.35, duration: 0.55 }}
+            className="hero-preview"
+            aria-label="UPI Rakshak scam interception preview"
+          >
+            <div className="hero-preview__topline">
+              <span>LIVE DEFENSE / 01</span>
+              <span className="hero-preview__status">● ARMED</span>
+            </div>
+            <div className="hero-preview__phone">
+              <div className="hero-preview__phonebar"><span>WhatsApp</span><span>9:41 AM</span></div>
+              <div className="hero-preview__message">
+                <span className="hero-preview__sender">Unknown sender</span>
+                <p>URGENT: Scan this QR and enter your UPI PIN to receive your electricity refund.</p>
+              </div>
+              <div className="hero-preview__alert">
+                <strong>RAKSHAK ALERT</strong>
+                <span>QR codes send money. A PIN is never needed to receive a refund.</span>
+              </div>
+            </div>
+            <div className="hero-preview__verdict">
+              <span className="hero-preview__seal">!</span>
+              <div><strong>HIGH RISK</strong><small>3 payment traps intercepted before approval</small></div>
+            </div>
+            <p className="hero-preview__footer">The product moment: explain the trap before the money leaves.</p>
+          </motion.aside>
         </div>
       </section>
 
