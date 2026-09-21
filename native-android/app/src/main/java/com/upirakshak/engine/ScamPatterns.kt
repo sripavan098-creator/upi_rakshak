@@ -28,7 +28,7 @@ object ScamPatterns {
         "money receive karne ke liye", "refund ke liye pay karo",
         "pin daalo", "pin enter karo", "qr scan karein",
         "scan qr to receive", "enter pin to receive",
-        "enter upi pin to receive", "pin to receive"
+        "enter upi pin to receive", "pin to receive", "enter upi pin"
     )
     
     // Lookalike domain patterns
@@ -62,7 +62,8 @@ object ScamPatterns {
     val AUTOPAY_TRAP_KEYWORDS = listOf(
         "autopay", "auto-pay", "mandate", "recurring payment",
         "verify with ₹1", "verify with rs 1", "trial activation",
-        "subscription verify", "activate autopay", "mandate setup"
+        "subscription verify", "activate autopay", "mandate setup",
+        "₹1 to activate", "activate subscription"
     )
 
     // AEPS biometric fraud
@@ -127,14 +128,14 @@ object ScamPatterns {
     val JOB_SCAM_KEYWORDS = listOf(
         "work from home", "part time job", "task based job", "registration fee job",
         "daily income", "rating task", "review task", "like and earn",
-        "job offer fee", "job deposit", "airline recruitment"
+        "job offer fee", "job deposit", "airline recruitment", "registration fee"
     )
 
     // Lottery scams
     val LOTTERY_SCAM_KEYWORDS = listOf(
         "kbc winner", "kbc lottery", "lucky draw", "lucky winner",
         "bumper prize", "jackpot winner", "you have won", "prize tax",
-        "claim your prize", "processing fee for prize"
+        "claim your prize", "processing fee for prize", "pay ₹"
     )
 
     // Customer care scams
@@ -181,7 +182,8 @@ object ScamPatterns {
     // SIM swap fraud
     val SIM_SWAP_KEYWORDS = listOf(
         "sim swap", "sim replace", "sim blocked", "sim upgrade",
-        "no network otp", "receive otp but no request", "duplicate sim"
+        "no network otp", "receive otp but no request", "duplicate sim",
+        "sim will be blocked"
     )
 
     // Fake screenshot scams

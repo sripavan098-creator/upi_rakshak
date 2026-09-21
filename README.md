@@ -228,7 +228,7 @@ UPI Rakshak is designed to integrate deeply with **iQOO devices running Funtouch
 - ✅ Cash flow prediction from SMS history
 - ✅ True loan cost calculator
 - ✅ Voice-first multilingual interface
-- ✅ Comprehensive test suite (15 passing tests)
+- ✅ Android rules-engine test suite (17 passing tests)
 
 ### What's Still Open
 - ⚠️ No live user research yet (personas are hypotheses)
@@ -243,18 +243,21 @@ UPI Rakshak is designed to integrate deeply with **iQOO devices running Funtouch
 ## 🧪 Testing
 
 ```bash
-# Run all tests
-npm test
+# Typecheck and build the web app
+npm run typecheck
+npm run build
 
-# Run with coverage
-npm run test:coverage
-
-# Run specific test file
-npm test -- rulesEngine
+# Run the Android rules-engine tests and build the debug APK
+cd native-android
+./gradlew test
+./gradlew assembleDebug
 ```
 
+The verified Android artifact is generated at
+`native-android/app/build/outputs/apk/debug/app-debug.apk`.
+
 **Test coverage:**
-- ✅ Rules engine (5 test cases: HIGH/MEDIUM/SAFE detection)
+- ✅ Rules engine (17 test cases: HIGH/MEDIUM/SAFE detection)
 - ✅ Cash flow calculation (runway, recurring expenses)
 - ✅ Loan cost math (EMI, effective rate, hidden fees)
 - ✅ Escalation gating (only HIGH/MEDIUM trigger alerts)

@@ -60,7 +60,7 @@ native-android/
 │   │           ├── HomeScreen.kt          # Main screen with demo button
 │   │           └── CashFlowScreen.kt      # Cash flow forecast
 │   └── src/test/java/com/upirakshak/engine/
-│       └── RulesEngineTest.kt             # 8 unit tests
+│       └── RulesEngineTest.kt             # 17 unit tests
 ├── build.gradle.kts
 └── README.md
 ```
@@ -130,7 +130,7 @@ adb shell appops set com.upirakshak SYSTEM_ALERT_WINDOW allow
 
 ## 🧪 Test Coverage
 
-8 unit tests covering:
+17 unit tests covering:
 - ✅ Electricity scam → HIGH
 - ✅ Bank KYC scam → HIGH
 - ✅ Prize scam → HIGH

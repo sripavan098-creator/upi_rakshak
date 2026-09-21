@@ -222,10 +222,14 @@ object RulesEngine {
         if (level == ThreatLevel.SAFE) {
             val hasUrgency = urgencyMatches.isNotEmpty()
             val hasTechnicalTrap = upiMatches.isNotEmpty() || trapMatches.isNotEmpty() || domainMatches.isNotEmpty()
+            val benignOtpNotice = combined.contains("otp") &&
+                (combined.contains("do not share") || combined.contains("don't share"))
+            val hasHighConfidenceSignal = (suspiciousMatches - "otp").isNotEmpty() || domainMatches.isNotEmpty()
             
             level = when {
-                hasUrgency && hasTechnicalTrap -> ThreatLevel.HIGH
-                hasUrgency || hasTechnicalTrap -> ThreatLevel.MEDIUM
+                hasUrgency && (hasTechnicalTrap || (suspiciousMatches.isNotEmpty() && !benignOtpNotice)) -> ThreatLevel.HIGH
+                domainMatches.isNotEmpty() -> ThreatLevel.HIGH
+                hasUrgency || hasTechnicalTrap || hasHighConfidenceSignal -> ThreatLevel.MEDIUM
                 else -> ThreatLevel.SAFE
             }
         }

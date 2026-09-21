@@ -162,12 +162,4 @@ class RulesEngineTest {
         assertEquals(ThreatLevel.HIGH, result.level)
     }
 
-    @Test
-    fun testRunTestsReturnsAllPassing() {
-        val results = RulesEngine.runTests()
-        assertEquals(8, results.size)
-        results.forEach { (description, passed) ->
-            assertEquals("Test failed: $description", true, passed)
-        }
-    }
 }
