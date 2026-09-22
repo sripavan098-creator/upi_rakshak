@@ -1,6 +1,6 @@
-import React from 'react';
 import { ShieldCheck, AlertTriangle, ShieldAlert, CheckCircle2, ArrowRight } from 'lucide-react';
 import { ThreatLevel } from '../lib/rulesEngine';
+import { THREAT_THEME } from '../lib/threatTheme';
 
 export interface StatusIndicatorProps {
   id?: string;
@@ -44,36 +44,42 @@ export default function StatusIndicator({
   // Determine color variables based on threat level
   const statusConfig = {
     SAFE: {
-      colorVar: 'var(--safe)',
       bgColor: 'rgba(63, 167, 150, 0.12)',
+      colorVar: 'var(--safe)',
       borderColor: 'var(--safe)',
-      badgeBg: 'var(--safe)',
       textColor: 'var(--safe)',
-      label: 'SAFE TRANSACTION',
+      textColorOnInk: 'var(--safe-on-ink)',
+      label: THREAT_THEME.SAFE.label,
+      badgeBg: 'var(--safe)',
+      badgeTextColor: '#FFFFFF',
       icon: <ShieldCheck className="w-6 h-6 text-[var(--safe)]" />,
-      smallIcon: <CheckCircle2 className="w-4 h-4 text-[var(--safe)]" />,
+      smallIcon: <CheckCircle2 className="w-4 h-4" />,
       pulseClass: '',
     },
     MEDIUM: {
-      colorVar: 'var(--warning)',
       bgColor: 'rgba(232, 163, 61, 0.12)',
+      colorVar: 'var(--warning)',
       borderColor: 'var(--warning)',
-      badgeBg: 'var(--warning)',
       textColor: 'var(--warning)',
-      label: 'SUSPICIOUS / CAUTION',
+      textColorOnInk: '#E8A33D',
+      label: THREAT_THEME.MEDIUM.label,
+      badgeBg: 'var(--warning)',
+      badgeTextColor: 'var(--ink)',
       icon: <AlertTriangle className="w-6 h-6 text-[var(--warning)]" />,
-      smallIcon: <AlertTriangle className="w-4 h-4 text-[var(--warning)]" />,
+      smallIcon: <AlertTriangle className="w-4 h-4" />,
       pulseClass: '',
     },
     HIGH: {
-      colorVar: 'var(--stamp-red)',
       bgColor: 'rgba(225, 85, 74, 0.14)',
+      colorVar: 'var(--stamp-red)',
       borderColor: 'var(--stamp-red)',
-      badgeBg: 'var(--stamp-red)',
       textColor: 'var(--stamp-red)',
-      label: 'CRITICAL FRAUD RISK',
+      textColorOnInk: 'var(--stamp-red-on-ink)',
+      label: THREAT_THEME.HIGH.label,
+      badgeBg: 'var(--stamp-red)',
+      badgeTextColor: '#FFFFFF',
       icon: <ShieldAlert className="w-6 h-6 text-[var(--stamp-red)]" />,
-      smallIcon: <ShieldAlert className="w-4 h-4 text-[var(--stamp-red)]" />,
+      smallIcon: <ShieldAlert className="w-4 h-4" />,
       pulseClass: 'risk-pulse',
     },
   }[level];
@@ -168,8 +174,8 @@ export default function StatusIndicator({
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span
-                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink)]"
-                style={{ backgroundColor: statusConfig.badgeBg }}
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-mono font-bold uppercase tracking-wider"
+                style={{ backgroundColor: statusConfig.badgeBg, color: statusConfig.badgeTextColor }}
               >
                 {statusConfig.icon && <span className="scale-75 origin-left">{statusConfig.smallIcon}</span>}
                 {statusConfig.label}
@@ -191,7 +197,7 @@ export default function StatusIndicator({
           <div className="bg-[var(--ink-light)] px-3.5 py-2 border border-[rgba(233, 231, 219, 0.18)] sm:text-right font-mono text-xs">
             {amount && (
               <p className="font-bold text-[var(--paper)]">
-                Amount: <span className="text-[var(--seal-gold)]">₹{amount}</span>
+                Amount: <span className="text-[var(--seal-gold-on-ink)]">₹{amount}</span>
               </p>
             )}
             {payeeAddress && (
@@ -220,7 +226,7 @@ export default function StatusIndicator({
                 key={idx}
                 className="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--paper)] bg-[var(--ink-light)] p-2.5 border border-[rgba(233, 231, 219, 0.18)]"
               >
-                <span className="mt-0.5 flex-shrink-0" style={{ color: statusConfig.textColor }}>
+                <span className="mt-0.5 flex-shrink-0" style={{ color: statusConfig.textColorOnInk }}>
                   {level === 'SAFE' ? '✓' : '⚠'}
                 </span>
                 <span className="leading-relaxed">{reason}</span>
@@ -235,7 +241,7 @@ export default function StatusIndicator({
         <div className="mt-4 pt-3 border-t border-[rgba(233, 231, 219, 0.18)] flex flex-col sm:flex-row gap-3 text-xs">
           {suggestedAction && (
             <div className="flex-1 bg-[var(--ink-light)] p-3 border border-[rgba(233, 231, 219, 0.34)]">
-              <span className="font-bold uppercase tracking-wide block mb-1" style={{ color: statusConfig.textColor }}>
+              <span className="font-bold uppercase tracking-wide block mb-1" style={{ color: statusConfig.textColorOnInk }}>
                 Recommended Action:
               </span>
               <p className="text-[var(--paper)] opacity-90 leading-relaxed">
@@ -246,7 +252,7 @@ export default function StatusIndicator({
 
           {officialRoute && (
             <div className="flex-1 bg-[var(--ink)] p-3 border border-[rgba(233, 231, 219, 0.18)]">
-              <span className="text-[var(--seal-gold)] font-bold uppercase tracking-wide flex items-center gap-1 mb-1">
+              <span className="text-[var(--seal-gold-on-ink)] font-bold uppercase tracking-wide flex items-center gap-1 mb-1">
                 Official Safe Channel <ArrowRight className="w-3.5 h-3.5" />
               </span>
               <p className="text-[var(--paper-dark)] leading-relaxed">

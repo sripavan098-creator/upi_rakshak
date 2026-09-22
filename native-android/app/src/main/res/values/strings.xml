@@ -23,4 +23,16 @@
     <string name="your_financial_bodyguard">Your financial bodyguard</string>
     <string name="recent_threats">Recent Threats</string>
     <string name="no_recent_threats">No recent threats detected</string>
+    <string name="payment_request_check">Check before you pay</string>
+    <string name="payee_label">Paying to</string>
+    <string name="amount_label">Amount</string>
+    <string name="note_label">Note</string>
+    <string name="pay_anyway">Pay anyway</string>
+    <string name="cancel_payment">Cancel</string>
+    <string name="intercept_high_body">This payment request matches a known fraud pattern. Do not pay until you have verified the payee through a channel you trust.</string>
+    <string name="intercept_medium_body">Some details of this payment request look unusual. Verify the payee before you continue.</string>
+    <string name="upi_payment_request">UPI payment request</string>
+    <string name="no_upi_app_found">No UPI app found to complete this payment</string>
+    <string name="use_my_messages">Use my messages</string>
+    <string name="use_my_messages_body">Rakshak reads your bank messages on this phone to forecast your cash flow. Messages are analysed on device and never uploaded.</string>
 </resources>

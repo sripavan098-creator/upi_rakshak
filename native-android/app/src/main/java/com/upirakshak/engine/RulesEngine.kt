@@ -1,8 +1,11 @@
 package com.upirakshak.engine
 
 /**
- * Deterministic fraud detection engine over 257 native keyword signals and 21 named categories.
- * Analyzes notification text and returns threat level with reasons and suggested actions
+ * Deterministic fraud detection engine over native keyword signals and named categories.
+ *
+ * Every detector contributes a weight to an additive risk score; the final level is derived
+ * from that score rather than assigned by whichever rule ran last. See [RiskScore] for the
+ * weights and thresholds.
  */
 object RulesEngine {
 
@@ -10,13 +13,13 @@ object RulesEngine {
      * Analyze a notification for fraud indicators
      * @param title Notification title
      * @param text Notification body text
-     * @return ThreatAnalysis with level, reasons, and suggested action
+     * @return ThreatAnalysis with level, score, reasons, and suggested action
      */
     fun analyze(title: String, text: String): ThreatAnalysis {
         val combined = "$title $text".lowercase()
         val reasons = mutableListOf<String>()
         val matchedPatterns = mutableListOf<String>()
-        var level = ThreatLevel.SAFE
+        var score = 0
         
         // === EXISTING RULES ===
         
@@ -25,6 +28,7 @@ object RulesEngine {
         if (urgencyMatches.isNotEmpty()) {
             reasons.add("Urgency detected: ${urgencyMatches.take(2).joinToString(", ")}")
             matchedPatterns.addAll(urgencyMatches)
+            score += urgencyMatches.distinct().size * RiskScore.URGENCY_KEYWORD_WEIGHT
         }
         
         // Check for suspicious UPI patterns
@@ -32,6 +36,7 @@ object RulesEngine {
         if (upiMatches.isNotEmpty()) {
             reasons.add("Suspicious UPI ID: ${upiMatches.first()}")
             matchedPatterns.addAll(upiMatches)
+            score += RiskScore.SUSPICIOUS_UPI
         }
         
         // Check for payment traps
@@ -39,6 +44,7 @@ object RulesEngine {
         if (trapMatches.isNotEmpty()) {
             reasons.add("Payment trap: ${trapMatches.first()}")
             matchedPatterns.addAll(trapMatches)
+            score += RiskScore.PAYMENT_TRAP
         }
         
         // Check for lookalike domains
@@ -46,6 +52,7 @@ object RulesEngine {
         if (domainMatches.isNotEmpty()) {
             reasons.add("Fake domain: ${domainMatches.first()}")
             matchedPatterns.addAll(domainMatches)
+            score += RiskScore.LOOKALIKE_DOMAIN
         }
         
         // Check for suspicious keywords
@@ -53,6 +60,11 @@ object RulesEngine {
         if (suspiciousMatches.isNotEmpty()) {
             reasons.add("Suspicious keywords: ${suspiciousMatches.take(2).joinToString(", ")}")
             matchedPatterns.addAll(suspiciousMatches)
+            val distinctSignals = suspiciousMatches
+                .filterNot { it in RiskScore.NEUTRAL_KEYWORDS }
+                .distinct()
+                .size
+            score += distinctSignals * RiskScore.SUSPICIOUS_KEYWORD_WEIGHT
         }
 
         // === NEW FRAUD CATEGORY RULES ===
@@ -61,147 +73,147 @@ object RulesEngine {
         if (ScamPatterns.DIGITAL_ARREST_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Digital arrest is not real. Police never conduct arrests over video calls.")
             matchedPatterns.add("digital_arrest")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: APK Malware Distribution
         if (ScamPatterns.MALWARE_APK_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("APK files from WhatsApp/Telegram contain malware. Never install.")
             matchedPatterns.add("malware_apk")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Remote Access App
         if (ScamPatterns.REMOTE_ACCESS_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Screen-sharing apps give scammers full control of your phone.")
             matchedPatterns.add("remote_access")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Autopay Mandate Trap
         if (ScamPatterns.AUTOPAY_TRAP_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Small verification amount may hide an AutoPay mandate.")
             matchedPatterns.add("autopay_trap")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: AI / Deepfake
         if (ScamPatterns.AI_DEEPFAKE_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("AI-generated voices and videos are being used in scams.")
             matchedPatterns.add("ai_deepfake")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Call Merging
         if (ScamPatterns.CALL_MERGE_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Scammers merge calls to capture your OTP. Hang up and call back.")
             matchedPatterns.add("call_merge")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Rogue QR Device Takeover
         if (ScamPatterns.ROGUE_QR_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("This QR may register your UPI on another device.")
             matchedPatterns.add("rogue_qr")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: AEPS Biometric
         if (ScamPatterns.AEPS_FRAUD_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Never share fingerprint or Aadhaar with strangers.")
             matchedPatterns.add("aeps_fraud")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Investment Scam
         if (ScamPatterns.INVESTMENT_SCAM_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Guaranteed returns are always a scam. SEBI registration is mandatory.")
             matchedPatterns.add("investment_scam")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Loan App Predatory
         if (ScamPatterns.LOAN_APP_TRAP_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Loan apps requesting contacts access are illegal.")
             matchedPatterns.add("loan_app_trap")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Job Scam
         if (ScamPatterns.JOB_SCAM_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Legitimate jobs never charge a registration fee.")
             matchedPatterns.add("job_scam")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Lottery Scam
         if (ScamPatterns.LOTTERY_SCAM_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("You never need to pay tax to receive a prize.")
             matchedPatterns.add("lottery_scam")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Customer Care / Remote Support
         if (ScamPatterns.CUSTOMER_CARE_SCAM_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Only trust customer care numbers from the official app or website.")
             matchedPatterns.add("customer_care_scam")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Courier Scam
         if (ScamPatterns.COURIER_SCAM_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Government agencies never demand payment for parcels.")
             matchedPatterns.add("courier_scam")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Sextortion
         if (ScamPatterns.SEXTORTION_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Do not pay. Report to 1930 immediately.")
             matchedPatterns.add("sextortion")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Romance Scam
         if (ScamPatterns.ROMANCE_SCAM_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Financial requests from online romantic interests are scams.")
             matchedPatterns.add("romance_scam")
-            level = ThreatLevel.MEDIUM
+            score += RiskScore.MEDIUM_CATEGORY
         }
 
         // Rule: Charity Scam
         if (ScamPatterns.CHARITY_SCAM_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Verify the charity registration before donating.")
             matchedPatterns.add("charity_scam")
-            level = ThreatLevel.MEDIUM
+            score += RiskScore.MEDIUM_CATEGORY
         }
 
         // Rule: Refund Scam
         if (ScamPatterns.REFUND_SCAM_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Refunds never require scanning a QR code or entering a UPI PIN.")
             matchedPatterns.add("refund_scam")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: SIM Swap
         if (ScamPatterns.SIM_SWAP_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Sudden SIM issues with OTP requests indicate SIM swap fraud.")
             matchedPatterns.add("sim_swap")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: Fake Screenshot
         if (ScamPatterns.FAKE_SCREENSHOT_KEYWORDS.any { combined.contains(it) }) {
             reasons.add("Payment screenshots can be forged. Always check your account.")
             matchedPatterns.add("fake_screenshot")
-            level = ThreatLevel.MEDIUM
+            score += RiskScore.MEDIUM_CATEGORY
         }
 
         // Rule: Suspicious App Names
         if (ScamPatterns.SUSPICIOUS_APPS.any { combined.contains(it) }) {
             reasons.add("This app name is associated with known scams.")
             matchedPatterns.add("suspicious_app")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // Rule: The Golden Rule - Receiving Money Never Needs UPI PIN
@@ -212,27 +224,12 @@ object RulesEngine {
                 combined.contains("pin enter") || combined.contains("pin daale"))) {
             reasons.add("Receiving money NEVER requires UPI PIN. This is a scam.")
             matchedPatterns.add("pin_for_receiving")
-            level = ThreatLevel.HIGH
+            score += RiskScore.HIGH_CATEGORY
         }
 
         // === DETERMINE FINAL THREAT LEVEL ===
-        
-        // If we already have HIGH from specific rules, keep it
-        // Otherwise, use the original logic
-        if (level == ThreatLevel.SAFE) {
-            val hasUrgency = urgencyMatches.isNotEmpty()
-            val hasTechnicalTrap = upiMatches.isNotEmpty() || trapMatches.isNotEmpty() || domainMatches.isNotEmpty()
-            val benignOtpNotice = combined.contains("otp") &&
-                (combined.contains("do not share") || combined.contains("don't share"))
-            val hasHighConfidenceSignal = (suspiciousMatches - "otp").isNotEmpty() || domainMatches.isNotEmpty()
-            
-            level = when {
-                hasUrgency && (hasTechnicalTrap || (suspiciousMatches.isNotEmpty() && !benignOtpNotice)) -> ThreatLevel.HIGH
-                domainMatches.isNotEmpty() -> ThreatLevel.HIGH
-                hasUrgency || hasTechnicalTrap || hasHighConfidenceSignal -> ThreatLevel.MEDIUM
-                else -> ThreatLevel.SAFE
-            }
-        }
+
+        val level = RiskScore.levelFor(score)
         
         // Generate suggested action based on matched patterns
         val suggestedAction = when {
@@ -290,6 +287,7 @@ object RulesEngine {
 
         return ThreatAnalysis(
             level = level,
+            riskScore = score,
             reasons = reasons,
             matchedPatterns = matchedPatterns,
             suggestedAction = suggestedAction,

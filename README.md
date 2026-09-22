@@ -253,6 +253,7 @@ UPI Rakshak is designed to integrate deeply with **iQOO devices running Funtouch
 - ✅ True loan cost calculator
 - ✅ Voice notice with English/Hinglish speech output
 - ✅ Android rules-engine test suite (17 passing tests)
+- ✅ Web unit + browser test suite (Vitest + Playwright)
 
 ### What's Still Open
 - ⚠️ No live user research yet (personas are hypotheses)
@@ -267,8 +268,16 @@ UPI Rakshak is designed to integrate deeply with **iQOO devices running Funtouch
 ## 🧪 Testing
 
 ```bash
-# Typecheck and build the web app
+# Web: typecheck, lint, unit tests, browser tests
 npm run typecheck
+npm run lint
+npm run test
+npm run test:e2e
+
+# Or run the whole gate at once
+npm run test:all
+
+# Build the web app
 npm run build
 
 # Run the Android rules-engine tests and build the debug APK
@@ -281,6 +290,8 @@ The verified Android artifact is generated at
 `native-android/app/build/outputs/apk/debug/app-debug.apk`.
 
 **Test coverage:**
+- ✅ Web unit suite (Vitest): 48 tests across rules engine, QR safety analysis, finance maths, saved reports
+- ✅ Web browser suite (Playwright): 27 tests covering landing/routing, QR scanner, message workbench, cash-flow ruler, and axe accessibility
 - ✅ Rules engine (17 test cases: HIGH/MEDIUM/SAFE detection)
 - ✅ Cash flow calculation (runway, recurring expenses)
 - ✅ Loan cost math (EMI, effective rate, hidden fees)
@@ -302,12 +313,13 @@ upi_rakshak/
 │   │   ├── CashFlowRuler.tsx         # Runway visualization
 │   │   ├── LoanReceipt.tsx           # Itemised loan comparison
 │   │   ├── CredibilityLedger.tsx     # Evidence and limitations
+│   │   ├── SectionHeader.tsx         # Shared section heading
 │   │   └── StatusIndicator.tsx       # Scanner status display
 │   ├── lib/
-│   │   ├── agent.ts                 # Core agent loop
 │   │   ├── rulesEngine.ts           # Fraud detection rules
-│   │   ├── voice.ts                 # Speech synthesis
-│   │   └── mockSmsData.ts           # Demo SMS history
+│   │   ├── qrSafetyAnalyzer.ts      # UPI QR payload parsing + scoring
+│   │   ├── finance.ts               # Runway and loan-cost maths
+│   │   └── voice.ts                 # Speech synthesis
 │   └── App.tsx
 ├── android-wrapper/                 # Android native wrapper
 │   ├── app/
@@ -344,7 +356,7 @@ This is a hackathon project, but we welcome feedback!
 **Known limitations:**
 - Keyword-based detection won't catch novel scam wording
 - No real user research yet (personas are hypotheses)
-- Cash flow uses simulated SMS data (real SMS parsing requires additional Android permissions)
+- Cash flow uses a simulated bill calendar (real SMS parsing requires additional Android permissions)
 
 **Future enhancements:**
 - On-device ML model for fraud detection

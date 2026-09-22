@@ -3,10 +3,13 @@ package com.upirakshak.data
 import java.time.LocalDate
 
 /**
- * Mock SMS repository with 15 realistic Indian bank SMS messages
- * Ported from TypeScript mockSmsData.ts
+ * Packaged transaction history used when the user has not opted into reading their own
+ * messages, and by tests that must not depend on a device inbox.
+ *
+ * Dates are fixed in the past so the forecast is deterministic; the figures are
+ * illustrative, not a claim about the user's own finances.
  */
-object MockSmsRepository {
+object SampleTransactions {
 
     val entries: List<SmsEntry> = listOf(
         // Day 1: Salary credit

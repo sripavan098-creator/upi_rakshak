@@ -259,7 +259,7 @@ fun LoanDetailCard(
             DetailRow("Total Interest", "₹${loan.totalInterest.toInt()}", color)
             DetailRow("Processing Fees", "₹${loan.totalFees.toInt()}", color)
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
                 color = TextSecondary.copy(alpha = 0.2f)
             )

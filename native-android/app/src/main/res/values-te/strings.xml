@@ -23,4 +23,16 @@
     <string name="your_financial_bodyguard">మీ ఆర్థిక అంగరక్షకుడు</string>
     <string name="recent_threats">ఇటీవల ముప్పులు</string>
     <string name="no_recent_threats">ఇటీవల ముప్పులు ఏమీ లేవు</string>
+    <string name="payment_request_check">చెల్లించే ముందు తనిఖీ చేయండి</string>
+    <string name="payee_label">చెల్లించే వ్యక్తి</string>
+    <string name="amount_label">మొత్తం</string>
+    <string name="note_label">గమనిక</string>
+    <string name="pay_anyway">అయినా చెల్లించు</string>
+    <string name="cancel_payment">రద్దు చేయి</string>
+    <string name="intercept_high_body">ఈ చెల్లింపు అభ్యర్థన తెలిసిన మోసం నమూనాతో సరిపోతుంది. నమ్మకమైన మార్గంలో ధృవీకరించే వరకు చెల్లించవద్దు.</string>
+    <string name="intercept_medium_body">ఈ అభ్యర్థనలో కొన్ని వివరాలు అసాధారణంగా ఉన్నాయి. కొనసాగించే ముందు లబ్ధిదారుని ధృవీకరించండి.</string>
+    <string name="upi_payment_request">UPI చెల్లింపు అభ్యర్థన</string>
+    <string name="no_upi_app_found">ఈ చెల్లింపు పూర్తి చేయడానికి UPI యాప్ కనుగొనబడలేదు</string>
+    <string name="use_my_messages">నా సందేశాలను ఉపయోగించు</string>
+    <string name="use_my_messages_body">మీ నగదు ప్రవాహాన్ని అంచనా వేయడానికి రక్షక్ ఈ ఫోన్‌లో మీ బ్యాంక్ సందేశాలను చదువుతుంది. సందేశాలు పరికరంలోనే విశ్లేషించబడతాయి, అప్‌లోడ్ కావు.</string>
 </resources>

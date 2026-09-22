@@ -17,8 +17,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.upirakshak.R
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.upirakshak.data.CashFlowAnalyzer
-import com.upirakshak.data.MockSmsRepository
+import com.upirakshak.data.LiveSmsRepository
+import com.upirakshak.data.SampleTransactions
+import com.upirakshak.data.SmsEntry
+import com.upirakshak.data.SmsReadPreference
 import com.upirakshak.ui.components.RunwayGauge
 import com.upirakshak.ui.theme.*
 
@@ -26,7 +36,42 @@ import com.upirakshak.ui.theme.*
 @Composable
 fun CashFlowScreen(modifier: Modifier = Modifier) {
     val scrollState = rememberScrollState()
-    val report = remember { CashFlowAnalyzer.analyze(MockSmsRepository.entries, currentBalance = 5000.0) }
+    val context = LocalContext.current
+
+    // Device data when the user has opted in, packaged examples otherwise. Reading is
+    // re-checked on resume so revoking the permission falls back without a crash.
+    var entries by remember { mutableStateOf(SampleTransactions.entries) }
+    var usingDeviceData by remember { mutableStateOf(false) }
+
+    fun refreshEntries() {
+        val live = LiveSmsRepository.readRecentEntries(context)
+        usingDeviceData = live.isNotEmpty()
+        entries = if (usingDeviceData) live else SampleTransactions.entries
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        SmsReadPreference.setEnabled(context, granted)
+        refreshEntries()
+    }
+
+    LaunchedEffect(Unit) { refreshEntries() }
+
+    // Re-checked whenever the screen is shown again, so revoking the permission in system
+    // settings falls back to the packaged examples rather than showing stale device data.
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) refreshEntries()
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    val report = remember(entries) {
+        CashFlowAnalyzer.analyze(entries, currentBalance = 5000.0)
+    }
     
     var purchaseInput by remember { mutableStateOf("") }
     var purchaseResponse by remember { mutableStateOf<String?>(null) }
@@ -50,11 +95,52 @@ fun CashFlowScreen(modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Offline forecast from packaged transaction examples",
+                text = if (usingDeviceData) {
+                    "On-device forecast from your bank messages. Nothing leaves this phone."
+                } else {
+                    "Offline forecast from packaged transaction examples"
+                },
                 color = TextSecondary,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 4.dp)
             )
+        }
+
+        // Opt-in card. Reading messages is powerful, so the choice is explained before the
+        // system prompt appears rather than requested on first launch.
+        if (!usingDeviceData) {
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                colors = CardDefaults.cardColors(containerColor = Slate),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = stringResource(R.string.use_my_messages),
+                        color = TextPrimary,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = stringResource(R.string.use_my_messages_body),
+                        color = TextSecondary,
+                        fontSize = 13.sp,
+                        lineHeight = 18.sp
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        onClick = {
+                            SmsReadPreference.setEnabled(context, true)
+                            permissionLauncher.launch(Manifest.permission.READ_SMS)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Emerald, contentColor = NavyDark),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(stringResource(R.string.grant_permission), fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
         }
         
         // Runway gauge

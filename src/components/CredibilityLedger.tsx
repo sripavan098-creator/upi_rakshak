@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import SectionHeader from './SectionHeader';
 
 /**
  * Credibility Ledger — What We Have Not Proved Yet
@@ -44,15 +45,10 @@ export default function CredibilityLedger() {
   return (
     <section className="bg-[var(--paper)] py-16 px-4">
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="mb-12">
-          <h2 className="font-signage font-bold text-4xl text-[var(--ink)] mb-2">
-            What We Have Not Proved Yet
-          </h2>
-          <p className="text-[var(--ink-light)] text-lg">
-            Honesty is the foundation of trust. Here's what we know, and what we don't.
-          </p>
-        </div>
+        <SectionHeader
+          title="What We Have Not Proved Yet"
+          description="Honesty is the foundation of trust. Here&apos;s what we know, and what we don&apos;t."
+        />
 
         {/* Ledger table */}
         <div className="border-2 border-[var(--ink)] bg-white">

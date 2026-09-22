@@ -18,8 +18,16 @@ import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import com.upirakshak.R
 import com.upirakshak.notification.RakshakGuardService
+import com.upirakshak.ui.onboarding.OnboardingPlan
+import com.upirakshak.ui.onboarding.OnboardingPreferences
+import com.upirakshak.ui.onboarding.OnboardingState
 import com.upirakshak.ui.screens.*
 import com.upirakshak.ui.theme.RakshakTheme
 import com.upirakshak.ui.theme.NavyDark
@@ -52,12 +60,54 @@ class MainActivity : ComponentActivity() {
                 var currentTab by remember { mutableIntStateOf(0) }
                 var showQrScanner by remember { mutableStateOf(false) }
                 var showLanguageSelector by remember { mutableStateOf(false) }
+
+                val lifecycleOwner = LocalLifecycleOwner.current
+                var notificationGranted by remember { mutableStateOf(false) }
+                var overlayGranted by remember { mutableStateOf(false) }
+                var showOnboarding by remember { mutableStateOf(false) }
+
+                // Permissions are granted in system settings, so the app cannot
+                // observe the result directly. Re-check whenever we come back.
+                DisposableEffect(lifecycleOwner) {
+                    val observer = LifecycleEventObserver { _, event ->
+                        if (event == Lifecycle.Event.ON_RESUME) {
+                            notificationGranted =
+                                PermissionHelper.hasNotificationAccess(this@MainActivity)
+                            overlayGranted =
+                                PermissionHelper.hasOverlayPermission(this@MainActivity)
+                            val state = OnboardingState(
+                                notificationAccessGranted = notificationGranted,
+                                overlayGranted = overlayGranted,
+                                dismissed = OnboardingPreferences.isDismissed(this@MainActivity)
+                            )
+                            showOnboarding = OnboardingPlan.shouldShow(state)
+                        }
+                    }
+                    lifecycleOwner.lifecycle.addObserver(observer)
+                    onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+                }
                 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = NavyDark
                 ) {
-                    if (showQrScanner) {
+                    if (showOnboarding) {
+                        OnboardingScreen(
+                            notificationGranted = notificationGranted,
+                            overlayGranted = overlayGranted,
+                            onGrantNotification = {
+                                PermissionHelper.requestNotificationAccess(this@MainActivity)
+                            },
+                            onGrantOverlay = {
+                                PermissionHelper.requestOverlayPermission(this@MainActivity)
+                            },
+                            onChooseLanguage = { showLanguageSelector = true },
+                            onSkip = {
+                                OnboardingPreferences.setDismissed(this@MainActivity, true)
+                                showOnboarding = false
+                            }
+                        )
+                    } else if (showQrScanner) {
                         QrScannerScreen(onBack = { showQrScanner = false })
                     } else if (showLanguageSelector) {
                         LanguageSelectionScreen(onBack = { showLanguageSelector = false })
@@ -70,19 +120,19 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     NavigationBarItem(
                                         icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                                        label = { Text("Home") },
+                                        label = { Text(stringResource(R.string.home)) },
                                         selected = currentTab == 0,
                                         onClick = { currentTab = 0 }
                                     )
                                     NavigationBarItem(
                                         icon = { Icon(Icons.Default.AttachMoney, contentDescription = null) },
-                                        label = { Text("Cash Flow") },
+                                        label = { Text(stringResource(R.string.cash_flow_forecast)) },
                                         selected = currentTab == 1,
                                         onClick = { currentTab = 1 }
                                     )
                                     NavigationBarItem(
                                         icon = { Icon(Icons.Default.AttachMoney, contentDescription = null) },
-                                        label = { Text("Loans") },
+                                        label = { Text(stringResource(R.string.loans)) },
                                         selected = currentTab == 2,
                                         onClick = { currentTab = 2 }
                                     )

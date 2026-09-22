@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import SectionHeader from './SectionHeader';
 import { motion } from 'framer-motion';
+import { computeRunwayDays, runwayBand, type RunwayBand } from '../lib/finance';
 
 /**
  * Cash Flow Ruler — Physical Ruler Visualization
@@ -27,34 +29,44 @@ const SALARY = 35000;
 const CURRENT_BALANCE = 8500;
 const DAYS_IN_MONTH = 30;
 
+/**
+ * The sample data starts at a 63-day runway, so the EMI has to push monthly
+ * outflow above ~₹87k (warning) and ~₹130k (danger) to reach those bands.
+ * The original ₹15k cap could never leave the safe band.
+ */
+const MAX_HYPOTHETICAL_EMI = 150000;
+const EMI_STEP = 5000;
+
 export default function CashFlowRuler() {
   const [hypotheticalEMI, setHypotheticalEMI] = useState(0);
-  
-  // Calculate total expenses
+
   const totalBills = SAMPLE_BILLS.reduce((sum, bill) => sum + bill.amount, 0);
   const totalWithHypothetical = totalBills + hypotheticalEMI;
-  
-  // Calculate runway
-  const availableFunds = CURRENT_BALANCE + SALARY;
-  const runway = Math.floor((availableFunds / totalWithHypothetical) * DAYS_IN_MONTH);
+
+  const runway = computeRunwayDays({
+    currentBalance: CURRENT_BALANCE,
+    monthlyIncome: SALARY,
+    monthlyOutflow: totalWithHypothetical,
+    daysInMonth: DAYS_IN_MONTH,
+  });
   const runwayPercentage = (runway / DAYS_IN_MONTH) * 100;
-  
-  // Determine if in danger zone
-  const isDanger = runway < 10;
-  const isWarning = runway >= 10 && runway < 15;
+
+  const band: RunwayBand = runwayBand(runway);
+  const bandColor = {
+    danger: 'var(--danger-text)',
+    warning: '#A34F08',
+    safe: 'var(--safe-text)',
+  }[band];
+  const isDanger = band === 'danger';
+  const isWarning = band === 'warning';
 
   return (
     <section className="bg-[var(--paper)] py-16 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-12">
-          <h2 className="font-signage font-bold text-4xl text-[var(--ink)] mb-2">
-            Cash Flow Forecast
-          </h2>
-          <p className="text-[var(--ink-light)] text-lg">
-            Your money, visualized as a physical ruler.
-          </p>
-        </div>
+        <SectionHeader
+          title="Cash Flow Forecast"
+          description="Your money, visualized as a physical ruler."
+        />
 
         {/* The Ruler */}
         <div className="relative mb-16">
@@ -108,7 +120,7 @@ export default function CashFlowRuler() {
               className="absolute top-0 bottom-0 border-r-4"
               style={{
                 width: `${runwayPercentage}%`,
-                borderColor: isDanger ? 'var(--stamp-red)' : isWarning ? 'var(--warning)' : 'var(--bbps-green)',
+                borderColor: bandColor,
                 background: isDanger
                   ? 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(194, 36, 27, 0.1) 10px, rgba(194, 36, 27, 0.1) 20px)'
                   : 'transparent',
@@ -120,7 +132,7 @@ export default function CashFlowRuler() {
             >
               <div
                 className="absolute top-1/2 -translate-y-1/2 right-2 font-signage font-bold text-lg"
-                style={{ color: isDanger ? 'var(--stamp-red)' : isWarning ? 'var(--warning)' : 'var(--bbps-green)' }}
+                style={{ color: bandColor }}
               >
                 {runway} days
               </div>
@@ -153,7 +165,7 @@ export default function CashFlowRuler() {
             <p className="text-sm text-[var(--ink-light)] mb-1">Runway</p>
             <p
               className="font-signage font-bold text-3xl"
-              style={{ color: isDanger ? 'var(--stamp-red)' : isWarning ? 'var(--warning)' : 'var(--bbps-green)' }}
+              style={{ color: bandColor }}
             >
               {runway} days
             </p>
@@ -171,19 +183,21 @@ export default function CashFlowRuler() {
 
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <label className="text-sm font-signage text-[var(--ink)] min-w-[100px]">
+              <label htmlFor="hypothetical-emi" className="text-sm font-signage text-[var(--ink)] min-w-[100px]">
                 Monthly EMI:
               </label>
               <input
+                id="hypothetical-emi"
                 type="range"
                 min="0"
-                max="15000"
-                step="500"
+                max={MAX_HYPOTHETICAL_EMI}
+                step={EMI_STEP}
                 value={hypotheticalEMI}
                 onChange={(e) => setHypotheticalEMI(Number(e.target.value))}
+                aria-valuetext={hypotheticalEMI > 0 ? `₹${hypotheticalEMI.toLocaleString()} monthly EMI` : 'No extra EMI'}
                 className="flex-1 h-2 bg-[var(--ink)] rounded-lg appearance-none cursor-pointer"
                 style={{
-                  background: `linear-gradient(to right, var(--bbps-green) 0%, var(--bbps-green) ${(hypotheticalEMI / 15000) * 100}%, var(--ink) ${(hypotheticalEMI / 15000) * 100}%, var(--ink) 100%)`,
+                  background: `linear-gradient(to right, var(--bbps-green) 0%, var(--bbps-green) ${(hypotheticalEMI / MAX_HYPOTHETICAL_EMI) * 100}%, var(--ink) ${(hypotheticalEMI / MAX_HYPOTHETICAL_EMI) * 100}%, var(--ink) 100%)`,
                 }}
               />
               <span
