@@ -45,6 +45,22 @@
             </intent-filter>
         </activity>
 
+        <!-- UPI deep-link interception. Not exported to the launcher, but must be
+             exported so UPI payment links from other apps can reach it. -->
+        <activity
+            android:name=".intent.UpiInterceptorActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@style/Theme.UPIRakshak.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="upi" android:host="pay" />
+            </intent-filter>
+        </activity>
+
         <!-- Notification Listener Service -->
         <service
             android:name=".notification.RakshakNotificationListener"

@@ -11,6 +11,8 @@ data class ThreatRecord(
     val id: String,
     val timestampMillis: Long,
     val level: ThreatLevel,
+    /** Weighted risk score from the engine; retained so history can explain itself. */
+    val riskScore: Int,
     val title: String,
     val sourcePackage: String,
     val reasons: List<String>,
@@ -28,6 +30,7 @@ fun ThreatAnalysis.toRecord(
     id = id,
     timestampMillis = timestampMillis,
     level = level,
+    riskScore = riskScore,
     title = title,
     sourcePackage = sourcePackage,
     reasons = reasons,

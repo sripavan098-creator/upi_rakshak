@@ -12,6 +12,7 @@ class ThreatHistoryCodecTest {
         id: String = "id-1",
         timestamp: Long = 1_700_000_000_000L,
         level: ThreatLevel = ThreatLevel.HIGH,
+        score: Int = 95,
         title: String = "BSES",
         source: String = "com.whatsapp",
         reasons: List<String> = listOf("Urgency language", "Payment trap"),
@@ -22,6 +23,7 @@ class ThreatHistoryCodecTest {
         id = id,
         timestampMillis = timestamp,
         level = level,
+        riskScore = score,
         title = title,
         sourcePackage = source,
         reasons = reasons,
@@ -167,5 +169,46 @@ class ThreatHistoryCodecTest {
 
         assertEquals(50, restored.size)
         assertEquals(records.map { it.id }, restored.map { it.id })
+    }
+
+    @Test
+    fun `a record round-trips its risk score`() {
+        val decoded = ThreatHistoryCodec.decode(ThreatHistoryCodec.encode(listOf(record(score = 130))))
+
+        assertEquals(1, decoded.size)
+        assertEquals(130, decoded.first().riskScore)
+    }
+
+    @Test
+    fun `history written before the risk score existed still decodes`() {
+        // Nine-field layout persisted by an earlier build: no score column.
+        val sep = "\u001E"
+        val field = "\u001F"
+        val legacy = listOf(
+            "legacy-1", "1700000000000", "HIGH", "BSES", "com.whatsapp",
+            "Urgency language", "Do not pay", "Use the official BSES app", "URGENT: pay now"
+        ).joinToString(field)
+        val raw = legacy + sep + listOf(
+            "legacy-2", "1700000001000", "SAFE", "Bank", "com.android.mms",
+            "None", "Looks fine", "", "OTP is 123456"
+        ).joinToString(field)
+
+        val decoded = ThreatHistoryCodec.decode(raw)
+
+        assertEquals(2, decoded.size)
+        assertEquals("legacy-1", decoded[0].id)
+        assertEquals(ThreatLevel.HIGH, decoded[0].level)
+        assertEquals("BSES", decoded[0].title)
+        assertEquals("URGENT: pay now", decoded[0].originalText)
+        assertEquals("Use the official BSES app", decoded[0].officialRoute)
+        // Missing score degrades to zero rather than dropping the record.
+        assertEquals(0, decoded[0].riskScore)
+        assertEquals("legacy-2", decoded[1].id)
+        assertNull(decoded[1].officialRoute)
+    }
+
+    @Test
+    fun `a record with too few fields is dropped`() {
+        assertTrue(ThreatHistoryCodec.decode("only\u001Ftwo").isEmpty())
     }
 }

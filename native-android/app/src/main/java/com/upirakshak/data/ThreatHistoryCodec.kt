@@ -16,7 +16,9 @@ object ThreatHistoryCodec {
     private const val FIELD_SEPARATOR = "\u001F"
     private const val LIST_SEPARATOR = "\u001D"
 
-    private const val FIELD_COUNT = 9
+    /** Field count before the risk score was added; old records are still decoded. */
+    private const val LEGACY_FIELD_COUNT = 9
+    private const val FIELD_COUNT = 10
 
     fun encode(records: List<ThreatRecord>): String =
         records.joinToString(RECORD_SEPARATOR) { encodeRecord(it) }
@@ -33,6 +35,7 @@ object ThreatHistoryCodec {
             record.id,
             record.timestampMillis.toString(),
             record.level.name,
+            record.riskScore.toString(),
             record.title,
             record.sourcePackage,
             record.reasons.joinToString(LIST_SEPARATOR),
@@ -45,24 +48,29 @@ object ThreatHistoryCodec {
 
     private fun decodeRecord(chunk: String): ThreatRecord? {
         val fields = chunk.split(FIELD_SEPARATOR)
-        if (fields.size != FIELD_COUNT) return null
+        if (fields.size != FIELD_COUNT && fields.size != LEGACY_FIELD_COUNT) return null
 
         val timestamp = fields[1].toLongOrNull() ?: return null
         val level = runCatching { ThreatLevel.valueOf(fields[2]) }.getOrNull() ?: return null
         if (fields[0].isBlank()) return null
 
+        // Records written before the risk score existed have nine fields and no score.
+        val scored = fields.size == FIELD_COUNT
+        val offset = if (scored) 1 else 0
+
         return ThreatRecord(
             id = unescape(fields[0]),
             timestampMillis = timestamp,
             level = level,
-            title = unescape(fields[3]),
-            sourcePackage = unescape(fields[4]),
-            reasons = unescape(fields[5])
+            riskScore = if (scored) fields[3].toIntOrNull() ?: 0 else 0,
+            title = unescape(fields[3 + offset]),
+            sourcePackage = unescape(fields[4 + offset]),
+            reasons = unescape(fields[5 + offset])
                 .split(LIST_SEPARATOR)
                 .filter { it.isNotBlank() },
-            suggestedAction = unescape(fields[6]),
-            officialRoute = unescape(fields[7]).ifBlank { null },
-            originalText = unescape(fields[8])
+            suggestedAction = unescape(fields[6 + offset]),
+            officialRoute = unescape(fields[7 + offset]).ifBlank { null },
+            originalText = unescape(fields[8 + offset])
         )
     }
 

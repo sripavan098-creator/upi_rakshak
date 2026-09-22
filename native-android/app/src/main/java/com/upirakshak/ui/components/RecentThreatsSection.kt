@@ -162,6 +162,7 @@ private fun RecentThreatsSectionPreview() {
                         id = "1",
                         timestampMillis = 1_700_000_000_000,
                         level = ThreatLevel.HIGH,
+                        riskScore = 95,
                         title = "Collect request from unknown VPA",
                         sourcePackage = "com.whatsapp",
                         reasons = listOf("Asks to approve a collect request", "Lookalike bank handle"),

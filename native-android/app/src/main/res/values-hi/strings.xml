@@ -23,4 +23,14 @@
     <string name="your_financial_bodyguard">आपका वित्तीय अंगरक्षक</string>
     <string name="recent_threats">हाल के खतरे</string>
     <string name="no_recent_threats">कोई हाल का खतरा नहीं मिला</string>
+    <string name="payment_request_check">भुगतान से पहले जाँचें</string>
+    <string name="payee_label">भुगतान किसे</string>
+    <string name="amount_label">राशि</string>
+    <string name="note_label">टिप्पणी</string>
+    <string name="pay_anyway">फिर भी भुगतान करें</string>
+    <string name="cancel_payment">रद्द करें</string>
+    <string name="intercept_high_body">यह भुगतान अनुरोध ज्ञात धोखाधड़ी पैटर्न से मेल खाता है। भरोसेमंद तरीके से पुष्टि करने तक भुगतान न करें।</string>
+    <string name="intercept_medium_body">इस भुगतान अनुरोध की कुछ जानकारी असामान्य लगती है। आगे बढ़ने से पहले प्राप्तकर्ता की पुष्टि करें।</string>
+    <string name="upi_payment_request">UPI भुगतान अनुरोध</string>
+    <string name="no_upi_app_found">यह भुगतान पूरा करने के लिए कोई UPI ऐप नहीं मिला</string>
 </resources>
