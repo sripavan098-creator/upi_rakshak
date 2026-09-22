@@ -19,6 +19,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.upirakshak.MainActivity
 import com.upirakshak.engine.ThreatAnalysis
+import com.upirakshak.engine.ThreatLevel
 
 class RakshakOverlayService : Service() {
     
@@ -81,16 +82,30 @@ class RakshakOverlayService : Service() {
         // Remove existing overlay if any
         hideOverlay()
         
+        // Severity drives the banner colour: critical threats read red, softer
+        // advisories read amber so the user can tell them apart at a glance.
+        val severity = runCatching { ThreatLevel.valueOf(level) }.getOrDefault(ThreatLevel.MEDIUM)
+        val bannerColor = when (severity) {
+            ThreatLevel.HIGH -> "#DC2626"
+            ThreatLevel.MEDIUM -> "#B45309"
+            ThreatLevel.SAFE -> "#15803D"
+        }
+        val header = when (severity) {
+            ThreatLevel.HIGH -> "⚠️ Rakshak Alert"
+            ThreatLevel.MEDIUM -> "⚠️ Rakshak: Check before paying"
+            ThreatLevel.SAFE -> "✓ Rakshak: Looks safe"
+        }
+
         // Create overlay layout
         overlayView = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(Color.parseColor("#DC2626"))
+            setBackgroundColor(Color.parseColor(bannerColor))
             setPadding(48, 32, 48, 32)
             elevation = 16f
             
             // Title
             addView(TextView(context).apply {
-                text = "⚠️ Rakshak Alert"
+                text = header
                 setTextColor(Color.WHITE)
                 textSize = 20f
                 setTypeface(typeface, android.graphics.Typeface.BOLD)
