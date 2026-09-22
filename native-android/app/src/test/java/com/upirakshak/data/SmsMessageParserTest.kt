@@ -98,7 +98,7 @@ class SmsMessageParserTest {
 
     @Test
     fun `every mock entry re-parses to the same classified amount`() {
-        MockSmsRepository.entries.forEach { entry ->
+        SampleTransactions.entries.forEach { entry ->
             val parsed = SmsMessageParser.parse(entry.message, entry.sender, entry.date)
 
             assertEquals("amount for: ${entry.message}", entry.amount, parsed!!.amount, 0.001)
@@ -108,7 +108,7 @@ class SmsMessageParserTest {
 
     @Test
     fun `parsed mock history feeds the analyzer without loss`() {
-        val parsed = MockSmsRepository.entries
+        val parsed = SampleTransactions.entries
             .mapNotNull { SmsMessageParser.parse(it.message, it.sender, it.date) }
             .filter { it.type != SmsType.INFO }
 

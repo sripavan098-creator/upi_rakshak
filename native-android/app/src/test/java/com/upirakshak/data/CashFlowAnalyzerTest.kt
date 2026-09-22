@@ -129,7 +129,7 @@ class CashFlowAnalyzerTest {
     @Test
     fun `mock repository produces a positive runway`() {
         val report = CashFlowAnalyzer.analyze(
-            entries = MockSmsRepository.entries,
+            entries = SampleTransactions.entries,
             currentBalance = 12700.0
         )
 

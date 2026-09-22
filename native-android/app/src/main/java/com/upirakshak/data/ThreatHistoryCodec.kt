@@ -12,42 +12,30 @@ import com.upirakshak.engine.ThreatLevel
  */
 object ThreatHistoryCodec {
 
-    private const val RECORD_SEPARATOR = "\u001E"
-    private const val FIELD_SEPARATOR = "\u001F"
-    private const val LIST_SEPARATOR = "\u001D"
-
     /** Field count before the risk score was added; old records are still decoded. */
     private const val LEGACY_FIELD_COUNT = 9
     private const val FIELD_COUNT = 10
 
     fun encode(records: List<ThreatRecord>): String =
-        records.joinToString(RECORD_SEPARATOR) { encodeRecord(it) }
+        DelimitedCodec.encodeRecords(records.map { encodeRecord(it) })
 
-    fun decode(raw: String?): List<ThreatRecord> {
-        if (raw.isNullOrBlank()) return emptyList()
+    fun decode(raw: String?): List<ThreatRecord> =
+        DelimitedCodec.splitRecords(raw).mapNotNull { decodeRecord(it) }
 
-        return raw.split(RECORD_SEPARATOR)
-            .mapNotNull { decodeRecord(it) }
-    }
+    private fun encodeRecord(record: ThreatRecord): List<String> = listOf(
+        record.id,
+        record.timestampMillis.toString(),
+        record.level.name,
+        record.riskScore.toString(),
+        record.title,
+        record.sourcePackage,
+        DelimitedCodec.encodeList(record.reasons),
+        record.suggestedAction,
+        record.officialRoute.orEmpty(),
+        record.originalText
+    )
 
-    private fun encodeRecord(record: ThreatRecord): String {
-        val fields = listOf(
-            record.id,
-            record.timestampMillis.toString(),
-            record.level.name,
-            record.riskScore.toString(),
-            record.title,
-            record.sourcePackage,
-            record.reasons.joinToString(LIST_SEPARATOR),
-            record.suggestedAction,
-            record.officialRoute.orEmpty(),
-            record.originalText
-        )
-        return fields.joinToString(FIELD_SEPARATOR) { escape(it) }
-    }
-
-    private fun decodeRecord(chunk: String): ThreatRecord? {
-        val fields = chunk.split(FIELD_SEPARATOR)
+    private fun decodeRecord(fields: List<String>): ThreatRecord? {
         if (fields.size != FIELD_COUNT && fields.size != LEGACY_FIELD_COUNT) return null
 
         val timestamp = fields[1].toLongOrNull() ?: return null
@@ -59,48 +47,16 @@ object ThreatHistoryCodec {
         val offset = if (scored) 1 else 0
 
         return ThreatRecord(
-            id = unescape(fields[0]),
+            id = DelimitedCodec.unescape(fields[0]),
             timestampMillis = timestamp,
             level = level,
             riskScore = if (scored) fields[3].toIntOrNull() ?: 0 else 0,
-            title = unescape(fields[3 + offset]),
-            sourcePackage = unescape(fields[4 + offset]),
-            reasons = unescape(fields[5 + offset])
-                .split(LIST_SEPARATOR)
-                .filter { it.isNotBlank() },
-            suggestedAction = unescape(fields[6 + offset]),
-            officialRoute = unescape(fields[7 + offset]).ifBlank { null },
-            originalText = unescape(fields[8 + offset])
+            title = DelimitedCodec.unescape(fields[3 + offset]),
+            sourcePackage = DelimitedCodec.unescape(fields[4 + offset]),
+            reasons = DelimitedCodec.decodeList(DelimitedCodec.unescape(fields[5 + offset])),
+            suggestedAction = DelimitedCodec.unescape(fields[6 + offset]),
+            officialRoute = DelimitedCodec.unescape(fields[7 + offset]).ifBlank { null },
+            originalText = DelimitedCodec.unescape(fields[8 + offset])
         )
-    }
-
-    // Escaping keeps user-visible text containing our separators from splitting
-    // a record into the wrong number of fields.
-    private fun escape(value: String): String = value
-        .replace("\\", "\\\\")
-        .replace(RECORD_SEPARATOR, "\\r")
-        .replace(FIELD_SEPARATOR, "\\f")
-        .replace(LIST_SEPARATOR, "\\l")
-
-    private fun unescape(value: String): String {
-        val out = StringBuilder(value.length)
-        var index = 0
-        while (index < value.length) {
-            val char = value[index]
-            if (char != '\\' || index == value.length - 1) {
-                out.append(char)
-                index++
-                continue
-            }
-            when (value[index + 1]) {
-                'r' -> out.append(RECORD_SEPARATOR)
-                'f' -> out.append(FIELD_SEPARATOR)
-                'l' -> out.append(LIST_SEPARATOR)
-                '\\' -> out.append('\\')
-                else -> out.append(value[index + 1])
-            }
-            index += 2
-        }
-        return out.toString()
     }
 }

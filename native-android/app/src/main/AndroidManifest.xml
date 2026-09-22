@@ -14,14 +14,15 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- READ_SMS is opt-in. It powers the on-device cash-flow forecast for users who
+         explicitly consent; the app works without it. Requested at runtime only. -->
+    <uses-permission android:name="android.permission.READ_SMS" />
     <!-- Keep the release artifact offline and avoid unused sensitive access. -->
     <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
-    <uses-permission android:name="android.permission.READ_SMS" tools:node="remove" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" tools:node="remove" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <!-- READ_SMS is declared for the notification-based flow; the handset must
-         not be assumed to have telephony, so this stays optional. -->
+    <!-- Telephony is not assumed: SMS reading degrades to the packaged examples. -->
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
 
     <application

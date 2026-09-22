@@ -33,4 +33,6 @@
     <string name="intercept_medium_body">इस भुगतान अनुरोध की कुछ जानकारी असामान्य लगती है। आगे बढ़ने से पहले प्राप्तकर्ता की पुष्टि करें।</string>
     <string name="upi_payment_request">UPI भुगतान अनुरोध</string>
     <string name="no_upi_app_found">यह भुगतान पूरा करने के लिए कोई UPI ऐप नहीं मिला</string>
+    <string name="use_my_messages">मेरे संदेश उपयोग करें</string>
+    <string name="use_my_messages_body">रक्षक आपके कैश फ्लो का अनुमान लगाने के लिए इस फोन पर बैंक संदेश पढ़ता है। संदेश डिवाइस पर ही विश्लेषित होते हैं, अपलोड नहीं होते।</string>
 </resources>
