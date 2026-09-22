@@ -25,14 +25,12 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
-        # Pin the packages to the project's compileSdk (34 in app/build.gradle.kts).
-        # Relying on the action's defaults installs the newest platform, which does not
-        # satisfy compileSdk 34. The deprecated "tools" package no longer exists in the
-        # SDK repository and must not be listed here.
-        packages: |
-          platform-tools
-          platforms;android-34
-          build-tools;34.0.0
+        # The action splits this value on single spaces only, never on newlines, so a
+        # multi-line block would be passed to sdkmanager as one malformed package name.
+        # Pin the versions to the project's compileSdk (34 in app/build.gradle.kts);
+        # the action's default also installs the deprecated "tools" package, which no
+        # longer exists in the SDK repository. Bump these with compileSdk.
+        packages: 'platform-tools platforms;android-34 build-tools;34.0.0'
       
     - name: Grant execute permission for gradlew
       run: |
