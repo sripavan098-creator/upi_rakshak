@@ -202,8 +202,6 @@ export function analyzeQrPayload(rawContent: string): QrSafetyResult {
   } else if (score < 85 || baseAnalysis.level === 'MEDIUM') {
     level = 'MEDIUM';
     score = Math.min(score, 75);
-  } else {
-    level = 'SAFE';
   }
 
   // Title and subtitle

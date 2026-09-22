@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { speakWarning, isSpeechSupported } from '../lib/voice';
+import { getSpeechRecognition, type SpeechRecognitionLike } from '../lib/speechRecognition';
 
 const RESPONSES: Record<string, { text: string; speech: string }> = {
   'Is this payment safe?': {
@@ -19,35 +20,45 @@ const RESPONSES: Record<string, { text: string; speech: string }> = {
 export default function NoticeVoicePanel() {
   const [selected, setSelected] = useState('Is this payment safe?');
   const [listening, setListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const supported = isSpeechSupported();
   const response = RESPONSES[selected];
 
   useEffect(() => {
-    const Recognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!Recognition) return;
-    const recognition = new Recognition();
+    const recognition = getSpeechRecognition();
+    if (!recognition) return;
+
     recognition.lang = 'hi-IN';
     recognition.interimResults = false;
     recognition.onstart = () => setListening(true);
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript.toLowerCase();
-      const match = Object.keys(RESPONSES).find((query) => query.toLowerCase().includes(transcript) || transcript.includes(query.toLowerCase().split(' ')[0]));
+    recognition.onresult = (event) => {
+      const transcript = event.results[0]?.[0]?.transcript.toLowerCase() ?? '';
+      const match = Object.keys(RESPONSES).find(
+        (query) =>
+          query.toLowerCase().includes(transcript) ||
+          transcript.includes(query.toLowerCase().split(' ')[0]),
+      );
       if (match) setSelected(match);
       setListening(false);
     };
     recognition.onerror = () => setListening(false);
     recognition.onend = () => setListening(false);
-    (window as any).__rakshakRecognition = recognition;
+    recognitionRef.current = recognition;
+
     return () => {
-      recognition.abort?.();
-      delete (window as any).__rakshakRecognition;
+      recognition.abort();
+      recognitionRef.current = null;
     };
   }, []);
 
   const listen = () => {
-    const recognition = (window as any).__rakshakRecognition;
+    const recognition = recognitionRef.current;
     if (!recognition) return;
-    try { recognition.start(); } catch { setListening(false); }
+    try {
+      recognition.start();
+    } catch {
+      setListening(false);
+    }
   };
 
   return (
@@ -75,9 +86,5 @@ export default function NoticeVoicePanel() {
       </div>
     </section>
   );
-}
-
-export function NoticeVoiceStatus() {
-  return null;
 }
 

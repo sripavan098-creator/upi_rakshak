@@ -229,10 +229,11 @@ UPI Rakshak is designed to integrate deeply with **iQOO devices running Funtouch
 ### What We Built
 - ✅ Real-time scam detection with Hinglish + English rules
 - ✅ System-level overlay (Android native)
-- ✅ Cash flow prediction from SMS history
+- ✅ Cash flow prediction from a modelled bill calendar
 - ✅ True loan cost calculator
 - ✅ Voice notice with English/Hinglish speech output
 - ✅ Android rules-engine test suite (17 passing tests)
+- ✅ Web unit + browser test suite (Vitest + Playwright)
 
 ### What's Still Open
 - ⚠️ No live user research yet (personas are hypotheses)
@@ -282,12 +283,13 @@ upi_rakshak/
 │   │   ├── CashFlowRuler.tsx         # Runway visualization
 │   │   ├── LoanReceipt.tsx           # Itemised loan comparison
 │   │   ├── CredibilityLedger.tsx     # Evidence and limitations
+│   │   ├── SectionHeader.tsx         # Shared section heading
 │   │   └── StatusIndicator.tsx       # Scanner status display
 │   ├── lib/
-│   │   ├── agent.ts                 # Core agent loop
 │   │   ├── rulesEngine.ts           # Fraud detection rules
-│   │   ├── voice.ts                 # Speech synthesis
-│   │   └── mockSmsData.ts           # Demo SMS history
+│   │   ├── qrSafetyAnalyzer.ts      # UPI QR payload parsing + scoring
+│   │   ├── finance.ts               # Runway and loan-cost maths
+│   │   └── voice.ts                 # Speech synthesis
 │   └── App.tsx
 ├── android-wrapper/                 # Android native wrapper
 │   ├── app/
@@ -324,7 +326,7 @@ This is a hackathon project, but we welcome feedback!
 **Known limitations:**
 - Keyword-based detection won't catch novel scam wording
 - No real user research yet (personas are hypotheses)
-- Cash flow uses simulated SMS data (real SMS parsing requires additional Android permissions)
+- Cash flow uses a simulated bill calendar (real SMS parsing requires additional Android permissions)
 
 **Future enhancements:**
 - On-device ML model for fraud detection

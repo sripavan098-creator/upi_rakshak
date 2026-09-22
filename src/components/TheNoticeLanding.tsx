@@ -32,12 +32,12 @@ export default function TheNoticeLanding() {
 
   return (
     <div className="min-h-screen bg-[var(--paper)]">
-      <header className="notice-nav" aria-label="Primary navigation">
+      <header className="notice-nav">
         <a className="notice-brand" href="#top" aria-label="UPI Rakshak home">
           <span className="notice-brand__seal" aria-hidden="true">र</span>
           <span>UPI Rakshak</span>
         </a>
-        <nav className="notice-nav__links">
+        <nav className="notice-nav__links" aria-label="Primary navigation">
           <a href="#scanner">Live scanner</a>
           <a href="#cash-flow">Cash flow</a>
           <a href="#loans">Loan receipt</a>
@@ -131,7 +131,7 @@ export default function TheNoticeLanding() {
             <div><span>01 / NATIVE REGISTER</span><strong>257</strong><em>keyword signals</em></div>
             <div><span>02 / RESPONSE TIME</span><strong>&lt;200ms</strong><em>overlay detection</em></div>
             <div><span>03 / LIVE WEB CUES</span><strong>2</strong><em>English + Hinglish</em></div>
-            <div><span>04 / VALIDATION</span><strong>17</strong><em>unit tests passing</em></div>
+            <div><span>04 / VALIDATION</span><strong>54</strong><em>unit tests passing</em></div>
           </motion.div>
 
           {/* Scroll indicator */}
