@@ -18,10 +18,12 @@ import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.upirakshak.R
 import com.upirakshak.notification.RakshakGuardService
 import com.upirakshak.ui.onboarding.OnboardingPlan
 import com.upirakshak.ui.onboarding.OnboardingPreferences
@@ -118,19 +120,19 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     NavigationBarItem(
                                         icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                                        label = { Text("Home") },
+                                        label = { Text(stringResource(R.string.home)) },
                                         selected = currentTab == 0,
                                         onClick = { currentTab = 0 }
                                     )
                                     NavigationBarItem(
                                         icon = { Icon(Icons.Default.AttachMoney, contentDescription = null) },
-                                        label = { Text("Cash Flow") },
+                                        label = { Text(stringResource(R.string.cash_flow_forecast)) },
                                         selected = currentTab == 1,
                                         onClick = { currentTab = 1 }
                                     )
                                     NavigationBarItem(
                                         icon = { Icon(Icons.Default.AttachMoney, contentDescription = null) },
-                                        label = { Text("Loans") },
+                                        label = { Text(stringResource(R.string.loans)) },
                                         selected = currentTab == 2,
                                         onClick = { currentTab = 2 }
                                     )

@@ -152,30 +152,37 @@ adb shell appops set com.upirakshak SYSTEM_ALERT_WINDOW allow
 
 ## 🧪 Test Coverage
 
-17 unit tests covering:
-- ✅ Electricity scam → HIGH
-- ✅ Bank KYC scam → HIGH
-- ✅ Prize scam → HIGH
-- ✅ OTP message → SAFE
-- ✅ Friend chat → SAFE
-- ✅ Paytm care lookalike → MEDIUM
-- ✅ Job registration fee → HIGH
-- ✅ Government scheme → HIGH
+97 JVM unit tests, 0 failures. Coverage spans:
+- ✅ Scam verdicts: electricity, KYC, prize, job-fee, and government-scheme scams → HIGH
+- ✅ Benign messages: OTP codes, friend chat → SAFE
+- ✅ Lookalike payee handles (e.g. Paytm care) → MEDIUM
+- ✅ Threat-level labelling and colour mapping stay distinct and consistent
+- ✅ Cash-flow runway, recurring-expense detection, and affordability math
+- ✅ Onboarding gating logic (which permissions still need granting)
+- ✅ Loan comparison math
 
-Run tests:
+Run tests and lint:
 ```bash
-./gradlew test
+./gradlew test lintDebug
 ```
+
+See [`../docs/android-build.md`](../docs/android-build.md) for the verified toolchain
+versions and the lint-warning baseline.
 
 ## 🎨 Design System
 
-**Theme:** Dusk guardian — ink/gold/teal/coral
+**Theme:** UPI Rakshak notice palette — shared with the web experience
 
-- **Ink:** `#14132B` (background)
-- **Gold:** `#E8A33D` (brand/CTA)
-- **Safe:** `#3FA796` (low risk)
-- **Risk Med:** `#E8A33D` (medium risk)
-- **Risk High:** `#E1554A` (high risk)
+- **Paper:** `#E9E7DB` (background)
+- **Ink:** `#1B2A21` (primary text)
+- **InkLight:** `#2D3E34` (secondary text)
+- **StampRed:** `#C2241B` (high risk / brand stamp)
+- **BbpsGreen:** `#138808` (safe)
+- **SealGold:** `#B8860B` (accents)
+- **Warning:** `#D97706` (medium risk)
+
+Colours are defined once in `ui/theme/Color.kt`; `RiskMed`/`RiskHigh`/`Safe` alias onto the
+values above so screens never hardcode hex literals.
 
 **Typography:** System sans-serif (Space Grotesk in web version)
 

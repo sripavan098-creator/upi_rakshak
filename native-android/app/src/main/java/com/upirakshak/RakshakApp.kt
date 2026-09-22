@@ -2,6 +2,7 @@ package com.upirakshak
 
 import android.app.Application
 import android.util.Log
+import com.upirakshak.data.ThreatHistoryStore
 import com.upirakshak.util.AppContextHolder
 import com.upirakshak.voice.VoiceOutput
 
@@ -9,6 +10,7 @@ class RakshakApp : Application() {
     override fun onCreate() {
         super.onCreate()
         AppContextHolder.init(this)
+        ThreatHistoryStore.load(this)
         VoiceOutput.init(this) { hindiAvailable ->
             Log.d("Rakshak", "TTS initialized. Hindi=$hindiAvailable")
         }

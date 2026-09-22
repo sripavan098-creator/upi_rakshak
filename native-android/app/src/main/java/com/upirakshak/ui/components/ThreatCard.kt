@@ -19,6 +19,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.upirakshak.R
 import com.upirakshak.engine.ThreatAnalysis
 import com.upirakshak.engine.ThreatLevel
 import com.upirakshak.ui.theme.*
@@ -28,11 +30,10 @@ import com.upirakshak.voice.VoiceOutput
 
 @Composable
 fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
-    val (borderColor, surfaceColor, badgeColor) = when (analysis.level) {
-        ThreatLevel.HIGH -> Triple(Danger, Danger.copy(alpha = 0.1f), Danger)
-        ThreatLevel.MEDIUM -> Triple(Warning, Warning.copy(alpha = 0.1f), Warning)
-        ThreatLevel.SAFE -> Triple(Emerald, Emerald.copy(alpha = 0.1f), Emerald)
-    }
+    val accent = analysis.level.tint
+    val surfaceColor = accent.copy(alpha = 0.1f)
+    val borderColor = accent
+    val badgeColor = accent
 
     Column(
         modifier = modifier
@@ -49,7 +50,7 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
                 .padding(horizontal = 12.dp, vertical = 4.dp)
         ) {
             Text(
-                text = analysis.level.name,
+                text = stringResource(analysis.level.badgeRes),
                 color = badgeColor,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
@@ -94,11 +95,7 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    when (analysis.level) {
-                        ThreatLevel.HIGH -> Danger.copy(alpha = 0.15f)
-                        ThreatLevel.MEDIUM -> Warning.copy(alpha = 0.15f)
-                        ThreatLevel.SAFE -> Emerald.copy(alpha = 0.15f)
-                    },
+                    analysis.level.tint.copy(alpha = 0.15f),
                     RoundedCornerShape(8.dp)
                 )
                 .padding(12.dp)
@@ -145,6 +142,14 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
         // Speak warning button
         val context = LocalContext.current
         Column {
+            Text(
+                text = stringResource(R.string.voice_warning).uppercase(),
+                color = TextSecondary,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.4.sp
+            )
+            Spacer(modifier = Modifier.height(8.dp))
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -168,7 +173,7 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Speak Again",
+                        text = stringResource(R.string.speak_again),
                         color = TextSecondary,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
@@ -230,7 +235,7 @@ private fun EscalationActions(analysis: ThreatAnalysis) {
             }
 
             ActionButton(
-                label = "Report on 1930",
+                label = stringResource(R.string.report_to_1930),
                 icon = Icons.Default.Phone,
                 modifier = Modifier.weight(1f)
             ) {

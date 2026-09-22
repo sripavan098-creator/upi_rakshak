@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
@@ -26,11 +25,7 @@ class RakshakGuardService : Service() {
         
         fun start(context: Context) {
             val intent = Intent(context, RakshakGuardService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(intent)
-            } else {
-                context.startService(intent)
-            }
+            context.startForegroundService(intent)
         }
         
         fun stop(context: Context) {
@@ -44,21 +39,18 @@ class RakshakGuardService : Service() {
         super.onCreate()
         Log.d(TAG, "Guard service created")
         
-        // Create notification channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Rakshak Protection",
-                NotificationManager.IMPORTANCE_LOW
-            ).apply {
-                description = "Keeps UPI Rakshak active in background"
-                setShowBadge(false)
-            }
-            
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
+        // minSdkVersion is 26, so the notification channel API is always available.
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            "Rakshak Protection",
+            NotificationManager.IMPORTANCE_LOW
+        ).apply {
+            description = "Keeps UPI Rakshak active in background"
+            setShowBadge(false)
         }
-        
+
+        getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+
         // Acquire partial wake lock to keep CPU running
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(

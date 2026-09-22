@@ -15,10 +15,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.upirakshak.R
+import com.upirakshak.data.ThreatHistoryStore
 import com.upirakshak.engine.ThreatAnalysis
 import com.upirakshak.engine.ThreatLevel
 import com.upirakshak.notification.NotificationProcessor
 import com.upirakshak.overlay.RakshakOverlayService
+import com.upirakshak.ui.components.RecentThreatsSection
 import com.upirakshak.ui.components.StatusCard
 import com.upirakshak.ui.components.ThreatCard
 import com.upirakshak.ui.theme.*
@@ -30,15 +32,16 @@ import com.upirakshak.voice.VoiceOutput
 fun HomeScreen(
     onRequestNotificationAccess: () -> Unit,
     onRequestOverlay: () -> Unit,
+    modifier: Modifier = Modifier,
     onScanQr: () -> Unit = {},
-    onLanguageSelect: () -> Unit = {},
-    modifier: Modifier = Modifier
+    onLanguageSelect: () -> Unit = {}
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val scrollState = rememberScrollState()
     var notifAccessGranted by remember { mutableStateOf(PermissionHelper.hasNotificationAccess(context)) }
     var overlayGranted by remember { mutableStateOf(PermissionHelper.hasOverlayPermission(context)) }
     val lastAnalysis by NotificationProcessor.lastAnalysis.collectAsState()
+    val threatHistory by ThreatHistoryStore.history.collectAsState()
 
     LaunchedEffect(Unit) {
         notifAccessGranted = PermissionHelper.hasNotificationAccess(context)
@@ -100,6 +103,10 @@ fun HomeScreen(
             SecondaryAction(stringResource(R.string.language).uppercase(), onLanguageSelect, Modifier.weight(1f))
         }
 
+        Spacer(Modifier.height(24.dp))
+        Text(stringResource(R.string.recent_threats).uppercase(), color = InkLight, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
+        Spacer(Modifier.height(8.dp))
+        RecentThreatsSection(records = threatHistory)
         Spacer(Modifier.height(24.dp))
         Text("LIVE EVIDENCE", color = InkLight, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
         Spacer(Modifier.height(8.dp))
