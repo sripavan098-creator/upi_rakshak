@@ -8,7 +8,7 @@ A Jetpack Compose Android app that intercepts WhatsApp/SMS notifications and sho
 - **Analyzes messages in real-time** using a rules engine that detects urgency keywords, suspicious UPI patterns, payment traps, and lookalike domains
 - **Shows system overlays** over other apps when fraud is detected (red warning banner)
 - **Speaks warnings in Hinglish** using Text-to-Speech
-- **Predicts cash flow shortfalls** from SMS history
+- **Predicts cash flow shortfalls** from packaged local transaction examples; it does not request SMS permission
 
 ## 🏗️ Architecture
 
@@ -141,7 +141,7 @@ adb shell appops set com.upirakshak SYSTEM_ALERT_WINDOW allow
 ### 3. Test Real Notification
 - Open WhatsApp on device
 - Send yourself: "URGENT: Your electricity will be disconnected tonight! Pay via QR to bsescare@icici"
-- Red overlay appears over WhatsApp within 200ms
+- Red overlay is triggered by the local rules path; observed latency depends on device load and notification-access state
 - Tap overlay → see full analysis
 
 ### 4. Test Cash Flow
@@ -229,8 +229,8 @@ Funtouch OS aggressively kills background services. Do ALL of these:
 ## 📊 Performance
 
 - **Notification processing:** <50ms
-- **Overlay display:** <200ms
-- **APK size:** ~5-8MB
+- **Overlay display:** designed for sub-200ms local handling; measure on the target device
+- **APK size:** approximately 32MB for the current bundled camera/barcode release
 - **Min SDK:** 26 (Android 8.0)
 - **Target SDK:** 34 (Android 14)
 

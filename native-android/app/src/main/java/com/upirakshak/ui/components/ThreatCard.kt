@@ -1,5 +1,6 @@
 package com.upirakshak.ui.components
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -140,7 +141,7 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
 
         // Speak warning button
         val context = LocalContext.current
-        Column {
+            Column {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -184,6 +185,30 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
                         .clickable {
                             VoiceOutput.openTtsInstallSettings(context)
                         }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Slate)
+                    .clickable {
+                        val report = "UPI Rakshak report\n\n${analysis.level.name}\n${analysis.suggestedAction}\n\nEvidence: ${analysis.reasons.joinToString(" | ")}"
+                        context.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, report)
+                        }, "Share safety report"))
+                    }
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = "Share safety report",
+                    color = TextSecondary,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
