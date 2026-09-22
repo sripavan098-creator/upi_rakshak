@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.upirakshak.R
 import com.upirakshak.data.ThreatHistoryStore
+import com.upirakshak.engine.RulesEngine
 import com.upirakshak.engine.ThreatAnalysis
 import com.upirakshak.engine.ThreatLevel
 import com.upirakshak.notification.NotificationProcessor
@@ -76,21 +77,15 @@ fun HomeScreen(
 
         Button(
             onClick = {
-                val fakeAnalysis = ThreatAnalysis(
-                    level = ThreatLevel.HIGH,
-                    reasons = listOf(
-                        "Urgency: disconnected tonight",
-                        "Payment trap: enter UPI PIN to receive",
-                        "Suspicious UPI ID: bsescare@icici"
-                    ),
-                    matchedPatterns = listOf("disconnected", "enter upi pin", "bsescare@icici"),
-                    suggestedAction = "Yeh message fraud hai. Kisi ko bhi OTP ya UPI PIN mat do.",
-                    officialRoute = "Official BSES app ya bbps.npci.org.in use karein",
-                    originalText = "URGENT: Electricity disconnected tonight, pay bsescare@icici"
+                // Run the real engine over the sample so the demo shows the same score
+                // and evidence a genuine notification would produce.
+                val demoAnalysis = RulesEngine.analyze(
+                    "Rakshak demo",
+                    "URGENT: Electricity disconnected tonight, scan QR to pay bsescare@icici"
                 )
-                HapticHelper.vibrateForThreat(context, ThreatLevel.HIGH)
-                VoiceOutput.speak(fakeAnalysis.suggestedAction)
-                RakshakOverlayService.show(context, fakeAnalysis)
+                HapticHelper.vibrateForThreat(context, demoAnalysis.level)
+                VoiceOutput.speak(demoAnalysis.suggestedAction)
+                RakshakOverlayService.show(context, demoAnalysis)
             },
             modifier = Modifier.fillMaxWidth().height(54.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = Paper),

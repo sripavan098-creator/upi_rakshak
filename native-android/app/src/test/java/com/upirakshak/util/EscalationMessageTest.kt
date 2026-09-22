@@ -20,6 +20,7 @@ class EscalationMessageTest {
         original: String = "URGENT: electricity disconnected tonight"
     ) = ThreatAnalysis(
         level = level,
+        riskScore = 85,
         reasons = reasons,
         matchedPatterns = emptyList(),
         suggestedAction = action,

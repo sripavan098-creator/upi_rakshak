@@ -75,6 +75,7 @@ object NotificationProcessor {
             .putString("patterns", analysis.matchedPatterns.joinToString(SEP))
             .putString("action", analysis.suggestedAction)
             .putString("route", analysis.officialRoute ?: "")
+            .putInt("score", analysis.riskScore)
             .putString("original", analysis.originalText)
             .apply()
     }
@@ -84,6 +85,7 @@ object NotificationProcessor {
         val level = prefs.getString("level", null)?.let { runCatching { ThreatLevel.valueOf(it) }.getOrNull() } ?: return
         _lastAnalysis.value = ThreatAnalysis(
             level = level,
+            riskScore = prefs.getInt("score", 0),
             reasons = prefs.getString("reasons", "").orEmpty().split(SEP).filter(String::isNotBlank),
             matchedPatterns = prefs.getString("patterns", "").orEmpty().split(SEP).filter(String::isNotBlank),
             suggestedAction = prefs.getString("action", "").orEmpty(),
