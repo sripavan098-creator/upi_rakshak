@@ -23,6 +23,8 @@ export default function MessageAnalysisWorkbench() {
   const [analysis, setAnalysis] = useState<ThreatAnalysis>(initial.analysis);
   const [hasRun, setHasRun] = useState(true);
   const [status, setStatus] = useState(initial.restored ? 'Restored your last saved report' : '');
+  const [saved, setSaved] = useState(false);
+  const [shared, setShared] = useState(false);
 
   const resultClass = useMemo(() => `message-analysis__result message-analysis__result--${analysis.level.toLowerCase()}`, [analysis.level]);
 
@@ -31,6 +33,8 @@ export default function MessageAnalysisWorkbench() {
     setAnalysis(next);
     setHasRun(true);
     setStatus('');
+    setSaved(false);
+    setShared(false);
   }
 
   function saveLocalReport() {
@@ -45,6 +49,17 @@ export default function MessageAnalysisWorkbench() {
       setStatus('Report copied to clipboard');
     } catch {
       setStatus('Could not copy — use Save local report');
+    }
+  }
+
+  async function shareReport() {
+    const report = `UPI Rakshak report\n\n${levelMeta[analysis.level].label}\n${analysis.suggestedAction}\n\nEvidence: ${analysis.reasons.join(' | ')}`;
+    try {
+      if (navigator.share) await navigator.share({ title: 'UPI Rakshak safety report', text: report });
+      else await navigator.clipboard.writeText(report);
+      setShared(true);
+    } catch {
+      // The user cancelled the share sheet; no data is sent automatically.
     }
   }
 
@@ -77,6 +92,8 @@ export default function MessageAnalysisWorkbench() {
             <button type="button" className="message-analysis__speak" onClick={() => speakWarning(analysis.suggestedAction, analysis.level === 'SAFE' ? 'en-IN' : 'hi-IN')}>Hear this guidance</button>
             <button type="button" className="message-analysis__save" onClick={copyReport}>Copy report</button>
             <button type="button" className="message-analysis__save" onClick={saveLocalReport}>Save local report</button>
+            <button type="button" className="message-analysis__save" onClick={saveLocalReport}>{saved ? 'Saved on this device' : 'Save local report'}</button>
+            <button type="button" className="message-analysis__save" onClick={shareReport}>{shared ? 'Report ready to share' : 'Share report'}</button>
           </div>
           <p className="message-analysis__status" role="status">{status}</p>
         </div>

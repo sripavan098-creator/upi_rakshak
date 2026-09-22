@@ -116,17 +116,37 @@ The dashboard shows:
 ### Android Native (Kotlin)
 - **NotificationListenerService** — intercepts notifications at OS level
 - **WindowManager** with TYPE_APPLICATION_OVERLAY — shows system-level warnings
-- **WebView** — hosts the React app and bridges with native services
-- **JavaScript Interface** — allows web app to trigger native overlays
+- **Jetpack Compose** — native home, threat, QR, cash-flow, loan, and language screens
+- **Optional `android-wrapper/` WebView** — packages the website separately; it is not the same artifact as `native-android/`
 
 ### Offline and APK installation
 
 The native Android rules engine, QR parser, notification processor, cash-flow calculations, and packaged translations run locally. The native manifest does not request `INTERNET`, and unused SMS/boot permissions were removed. Use `native-android/app-release.apk` from `./gradlew assembleRelease` rather than the debug APK for device testing. A locally signed APK can still show a Play Protect warning because sideloaded apps are not Play-reviewed; only trusted distribution through Google Play or an organisation-managed channel removes that distribution-level warning.
 
+## ✅ Requirements Matrix: Website vs Android App
+
+The two surfaces are deliberately different. The website is the judge-friendly, camera-capable analysis playground; the Android app is the device-level notification and overlay guard. A feature is marked **local** only when its calculation runs without a server or network request.
+
+| Requirement / outcome | Website | Native Android app |
+|---|---|---|
+| Paste a message and explain the exact trap | **Implemented:** Message Analysis Workbench with fired signals, reasons, safe action, speech, and local report save | **Implemented:** notification listener analyzes incoming notification text and persists the latest evidence |
+| Intercept WhatsApp/SMS at decision time | **Simulation:** in-page phone/overlay sequence; no browser OS interception | **Implemented:** `NotificationListenerService`, subject to user-granted notification access |
+| System warning over another app | **Simulation:** browser phone mockup only | **Implemented:** `TYPE_APPLICATION_OVERLAY`, subject to overlay permission |
+| UPI QR safety | **Implemented:** camera when browser supports it, custom UPI input, five deterministic scenarios, score and reasons | **Implemented:** CameraX + bundled barcode scanning + native rules engine |
+| Cash-flow forecast | **Implemented:** local sample transaction ruler and interactive hypothetical EMI slider | **Implemented:** local packaged transaction dataset, runway, recurring expenses, and affordability input |
+| Loan cost comparison | **Implemented:** itemized EMI, interest, fees, effective rate, repayment total | **Implemented:** native itemized loan comparison and calculations |
+| Voice guidance | **Implemented:** browser speech recognition/synthesis when supported | **Implemented:** Android TTS with locale fallback; device voice data may be required |
+| Languages | English/Hinglish web copy; not fully localized | **Implemented resources:** English, Hindi, Bengali, Tamil, Telugu, Marathi |
+| Trusted-contact escalation | **Implemented:** local report save; user can share/copy the report | **Implemented:** latest report persistence; user-initiated share action; no automatic contact messaging |
+| Offline use | **Implemented after first load:** PWA service worker caches the app shell and local rules | **Implemented:** no network permission in the final merged APK |
+
+The matrix is intentionally explicit: web mockups do not claim Android privileges, and the Android app does not claim unshipped automatic contact escalation or unshipped languages.
+
 ### Architecture
 ```
-┌─────────────────────────────────────────────────────────┐
-│  Browser / Android WebView                              │
+┌──────────────────────────────┐   ┌──────────────────────┐
+│  Website / optional WebView  │   │ Native Android app   │
+│  React app (src/)            │   │ Jetpack Compose      │
 │  ┌───────────────────────────────────────────────────┐  │
 │  │  React App (src/)                                 │  │
 │  │  • Rules Engine (TypeScript)                      │  │
@@ -134,10 +154,10 @@ The native Android rules engine, QR parser, notification processor, cash-flow ca
 │  │  • Voice Interface                                │  │
 │  │  • Loan Comparison                                │  │
 │  └───────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
-                          ↕ (JavaScript Interface)
+└──────────────────────────────┘   └──────────────────────┘
+                                              ↓
 ┌─────────────────────────────────────────────────────────┐
-│  Android Native Services                                │
+│  Native Android services (native-android/)              │
 │  ┌───────────────────────────────────────────────────┐  │
 │  │  NotificationListenerService                      │  │
 │  │  • Intercepts WhatsApp/SMS                        │  │
@@ -170,9 +190,9 @@ npm run dev
 # Open http://localhost:5173
 ```
 
-### Android Native Wrapper
+### Optional Android WebView Wrapper
 
-See [`android-wrapper/README.md`](./android-wrapper/README.md) for full setup instructions.
+See [`android-wrapper/README.md`](./android-wrapper/README.md) for full setup instructions. This wrapper packages the website and is separate from the full native app in `native-android/`.
 
 **Quick version:**
 ```bash
@@ -213,7 +233,7 @@ UPI Rakshak is designed to integrate deeply with **iQOO devices running Funtouch
 1. Install UPI Rakshak from APK
 2. Follow the 5-step Funtouch OS setup (see android-wrapper/README.md)
 3. Open WhatsApp and receive a test scam message
-4. **Watch the red overlay appear in <200ms** — the unforgettable moment
+4. **Watch the red overlay appear through the local rules path** — exact latency should be measured on the target iQOO device
 
 ---
 
@@ -224,12 +244,12 @@ UPI Rakshak is designed to integrate deeply with **iQOO devices running Funtouch
 - **Fraud interrupted at the moment of decision** — the scam explanation arrives *before* the QR is scanned
 - **Predatory borrowing made visible** — converting marketing rates into actual rupee totals
 - **Shortfalls surfaced days early** — cash flow projection catches problems before payments bounce
-- **A second line of defense** — trusted-contact escalation for first-time/lower-fluency users
+- **A second line of defense** — user-initiated report sharing for first-time/lower-fluency users
 
 ### What We Built
 - ✅ Real-time scam detection with Hinglish + English rules
 - ✅ System-level overlay (Android native)
-- ✅ Cash flow prediction from a modelled bill calendar
+- ✅ Cash flow prediction from packaged local transaction examples
 - ✅ True loan cost calculator
 - ✅ Voice notice with English/Hinglish speech output
 - ✅ Android rules-engine test suite (17 passing tests)
@@ -238,8 +258,8 @@ UPI Rakshak is designed to integrate deeply with **iQOO devices running Funtouch
 ### What's Still Open
 - ⚠️ No live user research yet (personas are hypotheses)
 - ⚠️ Fixed keyword-based scam detection (no ML yet)
-- ⚠️ No persistence layer (stateless by design for Stage 1)
-- ⚠️ No real trusted-contact delivery (simulated)
+- ✅ Latest Android threat analysis persists locally across app restarts
+- ⚠️ No automatic trusted-contact delivery; reports are user-initiated to avoid sending messages without consent
 
 **This is a Stage 1 hackathon proof-of-concept.** Validating actual impact (fraud rate reduction, borrowing rate change) requires a real pilot with real users — explicitly out of scope for this submission.
 
