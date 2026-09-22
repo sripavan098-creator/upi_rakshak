@@ -23,4 +23,11 @@
     <string name="your_financial_bodyguard">உங்கள் நிதி காவலர்</string>
     <string name="recent_threats">சமீபத்திய அச்சுறுத்தல்கள்</string>
     <string name="no_recent_threats">சமீபத்திய அச்சுறுத்தல்கள் எதுவும் இல்லை</string>
+    <string name="analyze_message">எந்த செய்தியையும் பரிசோடிக்கவும்</string>
+    <string name="analyze_hint">எந்த SMS, WhatsApp செய்தி அல்லது UPI கோரிக்கையையும் ஒட்டவும். ரக்ஷக் உங்கள் ஃபோனிலேயே பரிசோடிக்கிறது — எதுவும் வெளியே போகாது.</string>
+    <string name="analyze_placeholder">SMS, WhatsApp செய்தி அல்லது UPI கோரிக்கையை ஒட்டவும்…</string>
+    <string name="analyze">பரிசோடிக்கவும்</string>
+    <string name="overlay_alert_title">⚠️ ரக்ஷக் எச்சரிக்கை</string>
+    <string name="overlay_tap_details">விவரங்களுக்கு தட்டவும்</string>
+    <string name="overlay_notification_text">மோசடிக்கான கண்காணிப்பு</string>
 </resources>

@@ -23,4 +23,11 @@
     <string name="your_financial_bodyguard">Your financial bodyguard</string>
     <string name="recent_threats">Recent Threats</string>
     <string name="no_recent_threats">No recent threats detected</string>
+    <string name="analyze_message">Analyze any message</string>
+    <string name="analyze_hint">Paste any SMS, WhatsApp message, or UPI request. Rakshak explains the trap on-device — nothing leaves your phone.</string>
+    <string name="analyze_placeholder">Paste SMS, WhatsApp message, or UPI request…</string>
+    <string name="analyze">Analyze</string>
+    <string name="overlay_alert_title">⚠️ Rakshak Alert</string>
+    <string name="overlay_tap_details">Tap for details</string>
+    <string name="overlay_notification_text">Monitoring for scams</string>
 </resources>

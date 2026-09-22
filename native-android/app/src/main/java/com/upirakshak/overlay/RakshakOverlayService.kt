@@ -18,6 +18,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.upirakshak.MainActivity
+import com.upirakshak.R
 import com.upirakshak.engine.ThreatAnalysis
 
 class RakshakOverlayService : Service() {
@@ -90,7 +91,7 @@ class RakshakOverlayService : Service() {
             
             // Title
             addView(TextView(context).apply {
-                text = "⚠️ Rakshak Alert"
+                text = context.getString(R.string.overlay_alert_title)
                 setTextColor(Color.WHITE)
                 textSize = 20f
                 setTypeface(typeface, android.graphics.Typeface.BOLD)
@@ -116,7 +117,7 @@ class RakshakOverlayService : Service() {
             
             // Tap hint
             addView(TextView(context).apply {
-                text = "Tap for details"
+                text = context.getString(R.string.overlay_tap_details)
                 setTextColor(Color.WHITE)
                 textSize = 12f
                 alpha = 0.7f
@@ -200,15 +201,15 @@ class RakshakOverlayService : Service() {
     private fun createNotification(): Notification {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle("UPI Rakshak")
-                .setContentText("Monitoring for scams")
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.overlay_notification_text))
                 .setSmallIcon(android.R.drawable.ic_dialog_alert)
                 .build()
         } else {
             @Suppress("DEPRECATION")
             Notification.Builder(this)
-                .setContentTitle("UPI Rakshak")
-                .setContentText("Monitoring for scams")
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.overlay_notification_text))
                 .setSmallIcon(android.R.drawable.ic_dialog_alert)
                 .build()
         }

@@ -23,4 +23,11 @@
     <string name="your_financial_bodyguard">आपका वित्तीय अंगरक्षक</string>
     <string name="recent_threats">हाल के खतरे</string>
     <string name="no_recent_threats">कोई हाल का खतरा नहीं मिला</string>
+    <string name="analyze_message">कोई भी संदेश जाँचें</string>
+    <string name="analyze_hint">कोई भी एसएमएस, WhatsApp संदेश या UPI रिक्वेस्ट पेस्ट करें। रक्षक आपके फ़ोन पर ही जाँच करता है — कुछ भी बाहर नहीं जाता।</string>
+    <string name="analyze_placeholder">एसएमएस, WhatsApp संदेश या UPI रिक्वेस्ट पेस्ट करें…</string>
+    <string name="analyze">जाँचें</string>
+    <string name="overlay_alert_title">⚠️ रक्षक चेतावनी</string>
+    <string name="overlay_tap_details">विवरण के लिए टैप करें</string>
+    <string name="overlay_notification_text">ठगी के लिए निगरानी</string>
 </resources>

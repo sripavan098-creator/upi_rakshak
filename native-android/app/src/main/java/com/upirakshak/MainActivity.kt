@@ -11,10 +11,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -69,19 +70,19 @@ class MainActivity : ComponentActivity() {
                                     contentColor = TextPrimary
                                 ) {
                                     NavigationBarItem(
-                                        icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                                        icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                                         label = { Text("Home") },
                                         selected = currentTab == 0,
                                         onClick = { currentTab = 0 }
                                     )
                                     NavigationBarItem(
-                                        icon = { Icon(Icons.Default.AttachMoney, contentDescription = null) },
+                                        icon = { Icon(Icons.Default.TrendingUp, contentDescription = "Cash Flow") },
                                         label = { Text("Cash Flow") },
                                         selected = currentTab == 1,
                                         onClick = { currentTab = 1 }
                                     )
                                     NavigationBarItem(
-                                        icon = { Icon(Icons.Default.AttachMoney, contentDescription = null) },
+                                        icon = { Icon(Icons.Default.AccountBalance, contentDescription = "Loans") },
                                         label = { Text("Loans") },
                                         selected = currentTab == 2,
                                         onClick = { currentTab = 2 }

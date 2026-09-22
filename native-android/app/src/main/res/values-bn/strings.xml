@@ -23,4 +23,11 @@
     <string name="your_financial_bodyguard">আপনার আর্থিক দেহরক্ষী</string>
     <string name="recent_threats">সাম্প্রতিক হুমকি</string>
     <string name="no_recent_threats">কোনো সাম্প্রতিক হুমকি নেই</string>
+    <string name="analyze_message">যেকোনো বার্তা বিশ্লেষণ করুন</string>
+    <string name="analyze_hint">যেকোনো SMS, WhatsApp বার্তা বা UPI অনুরোধ পেস্ট করুন। রক্ষক আপনার ফোনেই বিশ্লেষণ করে — কিছুই বাইরে যায় না।</string>
+    <string name="analyze_placeholder">SMS, WhatsApp বার্তা বা UPI অনুরোধ পেস্ট করুন…</string>
+    <string name="analyze">বিশ্লেষণ করুন</string>
+    <string name="overlay_alert_title">⚠️ রক্ষক সতর্কতা</string>
+    <string name="overlay_tap_details">বিশদের জন্য ট্যাপ করুন</string>
+    <string name="overlay_notification_text">প্রতারণার নজরদারি</string>
 </resources>
