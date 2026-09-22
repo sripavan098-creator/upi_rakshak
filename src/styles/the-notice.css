@@ -104,6 +104,85 @@ body {
   text-transform: uppercase;
 }
 .notice-nav__links a:hover { color: var(--stamp-red); }
+
+/* ─── Accessibility & mobile navigation ─── */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.6rem 0.9rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-machine);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: top 120ms var(--ease-out);
+}
+.skip-link:focus { top: 0.75rem; }
+:focus-visible {
+  outline: 2px solid var(--stamp-red);
+  outline-offset: 2px;
+}
+.notice-nav__links a:focus-visible { outline-offset: 3px; }
+
+/* Mobile menu: hidden on desktop, shown under 680px */
+.notice-nav__mobile { display: none; }
+.notice-nav__mobile summary {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-size: 1.1rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.notice-nav__mobile summary::-webkit-details-marker { display: none; }
+.notice-nav__mobile-sheet {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--ink);
+  border-top: 0;
+  background: var(--paper);
+  box-shadow: var(--shadow-paper);
+}
+.notice-nav__mobile-sheet a {
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid rgba(27, 42, 33, 0.14);
+  color: var(--ink);
+  font-family: var(--font-machine);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.notice-nav__mobile-sheet a:last-child { border-bottom: 0; }
+.notice-nav__mobile-sheet a:hover { background: var(--paper-dark); color: var(--stamp-red); }
+
+@media (max-width: 680px) {
+  .notice-nav__mobile { display: block; }
+}
 .notice-offline-status { padding: 0.28rem 0.4rem; border: 1px solid var(--bbps-green); color: var(--bbps-green); font-family: var(--font-machine); font-size: 0.56rem; letter-spacing: 0.06em; white-space: nowrap; }
 .notice-offline-status.is-offline { border-color: var(--stamp-red); color: var(--stamp-red); }
 .hero-section { position: relative; overflow: hidden; }

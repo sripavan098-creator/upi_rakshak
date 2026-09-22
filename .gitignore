@@ -9,3 +9,6 @@ native-android/android-sdk/
 native-android/keystore.properties
 native-android/*.jks
 native-android/*.keystore
+bun.lock
+node_modules/
+dist/

@@ -11,8 +11,56 @@ let currentUtterance: SpeechSynthesisUtterance | null = null;
  * Speak a warning message aloud.
  * Prefers Hindi voice if available, falls back to English.
  */
+/**
+ * Voice availability is exposed so UI can adapt (e.g. show a notice on
+ * browsers/contexts where speech cannot run).
+ */
+export function isSpeechSupported(): boolean {
+  return typeof window !== 'undefined' && 'speechSynthesis' in window;
+}
+
+/**
+ * Chrome loads voices asynchronously — getVoices() returns [] until
+ * `voiceschanged` fires. We cache them and refresh on that event so the
+ * first spoken warning still gets the right (Hindi) voice.
+ */
+let cachedVoices: SpeechSynthesisVoice[] = [];
+
+function refreshVoices(): void {
+  if (!isSpeechSupported()) return;
+  cachedVoices = window.speechSynthesis.getVoices();
+}
+
+if (isSpeechSupported()) {
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
+
+function pickVoice(lang: 'hi-IN' | 'en-IN'): SpeechSynthesisVoice | null {
+  if (lang === 'hi-IN') {
+    return (
+      cachedVoices.find((v) => v.lang.startsWith('hi')) ||
+      cachedVoices.find((v) => /hindi/i.test(v.name)) ||
+      null // engine falls back to default voice rather than a wrong-language one
+    );
+  }
+  return (
+    cachedVoices.find((v) => v.lang === 'en-IN') ||
+    cachedVoices.find((v) => v.lang === 'en_IN') ||
+    cachedVoices.find((v) => v.lang.startsWith('en-IN')) ||
+    cachedVoices.find((v) => /india/i.test(v.name)) ||
+    cachedVoices.find((v) => v.lang.startsWith('en')) ||
+    null
+  );
+}
+
+/**
+ * Speak a warning message aloud.
+ * Prefers Hindi voice if available, falls back to English.
+ * Safe to call repeatedly — cancels any in-flight utterance first.
+ */
 export function speakWarning(text: string, lang: 'hi-IN' | 'en-IN' = 'hi-IN'): void {
-  if (!('speechSynthesis' in window)) {
+  if (!isSpeechSupported()) {
     console.warn('Speech synthesis not supported in this browser');
     return;
   }
@@ -20,25 +68,28 @@ export function speakWarning(text: string, lang: 'hi-IN' | 'en-IN' = 'hi-IN'): v
   // Cancel any ongoing speech
   stopSpeaking();
 
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = lang;
-  utterance.rate = 0.9; // Slightly slower for clarity
-  utterance.pitch = 1.0;
-  utterance.volume = 1.0;
+  // Long text gets truncated on some engines — chunk at a safe length.
+  const CHUNK = 220;
+  const chunks: string[] =
+    text.length <= CHUNK ? [text] : text.match(new RegExp(`.{1,${CHUNK}}(\\s|$)`, 'g')) ?? [text];
 
-  // Try to find a Hindi voice
-  const voices = window.speechSynthesis.getVoices();
-  const hindiVoice = voices.find(v => v.lang.startsWith('hi'));
-  const englishVoice = voices.find(v => v.lang.startsWith('en-IN') || v.lang.startsWith('en'));
-  
-  if (lang === 'hi-IN' && hindiVoice) {
-    utterance.voice = hindiVoice;
-  } else if (englishVoice) {
-    utterance.voice = englishVoice;
-  }
-
-  currentUtterance = utterance;
-  window.speechSynthesis.speak(utterance);
+  const voice = pickVoice(lang);
+  chunks.forEach((chunk, i) => {
+    const utterance = new SpeechSynthesisUtterance(chunk.trim());
+    utterance.lang = voice?.lang ?? lang;
+    if (voice) utterance.voice = voice;
+    utterance.rate = 0.9; // Slightly slower for clarity
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    if (i === chunks.length - 1) currentUtterance = utterance;
+    utterance.onerror = (e) => {
+      // 'interrupted'/'canceled' are expected from stopSpeaking(); log the rest
+      if (e.error !== 'interrupted' && e.error !== 'canceled') {
+        console.warn('Speech synthesis error:', e.error);
+      }
+    };
+    window.speechSynthesis.speak(utterance);
+  });
 }
 
 /**
@@ -51,9 +102,3 @@ export function stopSpeaking(): void {
   }
 }
 
-/**
- * Check if speech synthesis is available.
- */
-export function isSpeechSupported(): boolean {
-  return 'speechSynthesis' in window;
-}
