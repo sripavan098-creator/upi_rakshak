@@ -67,11 +67,15 @@ export default function MessageAnalysisWorkbench() {
 
   async function shareReport() {
     const report = buildReportText({ message, analysis, savedAt: new Date().toISOString() });
+    let sharedViaSheet = false;
     try {
-      if (navigator.share) await navigator.share({ title: 'UPI Rakshak safety report', text: report });
+      if (typeof navigator.share === 'function') {
+        sharedViaSheet = true;
+        await navigator.share({ title: 'UPI Rakshak safety report', text: report });
+      }
       else await navigator.clipboard.writeText(report);
       setShared(true);
-      setStatus(navigator.share ? 'Report ready to share' : 'Report copied to clipboard');
+      setStatus(sharedViaSheet ? 'Report ready to share' : 'Report copied to clipboard');
       setActionError('');
     } catch {
       setActionError('Sharing was cancelled. Nothing was sent.');
