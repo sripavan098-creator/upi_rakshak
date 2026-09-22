@@ -31,10 +31,9 @@ export function saveReport(message: string, analysis: ThreatAnalysis): SavedRepo
 
 /** Reads the last saved report, ignoring anything that fails validation. */
 export function loadReport(): SavedReport | null {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return null;
-
   try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
     const parsed: unknown = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return null;
     const report = parsed as Record<string, unknown>;
