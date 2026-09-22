@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseUpiString, analyzeQrPayload } from './qrSafetyAnalyzer';
+import { parseUpiString, parseUpiPayload, analyzeQrPayload } from './qrSafetyAnalyzer';
 import { SAMPLE_UPI_QR_SCENARIOS } from './qrScenarios';
 
 describe('parseUpiString', () => {
@@ -29,6 +29,57 @@ describe('parseUpiString', () => {
 
   it('returns null for plain prose that is not a payment payload', () => {
     expect(parseUpiString('hello there, pay me later')).toBeNull();
+  });
+});
+
+describe('parseUpiPayload validation', () => {
+  it('reports no errors for a well-formed link', () => {
+    const { payload, errors } = parseUpiPayload('upi://pay?pa=sharmastore@okhdfcbank&am=185&mc=5411');
+
+    expect(payload).not.toBeNull();
+    expect(errors).toEqual([]);
+  });
+
+  it('rejects a malformed payee address', () => {
+    const { payload, errors } = parseUpiPayload('upi://pay?pa=not-a-vpa&am=100');
+
+    expect(payload).toBeNull();
+    expect(errors.some((error) => error.field === 'payeeAddress')).toBe(true);
+  });
+
+  it('flags a non-numeric amount', () => {
+    const { payload, errors } = parseUpiPayload('upi://pay?pa=sharmastore@okhdfcbank&am=1e9abc');
+
+    expect(payload).not.toBeNull();
+    expect(errors.some((error) => error.field === 'amount')).toBe(true);
+  });
+
+  it('flags a merchant code that is not four digits', () => {
+    const { errors } = parseUpiPayload('upi://pay?pa=sharmastore@okhdfcbank&mc=54');
+
+    expect(errors.some((error) => error.field === 'merchantCode')).toBe(true);
+  });
+
+  it('rejects input longer than the payload cap', () => {
+    const { payload, errors } = parseUpiPayload(`upi://pay?pa=store@bank&tn=${'x'.repeat(2000)}`);
+
+    expect(payload).toBeNull();
+    expect(errors[0].field).toBe('input');
+  });
+
+  it('strips control characters from decoded fields', () => {
+    const { payload } = parseUpiPayload('upi://pay?pa=store@bank&pn=Store%00%1F%20Name');
+
+    expect(payload!.payeeName).toBe('Store Name');
+    expect([...payload!.payeeName].some((char) => (char.codePointAt(0) ?? 0) < 0x20)).toBe(false);
+  });
+
+  it('never marks an unreadable UPI-style payload as safe', () => {
+    const result = analyzeQrPayload('upi://pay?pa=bad vpa here&am=100');
+
+    expect(result.level).toBe('HIGH');
+    expect(result.matchedPatterns).toContain('invalid_upi_payload');
+    expect(result.validationErrors?.length).toBeGreaterThan(0);
   });
 });
 

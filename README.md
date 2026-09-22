@@ -248,8 +248,16 @@ UPI Rakshak is designed to integrate deeply with **iQOO devices running Funtouch
 ## 🧪 Testing
 
 ```bash
-# Typecheck and build the web app
+# Web: typecheck, lint, unit tests, browser tests
 npm run typecheck
+npm run lint
+npm run test
+npm run test:e2e
+
+# Or run the whole gate at once
+npm run test:all
+
+# Build the web app
 npm run build
 
 # Run the Android rules-engine tests and build the debug APK
@@ -262,6 +270,8 @@ The verified Android artifact is generated at
 `native-android/app/build/outputs/apk/debug/app-debug.apk`.
 
 **Test coverage:**
+- ✅ Web unit suite (Vitest): 48 tests across rules engine, QR safety analysis, finance maths, saved reports
+- ✅ Web browser suite (Playwright): 27 tests covering landing/routing, QR scanner, message workbench, cash-flow ruler, and axe accessibility
 - ✅ Rules engine (17 test cases: HIGH/MEDIUM/SAFE detection)
 - ✅ Cash flow calculation (runway, recurring expenses)
 - ✅ Loan cost math (EMI, effective rate, hidden fees)

@@ -131,7 +131,7 @@ export default function TheNoticeLanding() {
             <div><span>01 / NATIVE REGISTER</span><strong>257</strong><em>keyword signals</em></div>
             <div><span>02 / RESPONSE TIME</span><strong>&lt;200ms</strong><em>overlay detection</em></div>
             <div><span>03 / LIVE WEB CUES</span><strong>2</strong><em>English + Hinglish</em></div>
-            <div><span>04 / VALIDATION</span><strong>54</strong><em>unit tests passing</em></div>
+            <div><span>04 / VALIDATION</span><strong>48</strong><em>unit tests passing</em></div>
           </motion.div>
 
           {/* Scroll indicator */}

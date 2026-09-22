@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { analyzeMessage, ThreatAnalysis, ThreatLevel } from '../lib/rulesEngine';
 import { speakWarning } from '../lib/voice';
+import { buildReportText, loadReport, saveReport } from '../lib/savedReport';
 
 const SAMPLE_MESSAGE = `URGENT: Your electricity connection will be disconnected tonight. Scan this QR and enter your UPI PIN to receive a refund. UPI: bsescare@icici`;
 
@@ -10,11 +11,18 @@ const levelMeta: Record<ThreatLevel, { label: string; intro: string }> = {
   SAFE: { label: 'NO SIGNALS FOUND', intro: 'No known signals fired in the current web ruleset.' },
 };
 
+function initialReport() {
+  const restored = loadReport();
+  if (restored) return { message: restored.message, analysis: restored.analysis, restored: true };
+  return { message: SAMPLE_MESSAGE, analysis: analyzeMessage('WhatsApp message', SAMPLE_MESSAGE), restored: false };
+}
+
 export default function MessageAnalysisWorkbench() {
-  const [message, setMessage] = useState(SAMPLE_MESSAGE);
-  const [analysis, setAnalysis] = useState<ThreatAnalysis>(() => analyzeMessage('WhatsApp message', SAMPLE_MESSAGE));
+  const [initial] = useState(initialReport);
+  const [message, setMessage] = useState(initial.message);
+  const [analysis, setAnalysis] = useState<ThreatAnalysis>(initial.analysis);
   const [hasRun, setHasRun] = useState(true);
-  const [saved, setSaved] = useState(false);
+  const [status, setStatus] = useState(initial.restored ? 'Restored your last saved report' : '');
 
   const resultClass = useMemo(() => `message-analysis__result message-analysis__result--${analysis.level.toLowerCase()}`, [analysis.level]);
 
@@ -22,12 +30,22 @@ export default function MessageAnalysisWorkbench() {
     const next = analyzeMessage('User message', message);
     setAnalysis(next);
     setHasRun(true);
-    setSaved(false);
+    setStatus('');
   }
 
   function saveLocalReport() {
-    localStorage.setItem('upi-rakshak-last-analysis', JSON.stringify({ message, analysis, savedAt: new Date().toISOString() }));
-    setSaved(true);
+    saveReport(message, analysis);
+    setStatus('Saved on this device');
+  }
+
+  async function copyReport() {
+    const text = buildReportText({ message, analysis, savedAt: new Date().toISOString() });
+    try {
+      await navigator.clipboard.writeText(text);
+      setStatus('Report copied to clipboard');
+    } catch {
+      setStatus('Could not copy — use Save local report');
+    }
   }
 
   return (
@@ -57,8 +75,10 @@ export default function MessageAnalysisWorkbench() {
           <div className="message-analysis__action"><strong>SAFE ACTION</strong><span>{analysis.suggestedAction}</span></div>
           <div className="message-analysis__actions">
             <button type="button" className="message-analysis__speak" onClick={() => speakWarning(analysis.suggestedAction, analysis.level === 'SAFE' ? 'en-IN' : 'hi-IN')}>Hear this guidance</button>
-            <button type="button" className="message-analysis__save" onClick={saveLocalReport}>{saved ? 'Saved on this device' : 'Save local report'}</button>
+            <button type="button" className="message-analysis__save" onClick={copyReport}>Copy report</button>
+            <button type="button" className="message-analysis__save" onClick={saveLocalReport}>Save local report</button>
           </div>
+          <p className="message-analysis__status" role="status">{status}</p>
         </div>
       </div>
       <div className="message-analysis__foot"><span>DETERMINISTIC / NO EXTERNAL API</span><span>WEB RULESET / 38 MATCHERS</span><span>INPUT STAYS IN THIS SESSION</span></div>

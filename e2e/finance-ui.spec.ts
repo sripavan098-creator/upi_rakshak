@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('Cash-flow ruler', () => {
-  test('starts safe and collapses the runway as the hypothetical EMI grows', async ({ page }) => {
+  test('starts safe and collapses the runway into warning and danger bands', async ({ page }) => {
     await page.goto('/#cash-flow');
 
     const slider = page.getByRole('slider').first();
@@ -14,10 +14,22 @@ test.describe('Cash-flow ruler', () => {
     };
 
     const noLoan = await runwayAt('0');
-    const maxLoan = await runwayAt('15000');
 
-    expect(noLoan).toBeGreaterThan(maxLoan);
+    // The verdict card only renders once an EMI is applied.
+    await slider.fill('5000');
     await expect(page.getByText('Manageable')).toBeVisible();
+    const manageable = await runwayAt('5000');
+
+    // ~₹80k EMI pushes the runway under 15 days; the max pushes it under 10.
+    const tightLoan = await runwayAt('80000');
+    await expect(page.getByText('Tight Budget')).toBeVisible();
+
+    const maxLoan = await runwayAt('150000');
+    await expect(page.getByText('Danger Zone')).toBeVisible();
+
+    expect(noLoan).toBeGreaterThan(manageable);
+    expect(manageable).toBeGreaterThan(tightLoan);
+    expect(tightLoan).toBeGreaterThan(maxLoan);
   });
 
   test('hides the runway verdict when the EMI is zero', async ({ page }) => {
@@ -32,7 +44,7 @@ test.describe('Cash-flow ruler', () => {
   test('still surfaces a verdict once any EMI is applied', async ({ page }) => {
     await page.goto('/#cash-flow');
 
-    await page.getByRole('slider').first().fill('500');
+    await page.getByRole('slider').first().fill('5000');
 
     await expect(page.getByText('Manageable')).toBeVisible();
   });

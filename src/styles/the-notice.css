@@ -266,6 +266,8 @@ body {
 .message-analysis__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .message-analysis__speak, .message-analysis__save { justify-self: start; padding: 0.5rem 0.65rem; color: var(--ink); background: transparent; }
 .message-analysis__save { border: 0; color: var(--ink-light); font-family: var(--font-machine); font-size: 0.65rem; text-transform: uppercase; cursor: pointer; }
+.message-analysis__status:empty { display: none; }
+.message-analysis__status { margin: 0.5rem 0 0; color: var(--ink-light); font-family: var(--font-machine); font-size: 0.65rem; letter-spacing: 0.04em; }
 .message-analysis__foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem; margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid rgba(27, 42, 33, 0.24); }
 .notice-voice h3 { margin: 0.25rem 0 0.2rem; font-family: var(--font-signage); font-size: 1.55rem; color: var(--paper); }
 .notice-voice p { margin: 0; color: var(--paper-dark); font-family: var(--font-legal); font-size: 0.92rem; line-height: 1.45; }

@@ -29,9 +29,17 @@ const SALARY = 35000;
 const CURRENT_BALANCE = 8500;
 const DAYS_IN_MONTH = 30;
 
+/**
+ * The sample data starts at a 63-day runway, so the EMI has to push monthly
+ * outflow above ~₹87k (warning) and ~₹130k (danger) to reach those bands.
+ * The original ₹15k cap could never leave the safe band.
+ */
+const MAX_HYPOTHETICAL_EMI = 150000;
+const EMI_STEP = 5000;
+
 export default function CashFlowRuler() {
   const [hypotheticalEMI, setHypotheticalEMI] = useState(0);
-  
+
   const totalBills = SAMPLE_BILLS.reduce((sum, bill) => sum + bill.amount, 0);
   const totalWithHypothetical = totalBills + hypotheticalEMI;
 
@@ -182,14 +190,14 @@ export default function CashFlowRuler() {
                 id="hypothetical-emi"
                 type="range"
                 min="0"
-                max="15000"
-                step="500"
+                max={MAX_HYPOTHETICAL_EMI}
+                step={EMI_STEP}
                 value={hypotheticalEMI}
                 onChange={(e) => setHypotheticalEMI(Number(e.target.value))}
                 aria-valuetext={hypotheticalEMI > 0 ? `₹${hypotheticalEMI.toLocaleString()} monthly EMI` : 'No extra EMI'}
                 className="flex-1 h-2 bg-[var(--ink)] rounded-lg appearance-none cursor-pointer"
                 style={{
-                  background: `linear-gradient(to right, var(--bbps-green) 0%, var(--bbps-green) ${(hypotheticalEMI / 15000) * 100}%, var(--ink) ${(hypotheticalEMI / 15000) * 100}%, var(--ink) 100%)`,
+                  background: `linear-gradient(to right, var(--bbps-green) 0%, var(--bbps-green) ${(hypotheticalEMI / MAX_HYPOTHETICAL_EMI) * 100}%, var(--ink) ${(hypotheticalEMI / MAX_HYPOTHETICAL_EMI) * 100}%, var(--ink) 100%)`,
                 }}
               />
               <span
