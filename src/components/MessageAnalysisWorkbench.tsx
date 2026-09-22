@@ -14,6 +14,7 @@ export default function MessageAnalysisWorkbench() {
   const [message, setMessage] = useState(SAMPLE_MESSAGE);
   const [analysis, setAnalysis] = useState<ThreatAnalysis>(() => analyzeMessage('WhatsApp message', SAMPLE_MESSAGE));
   const [hasRun, setHasRun] = useState(true);
+  const [saved, setSaved] = useState(false);
 
   const resultClass = useMemo(() => `message-analysis__result message-analysis__result--${analysis.level.toLowerCase()}`, [analysis.level]);
 
@@ -21,6 +22,12 @@ export default function MessageAnalysisWorkbench() {
     const next = analyzeMessage('User message', message);
     setAnalysis(next);
     setHasRun(true);
+    setSaved(false);
+  }
+
+  function saveLocalReport() {
+    localStorage.setItem('upi-rakshak-last-analysis', JSON.stringify({ message, analysis, savedAt: new Date().toISOString() }));
+    setSaved(true);
   }
 
   return (
@@ -48,7 +55,10 @@ export default function MessageAnalysisWorkbench() {
             {analysis.reasons.slice(0, 4).map((reason, index) => <li key={`${reason}-${index}`}>{reason}</li>)}
           </ol>
           <div className="message-analysis__action"><strong>SAFE ACTION</strong><span>{analysis.suggestedAction}</span></div>
-          <button type="button" className="message-analysis__speak" onClick={() => speakWarning(analysis.suggestedAction, analysis.level === 'SAFE' ? 'en-IN' : 'hi-IN')}>Hear this guidance</button>
+          <div className="message-analysis__actions">
+            <button type="button" className="message-analysis__speak" onClick={() => speakWarning(analysis.suggestedAction, analysis.level === 'SAFE' ? 'en-IN' : 'hi-IN')}>Hear this guidance</button>
+            <button type="button" className="message-analysis__save" onClick={saveLocalReport}>{saved ? 'Saved on this device' : 'Save local report'}</button>
+          </div>
         </div>
       </div>
       <div className="message-analysis__foot"><span>DETERMINISTIC / NO EXTERNAL API</span><span>WEB RULESET / 38 MATCHERS</span><span>INPUT STAYS IN THIS SESSION</span></div>

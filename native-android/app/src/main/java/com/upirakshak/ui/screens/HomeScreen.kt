@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.upirakshak.R
 import com.upirakshak.engine.ThreatAnalysis
 import com.upirakshak.engine.ThreatLevel
 import com.upirakshak.notification.NotificationProcessor
@@ -47,8 +49,8 @@ fun HomeScreen(
         modifier = modifier.fillMaxSize().background(Paper).verticalScroll(scrollState).padding(horizontal = 20.dp, vertical = 18.dp)
     ) {
         Text("FINANCIAL SAFETY / ANDROID", color = InkLight, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.5.sp)
-        Text("UPI Rakshak", color = Ink, fontSize = 34.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = 8.dp))
-        Text("The guard that explains the trap before you pay.", color = InkLight, fontSize = 16.sp, lineHeight = 22.sp, modifier = Modifier.padding(top = 4.dp, bottom = 18.dp))
+        Text(stringResource(R.string.app_name), color = Ink, fontSize = 34.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = 8.dp))
+        Text(stringResource(R.string.your_financial_bodyguard), color = InkLight, fontSize = 16.sp, lineHeight = 22.sp, modifier = Modifier.padding(top = 4.dp, bottom = 18.dp))
 
         Row(modifier = Modifier.fillMaxWidth().border(1.dp, BorderStrong).padding(vertical = 10.dp)) {
             RegisterItem("SIGNALS", "257", "native keywords", Modifier.weight(1f))
@@ -90,12 +92,12 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth().height(54.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = Paper),
             shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
-        ) { Text("SIMULATE SCAM ATTACK  →", fontSize = 14.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp) }
+        ) { Text("${stringResource(R.string.simulate_scam_attack).uppercase()}  →", fontSize = 14.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp) }
 
         Spacer(Modifier.height(10.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            SecondaryAction("SCAN QR", onScanQr, Modifier.weight(1f))
-            SecondaryAction("LANGUAGE", onLanguageSelect, Modifier.weight(1f))
+            SecondaryAction(stringResource(R.string.scan_qr_code).uppercase(), onScanQr, Modifier.weight(1f))
+            SecondaryAction(stringResource(R.string.language).uppercase(), onLanguageSelect, Modifier.weight(1f))
         }
 
         Spacer(Modifier.height(24.dp))

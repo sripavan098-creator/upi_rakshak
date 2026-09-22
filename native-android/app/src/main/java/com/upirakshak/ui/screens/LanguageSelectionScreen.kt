@@ -19,6 +19,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.upirakshak.R
 import com.upirakshak.ui.language.AppLanguage
 import com.upirakshak.ui.language.LanguageManager
 import com.upirakshak.ui.language.supportedLanguages
@@ -36,7 +38,7 @@ fun LanguageSelectionScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Language / भाषा", color = TextPrimary) },
+                title = { Text(stringResource(R.string.language), color = TextPrimary) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, "Back", tint = TextPrimary)

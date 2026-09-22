@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InterceptionTimeline from './InterceptionTimeline';
 import CashFlowRuler from './CashFlowRuler';
 import LoanReceipt from './LoanReceipt';
@@ -18,6 +18,17 @@ import MessageAnalysisWorkbench from './MessageAnalysisWorkbench';
 
 export default function TheNoticeLanding() {
   const [attackOpen, setAttackOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState(() => navigator.onLine);
+
+  useEffect(() => {
+    const update = () => setIsOnline(navigator.onLine);
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+    return () => {
+      window.removeEventListener('online', update);
+      window.removeEventListener('offline', update);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[var(--paper)]">
@@ -31,6 +42,9 @@ export default function TheNoticeLanding() {
           <a href="#cash-flow">Cash flow</a>
           <a href="#loans">Loan receipt</a>
           <a href="https://github.com/sripavan098-creator/upi_rakshak" target="_blank" rel="noreferrer">Source</a>
+          <span className={`notice-offline-status ${isOnline ? 'is-online' : 'is-offline'}`} aria-live="polite">
+            {isOnline ? 'LOCAL RULES READY' : 'OFFLINE MODE'}
+          </span>
         </nav>
       </header>
       {/* Hero Section */}

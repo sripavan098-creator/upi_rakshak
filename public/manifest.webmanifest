@@ -1,0 +1,10 @@
+{
+  "name": "UPI Rakshak",
+  "short_name": "Rakshak",
+  "description": "Offline-first UPI scam analysis and safe-action guidance.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e9e7db",
+  "theme_color": "#1b2a21",
+  "icons": [{"src":"/rakshak.svg","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"}]
+}

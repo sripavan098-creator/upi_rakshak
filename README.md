@@ -42,7 +42,7 @@ Intercepts WhatsApp/SMS notifications at the OS level and analyzes them in <200m
 When a HIGH threat is detected, a **red warning overlay slides down from the top of the screen** — visible even when you're in WhatsApp — telling you exactly why it's fraud and what to do instead.
 
 ### 💰 Cash Flow Prediction
-Reads your SMS history (on-device, encrypted) to predict shortfalls before they happen:
+Analyzes local transaction examples on-device to predict shortfalls before they happen:
 - "Aapke paise 20 tareekh tak khatam ho sakte hain" (Your money might run out by the 20th)
 - Shows upcoming recurring expenses (rent, EMI, bills)
 - Suggests affordable alternatives before you take a predatory loan

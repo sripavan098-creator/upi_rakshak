@@ -15,6 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.upirakshak.R
 import com.upirakshak.data.CashFlowAnalyzer
 import com.upirakshak.data.MockSmsRepository
 import com.upirakshak.ui.components.RunwayGauge
@@ -42,13 +44,13 @@ fun CashFlowScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(bottom = 24.dp)
         ) {
             Text(
-                text = "Cash Flow Forecast",
+                text = stringResource(R.string.cash_flow_forecast),
                 color = TextPrimary,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Based on your last 30 days of SMS",
+                text = "Offline forecast from packaged transaction examples",
                 color = TextSecondary,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 4.dp)
@@ -66,7 +68,7 @@ fun CashFlowScreen(modifier: Modifier = Modifier) {
         }
         
         Text(
-            text = "days of runway remaining",
+            text = stringResource(R.string.days_runway),
             color = TextSecondary,
             fontSize = 14.sp,
             modifier = Modifier
@@ -235,7 +237,7 @@ fun CashFlowScreen(modifier: Modifier = Modifier) {
         
         // Ask about a purchase
         Text(
-            text = "Ask about a purchase",
+            text = stringResource(R.string.ask_about_purchase),
             color = TextSecondary,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
@@ -287,7 +289,7 @@ fun CashFlowScreen(modifier: Modifier = Modifier) {
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Check", fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.check), fontWeight = FontWeight.Bold)
             }
         }
         

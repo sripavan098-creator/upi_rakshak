@@ -13,6 +13,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.upirakshak.R
 import com.upirakshak.ui.theme.*
 
 @Composable
@@ -44,7 +46,7 @@ fun StatusCard(
             )
             Column {
                 Text(
-                    text = if (isProtected) "Protection Active" else "Setup Required",
+                    text = stringResource(if (isProtected) R.string.protection_active else R.string.setup_required),
                     color = if (isProtected) Emerald else Warning,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
