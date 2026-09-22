@@ -6,3 +6,6 @@ build/
 native-android/.gradle/
 native-android/local.properties
 native-android/android-sdk/
+native-android/keystore.properties
+native-android/*.jks
+native-android/*.keystore

@@ -57,7 +57,7 @@ Converts marketing rates into actual rupee totals:
 - Speak queries in Hindi/Hinglish: "Mere paise mahine ke end tak chalenge?"
 - Get spoken warnings: "Yeh message fraud hai. QR code scan mat karo."
 - Uses browser-native speech synthesis and Android text-to-speech where available
-- The Android selector lists 22 Indian locales, but translated Android resources currently exist for English, Hindi, Bengali, Marathi, Tamil, and Telugu only; the web UI is not fully localized yet
+- The Android APK packages six offline locales: English, Hindi, Bengali, Marathi, Tamil, and Telugu; the web UI is not fully localized yet
 
 ---
 
@@ -110,7 +110,7 @@ The dashboard shows:
 - **Vite** for blazing-fast builds
 - **Tailwind CSS** for the dusk-themed design system
 - **Framer Motion** for smooth animations
-- **Recharts** for cash flow visualization
+- Local SVG/CSS visualizations for the cash-flow layer
 - **Web Speech API** for voice input/output (browser-native, no dependencies)
 
 ### Android Native (Kotlin)
@@ -118,6 +118,10 @@ The dashboard shows:
 - **WindowManager** with TYPE_APPLICATION_OVERLAY — shows system-level warnings
 - **WebView** — hosts the React app and bridges with native services
 - **JavaScript Interface** — allows web app to trigger native overlays
+
+### Offline and APK installation
+
+The native Android rules engine, QR parser, notification processor, cash-flow calculations, and packaged translations run locally. The native manifest does not request `INTERNET`, and unused SMS/boot permissions were removed. Use `native-android/app-release.apk` from `./gradlew assembleRelease` rather than the debug APK for device testing. A locally signed APK can still show a Play Protect warning because sideloaded apps are not Play-reviewed; only trusted distribution through Google Play or an organisation-managed channel removes that distribution-level warning.
 
 ### Architecture
 ```

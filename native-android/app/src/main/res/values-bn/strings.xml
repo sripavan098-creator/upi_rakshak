@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="notification_listener_label">UPI Rakshak Notification Protection</string>
     <string name="app_name">ইউপিআই রক্ষক</string>
     <string name="protection_active">সুরক্ষা সক্রিয়</string>
     <string name="setup_required">সেটআপ প্রয়োজন</string>

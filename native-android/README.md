@@ -80,18 +80,40 @@ native-android/
 # Navigate to project
 cd native-android
 
-# Build debug APK
+# Build debug APK for development only
 ./gradlew assembleDebug
+
+# Build a signed release APK after creating keystore.properties
+./gradlew assembleRelease
 
 # Run unit tests
 ./gradlew test
 
-# Install on connected device
-adb install app/build/outputs/apk/debug/app-debug.apk
+# Install the release artifact on a connected device
+adb install app/build/outputs/apk/release/app-release.apk
 
 # Launch app
 adb shell am start -n com.upirakshak/.MainActivity
 ```
+
+### Offline operation
+
+Fraud analysis, notification processing, QR parsing, cash-flow calculations, and packaged language strings run locally. The manifest intentionally does **not** request `android.permission.INTERNET`. Camera scanning uses the bundled ML Kit barcode dependency. Speech output uses the device's installed Android TTS engine; Android may require a one-time voice-data install, but Rakshak's rules engine does not download anything.
+
+The language picker shows only the six locales currently packaged in the APK: English, Hindi, Bengali, Tamil, Telugu, and Marathi. Additional languages should not be shown until their translated resources are shipped.
+
+### Release signing and Play Protect
+
+Do not distribute `app-debug.apk`; it is a development artifact. For a local release build, create an uncommitted `keystore.properties` file beside this README:
+
+```properties
+storeFile=upirakshak-release.jks
+storePassword=YOUR_LOCAL_PASSWORD
+keyAlias=upirakshak-release
+keyPassword=YOUR_LOCAL_PASSWORD
+```
+
+Then run `./gradlew assembleRelease`. The resulting `app-release.apk` is signed with that local key. A locally signed sideload can still receive a Play Protect warning because Google has not reviewed or distributed it through Play; application code cannot remove that warning. For public distribution, upload the signed release to Google Play or use an organisation-managed trusted distribution channel, and keep the signing key private.
 
 ### Grant Permissions
 
