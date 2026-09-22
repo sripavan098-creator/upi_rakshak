@@ -108,7 +108,7 @@ fun HomeScreen(
 
         // ── Analyze any message (feature parity with the web workbench) ──
         Spacer(Modifier.height(24.dp))
-        Text("ANALYZE ANY MESSAGE", color = InkLight, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
+        Text(stringResource(R.string.analyze_section_label).uppercase(), color = InkLight, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
         Text(stringResource(R.string.analyze_message), color = Ink, fontSize = 23.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 4.dp))
         Text(stringResource(R.string.analyze_hint), color = InkLight, fontSize = 13.sp, lineHeight = 19.sp, modifier = Modifier.padding(top = 4.dp, bottom = 10.dp))
 

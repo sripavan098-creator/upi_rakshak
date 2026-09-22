@@ -7,6 +7,7 @@
     <string name="simulate_scam_attack">স্ক্যাম আক্রমণ সিমুলেট করুন</string>
     <string name="scan_qr_code">ইউপিআই কিউআর স্ক্যান করুন</string>
     <string name="cash_flow_forecast">নগদ প্রবাহ পূর্বাভাস</string>
+    <string name="cash_flow">নগদ প্রবাহ</string>
     <string name="loans">ঋণ</string>
     <string name="threat_detected">হুমকি সনাক্ত</string>
     <string name="safe">নিরাপদ</string>
@@ -24,6 +25,7 @@
     <string name="recent_threats">সাম্প্রতিক হুমকি</string>
     <string name="no_recent_threats">কোনো সাম্প্রতিক হুমকি নেই</string>
     <string name="analyze_message">যেকোনো বার্তা বিশ্লেষণ করুন</string>
+    <string name="analyze_section_label">যেকোনো বার্তা বিশ্লেষণ করুন</string>
     <string name="analyze_hint">যেকোনো SMS, WhatsApp বার্তা বা UPI অনুরোধ পেস্ট করুন। রক্ষক আপনার ফোনেই বিশ্লেষণ করে — কিছুই বাইরে যায় না।</string>
     <string name="analyze_placeholder">SMS, WhatsApp বার্তা বা UPI অনুরোধ পেস্ট করুন…</string>
     <string name="analyze">বিশ্লেষণ করুন</string>

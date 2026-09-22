@@ -194,7 +194,9 @@ export default function QrCodeScanner({
           }
         }, 350);
       } catch {
-        // Native BarcodeDetector not usable
+        // Native BarcodeDetector not usable — release the camera stream we already opened
+        stopCamera();
+        setCameraPermission('unsupported');
         setCameraError(
           'This browser could not start QR detection. Paste the UPI payload manually or use the simulated scenarios below.'
         );

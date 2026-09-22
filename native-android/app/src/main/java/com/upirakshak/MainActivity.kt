@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import com.upirakshak.notification.RakshakGuardService
@@ -70,20 +71,20 @@ class MainActivity : ComponentActivity() {
                                     contentColor = TextPrimary
                                 ) {
                                     NavigationBarItem(
-                                        icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                                        label = { Text("Home") },
+                                        icon = { Icon(Icons.Default.Home, contentDescription = stringResource(R.string.home)) },
+                                        label = { Text(stringResource(R.string.home)) },
                                         selected = currentTab == 0,
                                         onClick = { currentTab = 0 }
                                     )
                                     NavigationBarItem(
-                                        icon = { Icon(Icons.Default.TrendingUp, contentDescription = "Cash Flow") },
-                                        label = { Text("Cash Flow") },
+                                        icon = { Icon(Icons.Default.TrendingUp, contentDescription = stringResource(R.string.cash_flow)) },
+                                        label = { Text(stringResource(R.string.cash_flow)) },
                                         selected = currentTab == 1,
                                         onClick = { currentTab = 1 }
                                     )
                                     NavigationBarItem(
-                                        icon = { Icon(Icons.Default.AccountBalance, contentDescription = "Loans") },
-                                        label = { Text("Loans") },
+                                        icon = { Icon(Icons.Default.AccountBalance, contentDescription = stringResource(R.string.loans)) },
+                                        label = { Text(stringResource(R.string.loans)) },
                                         selected = currentTab == 2,
                                         onClick = { currentTab = 2 }
                                     )

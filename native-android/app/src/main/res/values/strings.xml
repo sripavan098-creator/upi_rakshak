@@ -7,6 +7,7 @@
     <string name="simulate_scam_attack">Simulate Scam Attack</string>
     <string name="scan_qr_code">Scan UPI QR Code</string>
     <string name="cash_flow_forecast">Cash Flow Forecast</string>
+    <string name="cash_flow">Cash Flow</string>
     <string name="loans">Loans</string>
     <string name="threat_detected">Threat Detected</string>
     <string name="safe">Safe</string>
@@ -24,6 +25,7 @@
     <string name="recent_threats">Recent Threats</string>
     <string name="no_recent_threats">No recent threats detected</string>
     <string name="analyze_message">Analyze any message</string>
+    <string name="analyze_section_label">Analyze any message</string>
     <string name="analyze_hint">Paste any SMS, WhatsApp message, or UPI request. Rakshak explains the trap on-device — nothing leaves your phone.</string>
     <string name="analyze_placeholder">Paste SMS, WhatsApp message, or UPI request…</string>
     <string name="analyze">Analyze</string>

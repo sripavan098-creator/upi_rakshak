@@ -247,6 +247,7 @@ export default function TheNoticeLanding() {
       <CredibilityLedger />
 
       {/* Footer */}
+      </main>
       <footer className="bg-[var(--ink)] text-[var(--paper)] py-12 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <p className="font-signage font-bold text-2xl mb-4">
@@ -279,7 +280,6 @@ export default function TheNoticeLanding() {
         </div>
       </footer>
       <NoticeAttackSimulation open={attackOpen} onClose={() => setAttackOpen(false)} />
-      </main>
     </div>
   );
 }

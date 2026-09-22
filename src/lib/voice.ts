@@ -48,7 +48,7 @@ function pickVoice(lang: 'hi-IN' | 'en-IN'): SpeechSynthesisVoice | null {
     cachedVoices.find((v) => v.lang === 'en-IN') ||
     cachedVoices.find((v) => v.lang === 'en_IN') ||
     cachedVoices.find((v) => v.lang.startsWith('en-IN')) ||
-    cachedVoices.find((v) => /india/i.test(v.name)) ||
+    cachedVoices.find((v) => v.lang.toLowerCase().startsWith('en') && /india/i.test(v.name)) ||
     cachedVoices.find((v) => v.lang.startsWith('en')) ||
     null
   );
@@ -70,8 +70,15 @@ export function speakWarning(text: string, lang: 'hi-IN' | 'en-IN' = 'hi-IN'): v
 
   // Long text gets truncated on some engines — chunk at a safe length.
   const CHUNK = 220;
-  const chunks: string[] =
-    text.length <= CHUNK ? [text] : text.match(new RegExp(`.{1,${CHUNK}}(\\s|$)`, 'g')) ?? [text];
+  const chunks: string[] = [];
+  let remaining = text.trim();
+  while (remaining.length > CHUNK) {
+    const boundary = remaining.lastIndexOf(' ', CHUNK);
+    const end = boundary > 0 ? boundary : CHUNK;
+    chunks.push(remaining.slice(0, end));
+    remaining = remaining.slice(end).trimStart();
+  }
+  if (remaining) chunks.push(remaining);
 
   const voice = pickVoice(lang);
   chunks.forEach((chunk, i) => {
