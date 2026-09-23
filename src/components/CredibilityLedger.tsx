@@ -28,7 +28,7 @@ const LEDGER_ITEMS: LedgerItem[] = [
     notProved: 'Full 22-language product coverage (not implemented)',
   },
   {
-    proved: '17 unit tests passing',
+    proved: '48 unit tests passing',
     notProved: 'Production deployment (Stage 1)',
   },
   {

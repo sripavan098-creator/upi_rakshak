@@ -44,3 +44,16 @@ test('the EMI slider is associated with its label', async ({ page }) => {
 
   await expect(page.getByRole('slider', { name: 'Monthly EMI:' })).toBeVisible();
 });
+
+test('the scam-attack overlay keeps safe text at an accessible contrast', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Simulate scam attack/i }).click();
+  await expect(page.getByText('HIGH RISK / STOP')).toBeVisible();
+
+  // Axe cannot score text inside this overlay (it reports the panel as obscured),
+  // so assert the accessible token directly: #0E6606 on the #E9E7DB paper panel.
+  const color = await page
+    .locator('.notice-attack__safe')
+    .evaluate((el) => getComputedStyle(el).color);
+  expect(color).toBe('rgb(14, 102, 6)');
+});

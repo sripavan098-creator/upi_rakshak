@@ -4,7 +4,7 @@ test.describe('Landing page', () => {
   test('loads with the hero and primary navigation', async ({ page }) => {
     await page.goto('/');
 
-    await expect(page.getByRole('heading', { level: 1, name: 'UPI Rakshak' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: /Stop the scam/i })).toBeVisible();
     await expect(page).toHaveTitle(/Rakshak/i);
 
     const nav = page.getByRole('navigation');

@@ -57,7 +57,6 @@ export default function QrCodeScanner({
   const scanIntervalRef = useRef<number | null>(null);
 
   const [isCameraActive, setIsCameraActive] = useState<boolean>(false);
-  const [cameraPermission, setCameraPermission] = useState<'prompt' | 'granted' | 'denied' | 'unsupported'>('prompt');
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment');
   const [torchOn, setTorchOn] = useState<boolean>(false);
@@ -128,7 +127,6 @@ export default function QrCodeScanner({
         setCameraError(
           'Live QR detection needs Chrome, Edge, or another Chromium browser on this device. You can still paste a UPI payload or use the simulated scenarios below.'
         );
-        setCameraPermission('unsupported');
         return;
       }
 
@@ -152,19 +150,6 @@ export default function QrCodeScanner({
         });
       }
 
-      try {
-        const barcodeDetector = new (window as any).BarcodeDetector({
-          formats: ['qr_code'],
-        });
-
-        scanIntervalRef.current = window.setInterval(async () => {
-          if (videoRef.current && videoRef.current.readyState >= 2) {
-            try {
-              const barcodes = await barcodeDetector.detect(videoRef.current);
-              if (barcodes && barcodes.length > 0) {
-                const detectedValue = barcodes[0].rawValue;
-                if (detectedValue && detectedValue !== currentRawPayload) {
-                  evaluatePayload(detectedValue);
       // Barcode detector if browser natively supports it
       const BarcodeDetectorCtor = (window as BarcodeDetectorWindow).BarcodeDetector;
       if (BarcodeDetectorCtor) {
@@ -181,19 +166,18 @@ export default function QrCodeScanner({
                     evaluatePayload(detectedValue);
                   }
                 }
+              } catch {
+                // frame detection failed, retry next tick
               }
-            } catch {
-              // frame detection failed, retry next tick
             }
-          }
-        }, 350);
-      } catch {
-        // Native BarcodeDetector not usable — release the camera stream we already opened
-        stopCamera();
-        setCameraPermission('unsupported');
-        setCameraError(
-          'This browser could not start QR detection. Paste the UPI payload manually or use the simulated scenarios below.'
-        );
+          }, 350);
+        } catch {
+          // Native BarcodeDetector not usable — release the camera stream we already opened
+          stopCamera();
+            setCameraError(
+            'This browser could not start QR detection. Paste the UPI payload manually or use the simulated scenarios below.'
+          );
+        }
       }
     } catch (err) {
       const error = err as { name?: string; message?: string };

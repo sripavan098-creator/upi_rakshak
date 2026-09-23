@@ -33,7 +33,6 @@ export default function TheNoticeLanding() {
   return (
     <div className="min-h-screen bg-[var(--paper)]">
       <a className="skip-link" href="#main">Skip to content</a>
-      <header className="notice-nav" aria-label="Primary navigation">
       <header className="notice-nav">
         <a className="notice-brand" href="#top" aria-label="UPI Rakshak home">
           <span className="notice-brand__seal" aria-hidden="true">र</span>

@@ -79,14 +79,13 @@ export function speakWarning(text: string, lang: 'hi-IN' | 'en-IN' = 'hi-IN'): v
   if (remaining) chunks.push(remaining);
 
   const voice = pickVoice(lang);
-  chunks.forEach((chunk, i) => {
+  chunks.forEach((chunk) => {
     const utterance = new SpeechSynthesisUtterance(chunk.trim());
     utterance.lang = voice?.lang ?? lang;
     if (voice) utterance.voice = voice;
     utterance.rate = 0.9; // Slightly slower for clarity
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
-    if (i === chunks.length - 1) currentUtterance = utterance;
     utterance.onerror = (e) => {
       // 'interrupted'/'canceled' are expected from stopSpeaking(); log the rest
       if (e.error !== 'interrupted' && e.error !== 'canceled') {
@@ -95,7 +94,6 @@ export function speakWarning(text: string, lang: 'hi-IN' | 'en-IN' = 'hi-IN'): v
     };
     window.speechSynthesis.speak(utterance);
   });
-  window.speechSynthesis.speak(utterance);
 }
 
 /**
