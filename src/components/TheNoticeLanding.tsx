@@ -32,6 +32,8 @@ export default function TheNoticeLanding() {
 
   return (
     <div className="min-h-screen bg-[var(--paper)]">
+      <a className="skip-link" href="#main">Skip to content</a>
+      <header className="notice-nav" aria-label="Primary navigation">
       <header className="notice-nav">
         <a className="notice-brand" href="#top" aria-label="UPI Rakshak home">
           <span className="notice-brand__seal" aria-hidden="true">र</span>
@@ -47,7 +49,24 @@ export default function TheNoticeLanding() {
             {isOnline ? 'LOCAL RULES READY' : 'OFFLINE MODE'}
           </span>
         </nav>
+        {/* Mobile section menu — desktop links are hidden under 680px */}
+        <details
+          className="notice-nav__mobile"
+          onClick={(e) => {
+            if ((e.target as HTMLElement).closest('a')) e.currentTarget.removeAttribute('open');
+          }}
+        >
+          <summary aria-label="Open section menu">☰<span className="visually-hidden"> Menu</span></summary>
+          <div className="notice-nav__mobile-sheet">
+            <a href="#interception">Interception</a>
+            <a href="#scanner">Live scanner</a>
+            <a href="#cash-flow">Cash flow</a>
+            <a href="#loans">Loan receipt</a>
+            <a href="https://github.com/sripavan098-creator/upi_rakshak" target="_blank" rel="noreferrer">Source ↗</a>
+          </div>
+        </details>
       </header>
+      <main id="main">
       {/* Hero Section */}
       <section id="top" className="hero-section flex items-center px-4 py-14 sm:py-16 scroll-mt-16">
         <div className="hero-grid max-w-6xl mx-auto w-full">
@@ -236,6 +255,7 @@ export default function TheNoticeLanding() {
       <CredibilityLedger />
 
       {/* Footer */}
+      </main>
       <footer className="bg-[var(--ink)] text-[var(--paper)] py-12 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <p className="font-signage font-bold text-2xl mb-4">

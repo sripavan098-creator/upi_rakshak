@@ -7,6 +7,7 @@
     <string name="simulate_scam_attack">மோசடி தாக்குதலை உருவகப்படுத்து</string>
     <string name="scan_qr_code">யுபிஐ கியூஆர் ஸ்கேன் செய்</string>
     <string name="cash_flow_forecast">பணப்புழக்க முன்னறிவிப்பு</string>
+    <string name="cash_flow">பணப்புழக்கம்</string>
     <string name="loans">கடன்கள்</string>
     <string name="threat_detected">அச்சுறுத்தல் கண்டறியப்பட்டது</string>
     <string name="safe">பாதுகாப்பானது</string>
@@ -23,6 +24,15 @@
     <string name="your_financial_bodyguard">உங்கள் நிதி காவலர்</string>
     <string name="recent_threats">சமீபத்திய அச்சுறுத்தல்கள்</string>
     <string name="no_recent_threats">சமீபத்திய அச்சுறுத்தல்கள் எதுவும் இல்லை</string>
+    <string name="analyze_message">எந்த செய்தியையும் பரிசோதிக்கவும்</string>
+    <string name="analyze_section_label">எந்த செய்தியையும் பரிசோதிக்கவும்</string>
+    <string name="analyze_hint">எந்த SMS, WhatsApp செய்தி அல்லது UPI கோரிக்கையையும் ஒட்டவும். ரக்ஷக் உங்கள் ஃபோனிலேயே பரிசோதிக்கிறது — எதுவும் வெளியே போகாது.</string>
+    <string name="analyze_placeholder">SMS, WhatsApp செய்தி அல்லது UPI கோரிக்கையை ஒட்டவும்…</string>
+    <string name="analyze">பரிசோதிக்கவும்</string>
+    <string name="overlay_alert_title">⚠️ ரக்ஷக் எச்சரிக்கை</string>
+    <string name="overlay_tap_details">விவரங்களுக்கு தட்டவும்</string>
+    <string name="overlay_notification_text">மோசடிக்கான கண்காணிப்பு</string>
+</resources>
     <string name="payment_request_check">பணம் செலுத்தும் முன் சரிபார்க்கவும்</string>
     <string name="payee_label">பணம் பெறுபவர்</string>
     <string name="amount_label">தொகை</string>

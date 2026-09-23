@@ -7,6 +7,7 @@
     <string name="simulate_scam_attack">फसवणूक हल्ला अनुकरण करा</string>
     <string name="scan_qr_code">यूपीआय क्यूआर स्कॅन करा</string>
     <string name="cash_flow_forecast">रोख प्रवाह अंदाज</string>
+    <string name="cash_flow">रोख प्रवाह</string>
     <string name="loans">कर्ज</string>
     <string name="threat_detected">धोका आढळला</string>
     <string name="safe">सुरक्षित</string>
@@ -23,6 +24,15 @@
     <string name="your_financial_bodyguard">तुमचा आर्थिक अंगरक्षक</string>
     <string name="recent_threats">अलीकडील धोके</string>
     <string name="no_recent_threats">कोणतेही अलीकडील धोके नाहीत</string>
+    <string name="analyze_message">कोणताही संदेश तपासा</string>
+    <string name="analyze_section_label">कोणताही संदेश तपासा</string>
+    <string name="analyze_hint">कोणताही SMS, WhatsApp संदेश किंवा UPI विनंती पेस्ट करा. रक्षक तुमच्या फोनवरच तपासतो — काहीही बाहेर जात नाही.</string>
+    <string name="analyze_placeholder">SMS, WhatsApp संदेश किंवा UPI विनंती पेस्ट करा…</string>
+    <string name="analyze">तपासा</string>
+    <string name="overlay_alert_title">⚠️ रक्षक सतर्कता</string>
+    <string name="overlay_tap_details">तपशीलांसाठी टॅप करा</string>
+    <string name="overlay_notification_text">फसवणुकीसाठी सतर्क निरीक्षण</string>
+</resources>
     <string name="payment_request_check">पेमेंट करण्यापूर्वी तपासा</string>
     <string name="payee_label">पेमेंट कोणाला</string>
     <string name="amount_label">रक्कम</string>

@@ -7,6 +7,7 @@
     <string name="simulate_scam_attack">స్కామ్ దాడిని అనుకరించండి</string>
     <string name="scan_qr_code">యూపీఐ క్యూఆర్ స్కాన్ చేయండి</string>
     <string name="cash_flow_forecast">నగదు ప్రవాహ సూచన</string>
+    <string name="cash_flow">నగదు ప్రవాహం</string>
     <string name="loans">రుణాలు</string>
     <string name="threat_detected">ముప్పు గుర్తించబడింది</string>
     <string name="safe">సురక్షితం</string>
@@ -23,6 +24,15 @@
     <string name="your_financial_bodyguard">మీ ఆర్థిక అంగరక్షకుడు</string>
     <string name="recent_threats">ఇటీవల ముప్పులు</string>
     <string name="no_recent_threats">ఇటీవల ముప్పులు ఏమీ లేవు</string>
+    <string name="analyze_message">ఏదైనా సందేశాన్ని విశ్లేషించండి</string>
+    <string name="analyze_section_label">ఏదైనా సందేశాన్ని విశ్లేషించండి</string>
+    <string name="analyze_hint">ఏదైనా SMS, WhatsApp సందేశం లేదా UPI అభ్యర్థనను పేస్ట్ చేయండి. రక్షక్ మీ ఫోన్‌లోనే విశ్లేషిస్తాడు — ఏమీ బయటకు వెళ్ళదు.</string>
+    <string name="analyze_placeholder">SMS, WhatsApp సందేశం లేదా UPI అభ్యర్థనను పేస్ట్ చేయండి…</string>
+    <string name="analyze">విశ్లేషించండి</string>
+    <string name="overlay_alert_title">⚠️ రక్షక్ హెచ్చరిక</string>
+    <string name="overlay_tap_details">వివరాల కోసం నొక్కండి</string>
+    <string name="overlay_notification_text">మోసాల కోసం పరిశీలన</string>
+</resources>
     <string name="payment_request_check">చెల్లించే ముందు తనిఖీ చేయండి</string>
     <string name="payee_label">చెల్లించే వ్యక్తి</string>
     <string name="amount_label">మొత్తం</string>

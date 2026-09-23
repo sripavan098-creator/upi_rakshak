@@ -44,7 +44,13 @@ fun HomeScreen(
     val lastAnalysis by NotificationProcessor.lastAnalysis.collectAsState()
     val threatHistory by ThreatHistoryStore.history.collectAsState()
 
-    LaunchedEffect(Unit) {
+    // Analyze-any-message console (parity with the web Message Analysis Workbench)
+    var manualMessage by remember { mutableStateOf("") }
+    var manualAnalysis by remember { mutableStateOf<ThreatAnalysis?>(null) }
+
+    // Re-check permissions every time the screen resumes — the user may have
+    // just granted notification access or overlay permission in Settings.
+    androidx.lifecycle.compose.LifecycleEventEffect(androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
         notifAccessGranted = PermissionHelper.hasNotificationAccess(context)
         overlayGranted = PermissionHelper.hasOverlayPermission(context)
     }
@@ -96,6 +102,50 @@ fun HomeScreen(
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             SecondaryAction(stringResource(R.string.scan_qr_code).uppercase(), onScanQr, Modifier.weight(1f))
             SecondaryAction(stringResource(R.string.language).uppercase(), onLanguageSelect, Modifier.weight(1f))
+        }
+
+        // ── Analyze any message (feature parity with the web workbench) ──
+        Spacer(Modifier.height(24.dp))
+        Text(stringResource(R.string.analyze_section_label).uppercase(), color = InkLight, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
+        Text(stringResource(R.string.analyze_message), color = Ink, fontSize = 23.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 4.dp))
+        Text(stringResource(R.string.analyze_hint), color = InkLight, fontSize = 13.sp, lineHeight = 19.sp, modifier = Modifier.padding(top = 4.dp, bottom = 10.dp))
+
+        androidx.compose.material3.OutlinedTextField(
+            value = manualMessage,
+            onValueChange = { manualMessage = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(stringResource(R.string.analyze_placeholder), color = InkLight, fontSize = 13.sp) },
+            textStyle = androidx.compose.ui.text.TextStyle(color = Ink, fontSize = 14.sp, lineHeight = 20.sp),
+            minLines = 3,
+            maxLines = 6,
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp),
+            colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = StampRed,
+                unfocusedBorderColor = BorderStrong,
+                focusedContainerColor = Paper,
+                unfocusedContainerColor = PaperDark,
+                cursorColor = StampRed
+            )
+        )
+        Button(
+            onClick = {
+                if (manualMessage.isNotBlank()) {
+                    val analysis = com.upirakshak.engine.RulesEngine.analyze("", manualMessage)
+                    manualAnalysis = analysis
+                    if (analysis.level != ThreatLevel.SAFE) {
+                        HapticHelper.vibrateForThreat(context, analysis.level)
+                        VoiceOutput.speak(analysis.suggestedAction)
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp).height(48.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = Paper),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
+        ) { Text(stringResource(R.string.analyze).uppercase(), fontSize = 14.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp) }
+
+        manualAnalysis?.let { analysis ->
+            Spacer(Modifier.height(10.dp))
+            ThreatCard(analysis = analysis)
         }
 
         Spacer(Modifier.height(24.dp))

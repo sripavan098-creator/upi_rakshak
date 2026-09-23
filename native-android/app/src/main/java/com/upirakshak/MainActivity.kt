@@ -11,12 +11,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -119,18 +121,22 @@ class MainActivity : ComponentActivity() {
                                     contentColor = TextPrimary
                                 ) {
                                     NavigationBarItem(
+                                        icon = { Icon(Icons.Default.Home, contentDescription = stringResource(R.string.home)) },
                                         icon = { Icon(Icons.Default.Home, contentDescription = null) },
                                         label = { Text(stringResource(R.string.home)) },
                                         selected = currentTab == 0,
                                         onClick = { currentTab = 0 }
                                     )
                                     NavigationBarItem(
+                                        icon = { Icon(Icons.Default.TrendingUp, contentDescription = stringResource(R.string.cash_flow)) },
+                                        label = { Text(stringResource(R.string.cash_flow)) },
                                         icon = { Icon(Icons.Default.AttachMoney, contentDescription = null) },
                                         label = { Text(stringResource(R.string.cash_flow_forecast)) },
                                         selected = currentTab == 1,
                                         onClick = { currentTab = 1 }
                                     )
                                     NavigationBarItem(
+                                        icon = { Icon(Icons.Default.AccountBalance, contentDescription = stringResource(R.string.loans)) },
                                         icon = { Icon(Icons.Default.AttachMoney, contentDescription = null) },
                                         label = { Text(stringResource(R.string.loans)) },
                                         selected = currentTab == 2,
