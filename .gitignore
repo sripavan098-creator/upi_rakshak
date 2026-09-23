@@ -3,6 +3,9 @@ node_modules/
 dist/
 build/
 *.log
+coverage/
+test-results/
+playwright-report/
 native-android/.gradle/
 native-android/local.properties
 native-android/android-sdk/

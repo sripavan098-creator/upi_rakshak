@@ -7,7 +7,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,18 +20,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.upirakshak.R
 import com.upirakshak.engine.ThreatAnalysis
 import com.upirakshak.engine.ThreatLevel
 import com.upirakshak.ui.theme.*
+import com.upirakshak.util.CYBERCRIME_HELPLINE
+import com.upirakshak.util.EscalationMessage
 import com.upirakshak.voice.VoiceOutput
 
 @Composable
 fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
-    val (borderColor, surfaceColor, badgeColor) = when (analysis.level) {
-        ThreatLevel.HIGH -> Triple(Danger, Danger.copy(alpha = 0.1f), Danger)
-        ThreatLevel.MEDIUM -> Triple(Warning, Warning.copy(alpha = 0.1f), Warning)
-        ThreatLevel.SAFE -> Triple(Emerald, Emerald.copy(alpha = 0.1f), Emerald)
-    }
+    val accent = analysis.level.tint
+    val surfaceColor = accent.copy(alpha = 0.1f)
+    val borderColor = accent
+    val badgeColor = accent
 
     Column(
         modifier = modifier
@@ -46,7 +51,7 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
                 .padding(horizontal = 12.dp, vertical = 4.dp)
         ) {
             Text(
-                text = analysis.level.name,
+                text = stringResource(analysis.level.badgeRes),
                 color = badgeColor,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
@@ -91,11 +96,7 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    when (analysis.level) {
-                        ThreatLevel.HIGH -> Danger.copy(alpha = 0.15f)
-                        ThreatLevel.MEDIUM -> Warning.copy(alpha = 0.15f)
-                        ThreatLevel.SAFE -> Emerald.copy(alpha = 0.15f)
-                    },
+                    analysis.level.tint.copy(alpha = 0.15f),
                     RoundedCornerShape(8.dp)
                 )
                 .padding(12.dp)
@@ -158,14 +159,14 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
-                        imageVector = Icons.Default.VolumeUp,
+                        imageVector = Icons.AutoMirrored.Filled.VolumeUp,
                         contentDescription = "Speak warning",
                         tint = TextSecondary,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Speak Again",
+                        text = stringResource(R.string.speak_again),
                         color = TextSecondary,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
@@ -214,3 +215,83 @@ fun ThreatCard(analysis: ThreatAnalysis, modifier: Modifier = Modifier) {
         }
     }
 }
+
+/**
+ * Lets the user hand a suspicious payment to someone they trust, or report it.
+ * Only shown when there is a real decision to be second-guessed.
+ */
+@Composable
+private fun EscalationActions(analysis: ThreatAnalysis) {
+    if (analysis.level == ThreatLevel.SAFE) return
+
+    val context = LocalContext.current
+
+    Spacer(modifier = Modifier.height(12.dp))
+
+    Column {
+        Text(
+            text = "Not sure? Ask someone you trust",
+            color = TextSecondary,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            ActionButton(
+                label = "Ask a trusted contact",
+                icon = Icons.Default.Share,
+                modifier = Modifier.weight(1f)
+            ) {
+                context.startActivity(
+                    EscalationMessage.shareIntent(analysis, "Ask for a second opinion")
+                )
+            }
+
+            ActionButton(
+                label = stringResource(R.string.report_to_1930),
+                icon = Icons.Default.Phone,
+                modifier = Modifier.weight(1f)
+            ) {
+                context.startActivity(EscalationMessage.reportIntent(CYBERCRIME_HELPLINE))
+            }
+        }
+    }
+}
+
+@Composable
+private fun ActionButton(
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
+            .background(Slate)
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp, horizontal = 8.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = TextSecondary,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = label,
+                color = TextSecondary,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
+}
+

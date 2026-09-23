@@ -34,15 +34,17 @@ export default function TheNoticeLanding() {
     <div className="min-h-screen bg-[var(--paper)]">
       <a className="skip-link" href="#main">Skip to content</a>
       <header className="notice-nav" aria-label="Primary navigation">
+      <header className="notice-nav">
         <a className="notice-brand" href="#top" aria-label="UPI Rakshak home">
           <span className="notice-brand__seal" aria-hidden="true">र</span>
           <span>UPI Rakshak</span>
         </a>
-        <nav className="notice-nav__links">
+        <nav className="notice-nav__links" aria-label="Primary navigation">
           <a href="#scanner">Live scanner</a>
           <a href="#cash-flow">Cash flow</a>
           <a href="#loans">Loan receipt</a>
           <a href="https://github.com/sripavan098-creator/upi_rakshak" target="_blank" rel="noreferrer">Source</a>
+          <a className="notice-nav__primary" href="#scanner">Run defense</a>
           <span className={`notice-offline-status ${isOnline ? 'is-online' : 'is-offline'}`} aria-live="polite">
             {isOnline ? 'LOCAL RULES READY' : 'OFFLINE MODE'}
           </span>
@@ -70,7 +72,7 @@ export default function TheNoticeLanding() {
         <div className="hero-grid max-w-6xl mx-auto w-full">
           <div className="hero-copy text-center md:text-left">
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35 }}
             className="notice-kicker mx-auto md:mx-0"
@@ -81,7 +83,7 @@ export default function TheNoticeLanding() {
           </motion.div>
           {/* Official seal */}
           <motion.div
-            initial={{ scale: 0, rotate: -180 }}
+            initial={false}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.6, type: 'spring' }}
             className="inline-block mb-6"
@@ -96,27 +98,27 @@ export default function TheNoticeLanding() {
 
           {/* Title */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="font-signage font-bold text-5xl sm:text-6xl md:text-7xl text-[var(--ink)] mb-4"
             style={{ letterSpacing: '-0.02em' }}
           >
-            UPI Rakshak
+            Stop the scam<br />before you pay.
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             className="text-xl md:text-2xl text-[var(--ink-light)] mb-5 max-w-2xl mx-auto md:mx-0"
           >
-            The real-time financial safety layer for India's digital economy
+            UPI Rakshak is a decision-time safety layer for India's digital economy.
           </motion.p>
 
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
             className="max-w-2xl mx-auto md:mx-0 text-base sm:text-lg text-[var(--ink-light)] leading-relaxed"
@@ -127,6 +129,12 @@ export default function TheNoticeLanding() {
           <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-7 mb-7">
             <a className="notice-cta notice-cta--primary" href="#scanner">Run the live defense</a>
             <a className="notice-cta notice-cta--secondary" href="#cash-flow">See the money layer</a>
+          </div>
+
+          <div className="hero-proofline" aria-label="Product guarantees">
+            <span><b>LOCAL</b> deterministic rules</span>
+            <span><b>EXPLAINS</b> the exact trap</span>
+            <span><b>ACTS</b> before approval</span>
           </div>
 
           {/* Hindi tagline */}
@@ -141,7 +149,7 @@ export default function TheNoticeLanding() {
 
           {/* Evidence register */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
             className="notice-register max-w-4xl mx-auto md:mx-0"
@@ -149,7 +157,7 @@ export default function TheNoticeLanding() {
             <div><span>01 / NATIVE REGISTER</span><strong>257</strong><em>keyword signals</em></div>
             <div><span>02 / RESPONSE TIME</span><strong>&lt;200ms</strong><em>overlay detection</em></div>
             <div><span>03 / LIVE WEB CUES</span><strong>2</strong><em>English + Hinglish</em></div>
-            <div><span>04 / VALIDATION</span><strong>17</strong><em>unit tests passing</em></div>
+            <div><span>04 / VALIDATION</span><strong>48</strong><em>unit tests passing</em></div>
           </motion.div>
 
           {/* Scroll indicator */}
@@ -171,7 +179,7 @@ export default function TheNoticeLanding() {
           </div>
 
           <motion.aside
-            initial={{ opacity: 0, x: 28 }}
+            initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.35, duration: 0.55 }}
             className="hero-preview"

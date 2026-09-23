@@ -31,14 +31,18 @@ object LoanCalculator {
             option.principal * monthlyRate * pow / (pow - 1)
         }
 
-        val totalRepayment = monthlyEmi * n
-        val totalInterest = totalRepayment - option.principal
+        val totalInterest = monthlyEmi * n - option.principal
         val processingFee = option.principal * option.processingFeePercent / 100
         val totalFees = processingFee + option.flatFees
-        val totalCost = totalInterest + totalFees
 
-        // Effective annual rate including all fees
-        val effectiveAnnualRate = (totalCost / option.principal) * (12 / n) * 100
+        // Fees are real money the borrower hands over, so they belong in the
+        // total. Only counting interest here understates the cost of every loan.
+        val totalRepayment = monthlyEmi * n + totalFees
+
+        // The borrower receives principal minus the fees taken up front, so the
+        // rate that actually applies to the money in hand is higher than nominal.
+        val netProceeds = option.principal - totalFees
+        val effectiveAnnualRate = annualPercentageRate(netProceeds, monthlyEmi, n)
 
         return LoanTotal(
             option = option,
@@ -49,6 +53,32 @@ object LoanCalculator {
             effectiveAnnualRate = effectiveAnnualRate
         )
     }
+
+    /**
+     * True annual percentage rate: the monthly discount rate at which the
+     * scheduled payments equal the money the borrower actually receives.
+     * Solved by bisection, which is stable for every input here and avoids
+     * pulling in a maths dependency for one closed-form case.
+     */
+    private fun annualPercentageRate(
+        netProceeds: Double,
+        monthlyEmi: Double,
+        tenureMonths: Double
+    ): Double {
+        if (netProceeds <= 0.0 || monthlyEmi <= 0.0 || tenureMonths <= 0.0) return 0.0
+
+        var low = 0.0
+        var high = 1.0
+        repeat(200) {
+            val mid = (low + high) / 2
+            if (presentValue(monthlyEmi, mid, tenureMonths) > netProceeds) low = mid else high = mid
+        }
+        return (low + high) / 2 * 12 * 100
+    }
+
+    private fun presentValue(payment: Double, monthlyRate: Double, n: Double): Double =
+        if (monthlyRate == 0.0) payment * n
+        else payment * (1 - Math.pow(1 + monthlyRate, -n)) / monthlyRate
 
     // Preset loan options for comparison
     val presetLoans = listOf(

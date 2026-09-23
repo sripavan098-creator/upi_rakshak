@@ -5,8 +5,6 @@
  * Browser-native, no external dependencies.
  */
 
-let currentUtterance: SpeechSynthesisUtterance | null = null;
-
 /**
  * Speak a warning message aloud.
  * Prefers Hindi voice if available, falls back to English.
@@ -97,6 +95,7 @@ export function speakWarning(text: string, lang: 'hi-IN' | 'en-IN' = 'hi-IN'): v
     };
     window.speechSynthesis.speak(utterance);
   });
+  window.speechSynthesis.speak(utterance);
 }
 
 /**
@@ -105,7 +104,6 @@ export function speakWarning(text: string, lang: 'hi-IN' | 'en-IN' = 'hi-IN'): v
 export function stopSpeaking(): void {
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
-    currentUtterance = null;
   }
 }
 

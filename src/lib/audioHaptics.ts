@@ -7,6 +7,10 @@
 
 import { ThreatLevel } from './rulesEngine';
 
+interface AudioContextWindow extends Window {
+  webkitAudioContext?: typeof AudioContext;
+}
+
 class SoundHapticService {
   private audioCtx: AudioContext | null = null;
   private soundEnabled: boolean = true;
@@ -15,7 +19,8 @@ class SoundHapticService {
   private getAudioContext(): AudioContext | null {
     if (typeof window === 'undefined') return null;
     if (!this.audioCtx) {
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      const AudioContextClass =
+        window.AudioContext ?? (window as AudioContextWindow).webkitAudioContext;
       if (AudioContextClass) {
         this.audioCtx = new AudioContextClass();
       }

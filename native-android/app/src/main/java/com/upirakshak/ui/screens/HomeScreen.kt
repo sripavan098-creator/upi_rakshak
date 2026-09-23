@@ -15,10 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.upirakshak.R
+import com.upirakshak.data.ThreatHistoryStore
+import com.upirakshak.engine.RulesEngine
 import com.upirakshak.engine.ThreatAnalysis
 import com.upirakshak.engine.ThreatLevel
 import com.upirakshak.notification.NotificationProcessor
 import com.upirakshak.overlay.RakshakOverlayService
+import com.upirakshak.ui.components.RecentThreatsSection
 import com.upirakshak.ui.components.StatusCard
 import com.upirakshak.ui.components.ThreatCard
 import com.upirakshak.ui.theme.*
@@ -30,15 +33,16 @@ import com.upirakshak.voice.VoiceOutput
 fun HomeScreen(
     onRequestNotificationAccess: () -> Unit,
     onRequestOverlay: () -> Unit,
+    modifier: Modifier = Modifier,
     onScanQr: () -> Unit = {},
-    onLanguageSelect: () -> Unit = {},
-    modifier: Modifier = Modifier
+    onLanguageSelect: () -> Unit = {}
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val scrollState = rememberScrollState()
     var notifAccessGranted by remember { mutableStateOf(PermissionHelper.hasNotificationAccess(context)) }
     var overlayGranted by remember { mutableStateOf(PermissionHelper.hasOverlayPermission(context)) }
     val lastAnalysis by NotificationProcessor.lastAnalysis.collectAsState()
+    val threatHistory by ThreatHistoryStore.history.collectAsState()
 
     // Analyze-any-message console (parity with the web Message Analysis Workbench)
     var manualMessage by remember { mutableStateOf("") }
@@ -79,21 +83,15 @@ fun HomeScreen(
 
         Button(
             onClick = {
-                val fakeAnalysis = ThreatAnalysis(
-                    level = ThreatLevel.HIGH,
-                    reasons = listOf(
-                        "Urgency: disconnected tonight",
-                        "Payment trap: enter UPI PIN to receive",
-                        "Suspicious UPI ID: bsescare@icici"
-                    ),
-                    matchedPatterns = listOf("disconnected", "enter upi pin", "bsescare@icici"),
-                    suggestedAction = "Yeh message fraud hai. Kisi ko bhi OTP ya UPI PIN mat do.",
-                    officialRoute = "Official BSES app ya bbps.npci.org.in use karein",
-                    originalText = "URGENT: Electricity disconnected tonight, pay bsescare@icici"
+                // Run the real engine over the sample so the demo shows the same score
+                // and evidence a genuine notification would produce.
+                val demoAnalysis = RulesEngine.analyze(
+                    "Rakshak demo",
+                    "URGENT: Electricity disconnected tonight, scan QR to pay bsescare@icici"
                 )
-                HapticHelper.vibrateForThreat(context, ThreatLevel.HIGH)
-                VoiceOutput.speak(fakeAnalysis.suggestedAction)
-                RakshakOverlayService.show(context, fakeAnalysis)
+                HapticHelper.vibrateForThreat(context, demoAnalysis.level)
+                VoiceOutput.speak(demoAnalysis.suggestedAction)
+                RakshakOverlayService.show(context, demoAnalysis)
             },
             modifier = Modifier.fillMaxWidth().height(54.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = Paper),
@@ -150,6 +148,10 @@ fun HomeScreen(
             ThreatCard(analysis = analysis)
         }
 
+        Spacer(Modifier.height(24.dp))
+        Text(stringResource(R.string.recent_threats).uppercase(), color = InkLight, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
+        Spacer(Modifier.height(8.dp))
+        RecentThreatsSection(records = threatHistory)
         Spacer(Modifier.height(24.dp))
         Text("LIVE EVIDENCE", color = InkLight, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
         Spacer(Modifier.height(8.dp))

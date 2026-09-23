@@ -2,6 +2,8 @@ package com.upirakshak.notification
 
 import android.content.Context
 import android.util.Log
+import com.upirakshak.data.ThreatHistoryStore
+import com.upirakshak.data.toRecord
 import com.upirakshak.engine.RulesEngine
 import com.upirakshak.engine.ThreatAnalysis
 import com.upirakshak.engine.ThreatLevel
@@ -25,6 +27,7 @@ object NotificationProcessor {
     init {
         // Application.onCreate initializes AppContextHolder before this object is first used.
         runCatching { restoreLastAnalysis(AppContextHolder.get()) }
+        runCatching { ThreatHistoryStore.load(AppContextHolder.get()) }
     }
 
     fun process(title: String, text: String, packageName: String) {
@@ -37,6 +40,15 @@ object NotificationProcessor {
         if (analysis.level != ThreatLevel.SAFE) {
             try {
                 val context = AppContextHolder.get()
+                ThreatHistoryStore.record(
+                    context,
+                    analysis.toRecord(
+                        id = ThreatHistoryStore.newId(),
+                        timestampMillis = System.currentTimeMillis(),
+                        title = title,
+                        sourcePackage = packageName
+                    )
+                )
                 HapticHelper.vibrateForThreat(context, analysis.level)
                 val currentLanguage = LanguageManager.getCurrentLanguage(context)
                 VoiceOutput.speakInLanguage(analysis.suggestedAction, currentLanguage)
@@ -45,6 +57,10 @@ object NotificationProcessor {
                 Log.e(TAG, "Failed to trigger threat response", e)
             }
         }
+    }
+
+    fun clearHistory() {
+        runCatching { ThreatHistoryStore.clear(AppContextHolder.get()) }
     }
 
     fun clearAnalysis() {
@@ -59,6 +75,7 @@ object NotificationProcessor {
             .putString("patterns", analysis.matchedPatterns.joinToString(SEP))
             .putString("action", analysis.suggestedAction)
             .putString("route", analysis.officialRoute ?: "")
+            .putInt("score", analysis.riskScore)
             .putString("original", analysis.originalText)
             .apply()
     }
@@ -68,6 +85,7 @@ object NotificationProcessor {
         val level = prefs.getString("level", null)?.let { runCatching { ThreatLevel.valueOf(it) }.getOrNull() } ?: return
         _lastAnalysis.value = ThreatAnalysis(
             level = level,
+            riskScore = prefs.getInt("score", 0),
             reasons = prefs.getString("reasons", "").orEmpty().split(SEP).filter(String::isNotBlank),
             matchedPatterns = prefs.getString("patterns", "").orEmpty().split(SEP).filter(String::isNotBlank),
             suggestedAction = prefs.getString("action", "").orEmpty(),

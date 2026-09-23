@@ -12,13 +12,21 @@ export interface RakshakNativePlugin {
   addListener(
     eventName: 'onNotification',
     listenerFunc: (data: { title: string; text: string }) => void
-  ): Promise<any>;
+  ): Promise<{ remove: () => void }>;
+}
+
+interface CapacitorGlobal {
+  isNativePlatform?: () => boolean;
+}
+
+interface CapacitorWindow extends Window {
+  Capacitor?: CapacitorGlobal;
 }
 
 const Rakshak = registerPlugin<RakshakNativePlugin>('Rakshak');
 
 export function isNativeAvailable(): boolean {
-  return (window as any).Capacitor?.isNativePlatform?.() ?? false;
+  return (window as CapacitorWindow).Capacitor?.isNativePlatform?.() ?? false;
 }
 
 export default Rakshak;

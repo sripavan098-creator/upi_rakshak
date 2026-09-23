@@ -90,7 +90,7 @@ fun StatusCard(
                             contentColor = NavyDark
                         )
                     ) {
-                        Text("Grant", fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.grant_permission), fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -124,7 +124,7 @@ fun StatusCard(
                             contentColor = NavyDark
                         )
                     ) {
-                        Text("Grant", fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.grant_permission), fontWeight = FontWeight.Bold)
                     }
                 }
             }

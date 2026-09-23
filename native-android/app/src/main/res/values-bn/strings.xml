@@ -33,3 +33,16 @@
     <string name="overlay_tap_details">বিশদের জন্য ট্যাপ করুন</string>
     <string name="overlay_notification_text">প্রতারণার নজরদারি</string>
 </resources>
+    <string name="payment_request_check">পেমেন্টের আগে যাচাই করুন</string>
+    <string name="payee_label">যাকে পেমেন্ট</string>
+    <string name="amount_label">পরিমাণ</string>
+    <string name="note_label">নোট</string>
+    <string name="pay_anyway">তবুও পেমেন্ট করুন</string>
+    <string name="cancel_payment">বাতিল করুন</string>
+    <string name="intercept_high_body">এই পেমেন্ট অনুরোধ পরিচিত প্রতারণার ধরনের সাথে মেলে। বিশ্বস্ত উপায়ে যাচাই করার আগে পেমেন্ট করবেন না।</string>
+    <string name="intercept_medium_body">এই পেমেন্ট অনুরোধের কিছু তথ্য অস্বাভাবিক লাগছে। চালিয়ে যাওয়ার আগে প্রাপক যাচাই করুন।</string>
+    <string name="upi_payment_request">UPI পেমেন্ট অনুরোধ</string>
+    <string name="no_upi_app_found">এই পেমেন্ট সম্পন্ন করার জন্য কোনো UPI অ্যাপ পাওয়া যায়নি</string>
+    <string name="use_my_messages">আমার বার্তা ব্যবহার করুন</string>
+    <string name="use_my_messages_body">ক্যাশ ফ্লো অনুমান করতে রক্ষক এই ফোনে আপনার ব্যাঙ্ক বার্তা পড়ে। বার্তাগুলি ডিভাইসেই বিশ্লেষণ হয়, আপলোড হয় না।</string>
+</resources>

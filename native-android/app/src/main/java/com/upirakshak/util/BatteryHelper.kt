@@ -45,7 +45,7 @@ object BatteryHelper {
      * Check if autostart is enabled (manufacturer-specific)
      * Note: There's no standard API for this, so we provide manual guidance
      */
-    fun isAutostartEnabled(context: Context): Boolean {
+    fun isAutostartEnabled(): Boolean {
         // This is manufacturer-specific and cannot be reliably checked
         // Return true as default - user will need to manually enable
         return true

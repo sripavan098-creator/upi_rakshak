@@ -11,10 +11,17 @@ interface NoticeAttackSimulationProps {
 
 export default function NoticeAttackSimulation({ open, onClose }: NoticeAttackSimulationProps) {
   const [stage, setStage] = useState<Stage>('notification');
+  const [wasOpen, setWasOpen] = useState(open);
+
+  // Reset the sequence during render when the dialog reopens, so the effect
+  // below is left to do nothing but schedule timers.
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) setStage('notification');
+  }
 
   useEffect(() => {
     if (!open) return;
-    setStage('notification');
     const fraudTimer = window.setTimeout(() => {
       setStage('fraud');
       speakWarning('Yeh message fraud ho sakta hai. QR code scan karke ya UPI PIN dekar paisa receive nahi hota.', 'hi-IN');

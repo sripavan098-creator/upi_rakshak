@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PixelFormat
-import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -20,6 +19,7 @@ import android.widget.TextView
 import com.upirakshak.MainActivity
 import com.upirakshak.R
 import com.upirakshak.engine.ThreatAnalysis
+import com.upirakshak.engine.ThreatLevel
 
 class RakshakOverlayService : Service() {
     
@@ -37,11 +37,7 @@ class RakshakOverlayService : Service() {
                 putExtra("officialRoute", analysis.officialRoute ?: "")
             }
             
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(intent)
-            } else {
-                context.startService(intent)
-            }
+            context.startForegroundService(intent)
         }
         
         fun hide() {
@@ -82,16 +78,31 @@ class RakshakOverlayService : Service() {
         // Remove existing overlay if any
         hideOverlay()
         
+        // Severity drives the banner colour: critical threats read red, softer
+        // advisories read amber so the user can tell them apart at a glance.
+        val severity = runCatching { ThreatLevel.valueOf(level) }.getOrDefault(ThreatLevel.MEDIUM)
+        val bannerColor = when (severity) {
+            ThreatLevel.HIGH -> "#DC2626"
+            ThreatLevel.MEDIUM -> "#B45309"
+            ThreatLevel.SAFE -> "#15803D"
+        }
+        val header = when (severity) {
+            ThreatLevel.HIGH -> "⚠️ Rakshak Alert"
+            ThreatLevel.MEDIUM -> "⚠️ Rakshak: Check before paying"
+            ThreatLevel.SAFE -> "✓ Rakshak: Looks safe"
+        }
+
         // Create overlay layout
         overlayView = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(Color.parseColor("#DC2626"))
+            setBackgroundColor(Color.parseColor(bannerColor))
             setPadding(48, 32, 48, 32)
             elevation = 16f
             
             // Title
             addView(TextView(context).apply {
                 text = context.getString(R.string.overlay_alert_title)
+                text = header
                 setTextColor(Color.WHITE)
                 textSize = 20f
                 setTypeface(typeface, android.graphics.Typeface.BOLD)
@@ -139,12 +150,7 @@ class RakshakOverlayService : Service() {
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-            } else {
-                @Suppress("DEPRECATION")
-                WindowManager.LayoutParams.TYPE_PHONE
-            },
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
         ).apply {
@@ -184,18 +190,16 @@ class RakshakOverlayService : Service() {
     }
     
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Rakshak Alerts",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = "Alerts from UPI Rakshak"
-            }
-            
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
+        // minSdkVersion is 26, so the notification channel API is always available.
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            "Rakshak Alerts",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "Alerts from UPI Rakshak"
         }
+
+        getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
     
     private fun createNotification(): Notification {
@@ -213,5 +217,10 @@ class RakshakOverlayService : Service() {
                 .setSmallIcon(android.R.drawable.ic_dialog_alert)
                 .build()
         }
+        return Notification.Builder(this, CHANNEL_ID)
+            .setContentTitle("UPI Rakshak")
+            .setContentText("Monitoring for scams")
+            .setSmallIcon(android.R.drawable.ic_dialog_alert)
+            .build()
     }
 }

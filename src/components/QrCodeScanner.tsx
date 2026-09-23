@@ -1,17 +1,12 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import {
   Camera,
   CameraOff,
   RefreshCw,
   Zap,
   ZapOff,
-  ShieldCheck,
-  AlertTriangle,
-  Play,
-  RotateCcw,
   QrCode,
   Info,
-  CheckCircle2,
   Volume2,
   VolumeX,
   Vibrate,
@@ -19,46 +14,30 @@ import {
 } from 'lucide-react';
 import { analyzeQrPayload, QrSafetyResult } from '../lib/qrSafetyAnalyzer';
 import { soundHaptics } from '../lib/audioHaptics';
+import { SAMPLE_UPI_QR_SCENARIOS } from '../lib/qrScenarios';
+import { THREAT_THEME } from '../lib/threatTheme';
 import StatusIndicator from './StatusIndicator';
 
-// Realistic sample UPI QR payloads for immediate simulation & verification
-export const SAMPLE_UPI_QR_SCENARIOS = [
-  {
-    id: 'scam-electricity',
-    title: '🚨 Electricity Disconnection Scam',
-    type: 'HIGH_RISK',
-    description: 'Fake BSES support demanding payment to prevent immediate meter disconnection',
-    payload: 'upi://pay?pa=bsescare@icici&pn=BSES%20Electricity%20Support&am=2499&tn=Disconnection%20fine%20refund%20scan%20QR%20enter%20PIN',
-  },
-  {
-    id: 'scam-lottery',
-    title: '🚨 Lottery Prize Reversal Trap',
-    type: 'HIGH_RISK',
-    description: 'Fraudulent voucher tricking user to enter PIN to "claim" ₹10,000 lottery winnings',
-    payload: 'upi://pay?pa=refundcare@paytm&pn=Lucky%20Cash%20Claim&am=499&tn=Pay%20processing%20charge%20to%20receive%2010000%20prize',
-  },
-  {
-    id: 'scam-kyc',
-    title: '⚠️ Unofficial KYC Verification',
-    type: 'MEDIUM_RISK',
-    description: 'Personal VPA handle attempting account reactivation with artificial urgency',
-    payload: 'upi://pay?pa=paytm.kyc.verify@okhdfcbank&pn=Paytm%20KYC%20Help&am=1&tn=Verify%20KYC%20urgent%20within%2024%20hours',
-  },
-  {
-    id: 'safe-kirana',
-    title: '🛡️ Verified Grocery Merchant',
-    type: 'SAFE',
-    description: 'Authentic corner store BharatQR with valid MCC (Merchant Category Code 5411)',
-    payload: 'upi://pay?pa=sharmastore@okhdfcbank&pn=Sharma%20General%20Store&am=185&tn=Grocery%20bill&mc=5411',
-  },
-  {
-    id: 'safe-bbps',
-    title: '🛡️ Official BSES Utility Payment',
-    type: 'SAFE',
-    description: 'Legitimate registered BBPS electricity utility provider QR code',
-    payload: 'upi://pay?pa=bsesdelhi@sbi&pn=BSES%20Rajdhani%20Power%20Ltd&am=1420&tn=Bill%201039482938&mc=4900',
-  },
-];
+interface DetectedBarcode {
+  rawValue: string;
+}
+
+interface BarcodeDetectorLike {
+  detect(source: CanvasImageSource): Promise<DetectedBarcode[]>;
+}
+
+interface BarcodeDetectorWindow extends Window {
+  BarcodeDetector?: new (options: { formats: string[] }) => BarcodeDetectorLike;
+}
+
+/** `torch` is a non-standard ImageCapture constraint, absent from the DOM lib. */
+interface TorchConstraintSet extends MediaTrackConstraintSet {
+  torch: boolean;
+}
+
+interface TorchCapableTrack extends MediaStreamTrack {
+  applyConstraints(constraints: MediaTrackConstraints): Promise<void>;
+}
 
 export interface QrCodeScannerProps {
   id?: string;
@@ -93,6 +72,7 @@ export default function QrCodeScanner({
   const [analysisResult, setAnalysisResult] = useState<QrSafetyResult>(() =>
     analyzeQrPayload(SAMPLE_UPI_QR_SCENARIOS[0].payload)
   );
+  const threatTheme = THREAT_THEME[analysisResult.level];
   const [customInput, setCustomInput] = useState<string>('');
   const [activeScenarioId, setActiveScenarioId] = useState<string>(
     defaultScenarioId || SAMPLE_UPI_QR_SCENARIOS[0].id
@@ -133,7 +113,7 @@ export default function QrCodeScanner({
   }, []);
 
   // Start device camera
-  const startCamera = useCallback(async () => {
+  const startCamera = useCallback(async (mode: 'environment' | 'user' = facingMode) => {
     setCameraError(null);
     stopCamera();
 
@@ -154,7 +134,7 @@ export default function QrCodeScanner({
 
       const constraints: MediaStreamConstraints = {
         video: {
-          facingMode: { ideal: facingMode },
+          facingMode: { ideal: mode },
           width: { ideal: 1280 },
           height: { ideal: 720 },
         },
@@ -163,7 +143,6 @@ export default function QrCodeScanner({
 
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       streamRef.current = stream;
-      setCameraPermission('granted');
       setIsCameraActive(true);
 
       if (videoRef.current) {
@@ -186,6 +165,21 @@ export default function QrCodeScanner({
                 const detectedValue = barcodes[0].rawValue;
                 if (detectedValue && detectedValue !== currentRawPayload) {
                   evaluatePayload(detectedValue);
+      // Barcode detector if browser natively supports it
+      const BarcodeDetectorCtor = (window as BarcodeDetectorWindow).BarcodeDetector;
+      if (BarcodeDetectorCtor) {
+        try {
+          const barcodeDetector = new BarcodeDetectorCtor({ formats: ['qr_code'] });
+
+          scanIntervalRef.current = window.setInterval(async () => {
+            if (videoRef.current && videoRef.current.readyState >= 2) {
+              try {
+                const barcodes = await barcodeDetector.detect(videoRef.current);
+                if (barcodes && barcodes.length > 0) {
+                  const detectedValue = barcodes[0].rawValue;
+                  if (detectedValue && detectedValue !== currentRawPayload) {
+                    evaluatePayload(detectedValue);
+                  }
                 }
               }
             } catch {
@@ -201,13 +195,13 @@ export default function QrCodeScanner({
           'This browser could not start QR detection. Paste the UPI payload manually or use the simulated scenarios below.'
         );
       }
-    } catch (err: any) {
-      console.warn('Camera initialization error:', err);
-      setCameraPermission('denied');
+    } catch (err) {
+      const error = err as { name?: string; message?: string };
+      console.warn('Camera initialization error:', error);
       setCameraError(
-        err.name === 'NotAllowedError'
+        error.name === 'NotAllowedError'
           ? 'Camera access was denied. You can test live UPI detection using our simulated scenarios below.'
-          : err.message || 'Unable to access device camera in this window.'
+          : error.message || 'Unable to access device camera in this window.'
       );
       setIsCameraActive(false);
     }
@@ -223,7 +217,11 @@ export default function QrCodeScanner({
   };
 
   const flipCamera = () => {
-    setFacingMode((prev) => (prev === 'environment' ? 'user' : 'environment'));
+    const nextMode = facingMode === 'environment' ? 'user' : 'environment';
+    setFacingMode(nextMode);
+    if (isCameraActive) {
+      startCamera(nextMode);
+    }
   };
 
   const toggleTorch = async () => {
@@ -232,8 +230,8 @@ export default function QrCodeScanner({
     if (track && 'applyConstraints' in track) {
       try {
         const nextState = !torchOn;
-        await (track as any).applyConstraints({
-          advanced: [{ torch: nextState }],
+        await (track as TorchCapableTrack).applyConstraints({
+          advanced: [{ torch: nextState } as TorchConstraintSet],
         });
         setTorchOn(nextState);
       } catch {
@@ -242,15 +240,6 @@ export default function QrCodeScanner({
     }
   };
 
-  // Re-start camera on facingMode change if already active
-  useEffect(() => {
-    if (isCameraActive) {
-      startCamera();
-    }
-    return () => {
-      stopCamera();
-    };
-  }, [facingMode]);
 
   return (
     <div id={id} className={`w-full max-w-4xl mx-auto ${className}`}>
@@ -259,13 +248,13 @@ export default function QrCodeScanner({
         {/* Header with Camera Status */}
         <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[rgba(233, 231, 219, 0.18)]">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.18)] flex items-center justify-center text-[var(--seal-gold)]">
+            <div className="w-9 h-9 rounded bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.18)] flex items-center justify-center text-[var(--seal-gold-on-ink)]">
               <QrCode className="w-5 h-5" />
             </div>
             <div>
               <h2 className="font-display font-bold text-lg text-[var(--paper)] flex items-center gap-2">
                 Real-Time UPI QR Guard
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--ink-light)] text-[var(--seal-gold)] border border-[rgba(233, 231, 219, 0.18)] uppercase tracking-wider">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--ink-light)] text-[var(--seal-gold-on-ink)] border border-[rgba(233, 231, 219, 0.18)] uppercase tracking-wider">
                   Live Vision
                 </span>
               </h2>
@@ -292,7 +281,7 @@ export default function QrCodeScanner({
               title={soundEnabled ? 'Mute Alert Sounds' : 'Unmute Alert Sounds'}
               className={`px-2.5 py-1.5 font-mono text-xs border flex items-center gap-1.5 transition-colors ${
                 soundEnabled
-                  ? 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.34)] text-[var(--seal-gold)] hover:border-[var(--seal-gold)]'
+                  ? 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.34)] text-[var(--seal-gold-on-ink)] hover:border-[var(--seal-gold)]'
                   : 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.18)] text-[var(--paper-dark)]'
               }`}
             >
@@ -315,7 +304,7 @@ export default function QrCodeScanner({
               title={hapticsEnabled ? 'Disable Haptics' : 'Enable Haptics'}
               className={`px-2.5 py-1.5 font-mono text-xs border flex items-center gap-1.5 transition-colors ${
                 hapticsEnabled
-                  ? 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.34)] text-[var(--safe)] hover:border-[var(--safe)]'
+                  ? 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.34)] text-[var(--safe-on-ink)] hover:border-[var(--safe)]'
                   : 'bg-[var(--ink-light)] border-[rgba(233, 231, 219, 0.18)] text-[var(--paper-dark)]'
               }`}
             >
@@ -340,7 +329,7 @@ export default function QrCodeScanner({
                 </>
               ) : (
                 <>
-                  <Camera className="w-3.5 h-3.5 text-[var(--seal-gold)]" /> Start Camera
+                  <Camera className="w-3.5 h-3.5 text-[var(--seal-gold-on-ink)]" /> Start Camera
                 </>
               )}
             </button>
@@ -395,7 +384,7 @@ export default function QrCodeScanner({
           ) : (
             /* Idle / Simulated Viewfinder Backdrop */
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-0 bg-gradient-to-b from-[var(--ink-light)] to-[var(--ink)]">
-              <div className="w-16 h-16 rounded-full bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.34)] flex items-center justify-center mb-3 text-[var(--seal-gold)] shadow-inner">
+              <div className="w-16 h-16 rounded-full bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.34)] flex items-center justify-center mb-3 text-[var(--seal-gold-on-ink)] shadow-inner">
                 <Camera className="w-8 h-8 opacity-80" />
               </div>
               <p className="font-display font-semibold text-sm text-[var(--paper)] mb-1">
@@ -407,7 +396,7 @@ export default function QrCodeScanner({
               <button
                 type="button"
                 id="btn-start-camera-overlay"
-                onClick={startCamera}
+                onClick={() => startCamera()}
                 className="px-4 py-2 bg-[var(--seal-gold)] text-[var(--ink)] font-mono text-xs font-bold uppercase tracking-wider hover:brightness-110 flex items-center gap-2"
               >
                 <Camera className="w-4 h-4" /> Enable Device Camera
@@ -435,41 +424,14 @@ export default function QrCodeScanner({
               <div
                 id="scan-frame-latency-overlay"
                 className="w-full z-20 flex items-center justify-between px-2.5 py-1.5 bg-[var(--ink)]/95 border backdrop-blur-sm font-mono text-[10px] shadow-lg pointer-events-none select-none transition-all duration-200"
-                style={{
-                  borderColor:
-                    analysisResult.level === 'HIGH'
-                      ? 'var(--stamp-red)'
-                      : analysisResult.level === 'MEDIUM'
-                      ? 'var(--warning)'
-                      : 'var(--safe)',
-                }}
+                style={{ borderColor: threatTheme.accent }}
                 role="status"
                 aria-label={`Fraud detection latency: ${analysisResult.latencyMs} milliseconds`}
               >
                 <div className="flex items-center gap-1.5">
-                  <Activity
-                    className="w-3.5 h-3.5 animate-pulse"
-                    style={{
-                      color:
-                        analysisResult.level === 'HIGH'
-                          ? 'var(--stamp-red)'
-                          : analysisResult.level === 'MEDIUM'
-                          ? 'var(--warning)'
-                          : 'var(--safe)',
-                    }}
-                  />
+                  <Activity className="w-3.5 h-3.5 animate-pulse" style={{ color: threatTheme.accent }} />
                   <span className="text-[var(--paper)] font-bold tracking-wider">LATENCY:</span>
-                  <span
-                    className="font-bold text-xs"
-                    style={{
-                      color:
-                        analysisResult.level === 'HIGH'
-                          ? 'var(--stamp-red)'
-                          : analysisResult.level === 'MEDIUM'
-                          ? 'var(--warning)'
-                          : 'var(--safe)',
-                    }}
-                  >
+                  <span className="font-bold text-xs" style={{ color: threatTheme.accent }}>
                     {analysisResult.latencyMs} ms
                   </span>
                 </div>
@@ -478,20 +440,7 @@ export default function QrCodeScanner({
                   <span className="text-[9px] text-[var(--paper-dark)] hidden sm:inline">TARGET &lt;200ms</span>
                   <span
                     className="font-bold text-[9px] px-1.5 py-0.5 uppercase tracking-wider"
-                    style={{
-                      backgroundColor:
-                        analysisResult.level === 'HIGH'
-                          ? 'rgba(225, 85, 74, 0.25)'
-                          : analysisResult.level === 'MEDIUM'
-                          ? 'rgba(232, 163, 61, 0.25)'
-                          : 'rgba(63, 167, 150, 0.25)',
-                      color:
-                        analysisResult.level === 'HIGH'
-                          ? 'var(--stamp-red)'
-                          : analysisResult.level === 'MEDIUM'
-                          ? 'var(--warning)'
-                          : 'var(--safe)',
-                    }}
+                    style={{ backgroundColor: threatTheme.tint, color: threatTheme.accent }}
                   >
                     REAL-TIME
                   </span>
@@ -499,7 +448,7 @@ export default function QrCodeScanner({
               </div>
 
               {/* Target HUD Header */}
-              <div className="w-full flex justify-between items-center text-[10px] font-mono text-[var(--seal-gold)] opacity-80 uppercase tracking-wider">
+              <div className="w-full flex justify-between items-center text-[10px] font-mono text-[var(--seal-gold-on-ink)] opacity-80 uppercase tracking-wider">
                 <span>[SCAN: VPA_ALIGN]</span>
                 <span className="flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--seal-gold)] animate-pulse" />
@@ -512,7 +461,7 @@ export default function QrCodeScanner({
                 <div className="w-12 h-12 border border-[var(--seal-gold)] border-dashed mx-auto mb-2 opacity-50 flex items-center justify-center">
                   <div className="w-2 h-2 bg-[var(--seal-gold)] rounded-full" />
                 </div>
-                <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--seal-gold)] bg-[var(--ink)]/80 px-2 py-0.5 border border-[rgba(233, 231, 219, 0.18)] inline-block">
+                <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--seal-gold-on-ink)] bg-[var(--ink)]/80 px-2 py-0.5 border border-[rgba(233, 231, 219, 0.18)] inline-block">
                   {analysisResult.level === 'HIGH' ? '⚠️ RISK INTERCEPT' : 'UPI QR DETECTOR'}
                 </p>
               </div>
@@ -566,7 +515,7 @@ export default function QrCodeScanner({
             <span className="text-[var(--paper-dark)] text-[11px] uppercase tracking-wider flex items-center gap-1.5">
               <span>🔍</span> Active Payload Stream:
             </span>
-            <span className="text-[10px] text-[var(--seal-gold)]">
+            <span className="text-[10px] text-[var(--seal-gold-on-ink)]">
               Analyzed in: 0.14s • {analysisResult.timestamp}
             </span>
           </div>
@@ -578,7 +527,7 @@ export default function QrCodeScanner({
         {/* Audio & Haptic Feedback Quick Testing Bar */}
         <div className="mt-4 p-3 bg-[var(--ink-light)] border border-[rgba(233, 231, 219, 0.18)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Volume2 className="w-4 h-4 text-[var(--seal-gold)]" />
+            <Volume2 className="w-4 h-4 text-[var(--seal-gold-on-ink)]" />
             <div>
               <p className="text-xs font-bold text-[var(--paper)]">
                 Audio &amp; Haptic Sensory Alerts
@@ -596,7 +545,7 @@ export default function QrCodeScanner({
                 soundHaptics.playSound('SAFE');
                 soundHaptics.triggerHaptics('SAFE');
               }}
-              className="px-2.5 py-1 text-[11px] font-mono font-bold bg-[var(--ink)] text-[var(--safe)] border border-[var(--safe)] hover:brightness-110 flex items-center gap-1.5 transition-all"
+              className="px-2.5 py-1 text-[11px] font-mono font-bold bg-[var(--ink)] text-[var(--safe-on-ink)] border border-[var(--safe)] hover:brightness-110 flex items-center gap-1.5 transition-all"
             >
               <span>🔔</span> Test Safe Chime
             </button>
@@ -607,7 +556,7 @@ export default function QrCodeScanner({
                 soundHaptics.playSound('HIGH');
                 soundHaptics.triggerHaptics('HIGH');
               }}
-              className="px-2.5 py-1 text-[11px] font-mono font-bold bg-[var(--ink)] text-[var(--stamp-red)] border border-[var(--stamp-red)] hover:brightness-110 flex items-center gap-1.5 transition-all"
+              className="px-2.5 py-1 text-[11px] font-mono font-bold bg-[var(--ink)] text-[var(--stamp-red-on-ink)] border border-[var(--stamp-red)] hover:brightness-110 flex items-center gap-1.5 transition-all"
             >
               <span>🚨</span> Test High-Risk Alarm
             </button>
@@ -644,10 +593,10 @@ export default function QrCodeScanner({
                     <span
                       className={`text-[9px] font-mono px-1.5 py-0.2 uppercase ${
                         isHigh
-                          ? 'text-[var(--stamp-red)]'
+                          ? 'text-[var(--stamp-red-on-ink)]'
                           : isMed
                           ? 'text-[var(--warning)]'
-                          : 'text-[var(--safe)]'
+                          : 'text-[var(--safe-on-ink)]'
                       }`}
                     >
                       {item.type.replace('_', ' ')}

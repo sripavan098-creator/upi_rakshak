@@ -192,7 +192,7 @@ export default function InterceptionTimeline() {
 
       {/* Rules - scroll through these */}
       <div className="relative z-10 space-y-[100vh] pt-[50vh] pb-[50vh]">
-        {RULES.map((rule, index) => (
+        {RULES.map((rule) => (
           <motion.div
             key={rule.id}
             className="max-w-2xl mx-auto px-4"

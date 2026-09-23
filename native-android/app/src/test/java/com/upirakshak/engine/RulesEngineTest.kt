@@ -1,6 +1,7 @@
 package com.upirakshak.engine
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
@@ -162,4 +163,42 @@ class RulesEngineTest {
         assertEquals(ThreatLevel.HIGH, result.level)
     }
 
+    @Test
+    fun testScoresMonotonicallyIncreaseWithEvidence() {
+        // Corroborating signals must raise the score, not just flip a level.
+        val single = RulesEngine.analyze("SMS", "Urgent account notice")
+        val double = RulesEngine.analyze("SMS", "Urgent account blocked")
+        assertTrue(double.riskScore > single.riskScore)
+    }
+
+    @Test
+    fun testBenignMessageScoresZero() {
+        val result = RulesEngine.analyze("WhatsApp", "Hi, this is your friend, sending money")
+        assertEquals(0, result.riskScore)
+    }
+
+    @Test
+    fun testOtpKeywordAloneDoesNotScore() {
+        // Every genuine bank SMS contains "otp"; it must not be treated as a fraud signal.
+        val result = RulesEngine.analyze("HDFC Bank", "Your OTP is 123456. Do not share.")
+        assertEquals(0, result.riskScore)
+    }
+
+    @Test
+    fun testHighVerdictsAlwaysScoreAtLeastTheHighThreshold() {
+        val cases = listOf(
+            "WhatsApp" to "URGENT: Electricity disconnected tonight, scan QR to pay bsescare@icici",
+            "SMS" to "Your SBI account blocked, enter UPI PIN immediately",
+            "WhatsApp" to "Enter UPI PIN to receive your refund money",
+            "SMS" to "Install this APK for traffic e-challan fine payment"
+        )
+        for ((title, body) in cases) {
+            val result = RulesEngine.analyze(title, body)
+            assertEquals(ThreatLevel.HIGH, result.level)
+            assertTrue(
+                "'$body' scored ${result.riskScore}",
+                result.riskScore >= RiskScore.HIGH_THRESHOLD
+            )
+        }
+    }
 }
